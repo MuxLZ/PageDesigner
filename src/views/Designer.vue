@@ -102,12 +102,15 @@
           <el-form label-width="80px" size="small">
             <el-form-item label="主题色">
               <el-color-picker v-model="globalTheme.primary" />
+              <div class="form-item-tip">用于按钮、链接、强调元素</div>
             </el-form-item>
             <el-form-item label="次色">
               <el-color-picker v-model="globalTheme.secondary" />
+              <div class="form-item-tip">用于渐变背景、次要强调元素</div>
             </el-form-item>
             <el-form-item label="背景色">
               <el-color-picker v-model="globalTheme.background" />
+              <div class="form-item-tip">页面整体背景色</div>
             </el-form-item>
           </el-form>
         </div>
@@ -179,7 +182,6 @@
                 <el-form-item label="效果类型">
                   <el-select v-model="selectedModule.effect.type" placeholder="选择效果">
                     <el-option label="淡入淡出" value="fade" />
-                    <el-option label="滑动" value="slide" />
                     <el-option label="缩放" value="zoom" />
                     <el-option label="旋转" value="rotate" />
                   </el-select>
@@ -1270,7 +1272,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Edit } from '@element-plus/icons-vue'
 import type { PageConfig, ModuleConfig } from '@/types/module'
@@ -1303,8 +1305,21 @@ const globalTheme = computed({
       pageConfig.value.globalStyle = {}
     }
     pageConfig.value.globalStyle.theme = val
+    // 应用主题到CSS变量
     StyleSystem.applyThemeToCSS(val)
   }
+})
+
+// 监听主题变化并应用
+watch(() => globalTheme.value, (newTheme) => {
+  StyleSystem.applyThemeToCSS(newTheme)
+}, { deep: true, immediate: true })
+
+// 页面加载时初始化主题
+onMounted(() => {
+  // 确保主题被应用
+  const theme = pageConfig.value.globalStyle?.theme || StyleSystem.createDefaultTheme()
+  StyleSystem.applyThemeToCSS(theme)
 })
 
 // 排序后的模块
@@ -1994,10 +2009,6 @@ const importConfig = () => {
   input.click()
 }
 
-// 监听全局主题变化
-watch(globalTheme, (newTheme) => {
-  StyleSystem.applyThemeToCSS(newTheme)
-}, { deep: true })
 </script>
 
 <style scoped>
@@ -2053,6 +2064,13 @@ watch(globalTheme, (newTheme) => {
   color: var(--dark-color);
 }
 
+.form-item-tip {
+  font-size: 0.75rem;
+  color: var(--gray-color);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
 .module-library {
   display: flex;
   flex-direction: column;
@@ -2085,7 +2103,7 @@ watch(globalTheme, (newTheme) => {
 .preview-container {
   max-width: 100%;
   margin: 0 auto;
-  background: white;
+  /* 背景色由 PageRenderer 的 pageStyles 控制，不在这里设置固定白色 */
   min-height: 100%;
 }
 

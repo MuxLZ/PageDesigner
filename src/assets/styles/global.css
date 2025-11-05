@@ -25,6 +25,8 @@ html, body {
   --light-color: #f8fafc;
   --gray-color: #6b7280;
   --border-color: #e5e7eb;
+  --background-color: #ffffff;
+  --text-color: #333333;
 }
 
 /* 通用类 */

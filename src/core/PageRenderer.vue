@@ -117,6 +117,10 @@ const pageStyles = computed(() => {
     // 应用主题
     if (theme) {
       StyleSystem.applyThemeToCSS(theme)
+      // 应用背景色到页面容器
+      if (theme.background) {
+        styles.backgroundColor = theme.background
+      }
     }
     
     // 应用字体
@@ -140,6 +144,9 @@ const pageStyles = computed(() => {
 .page-renderer {
   min-height: 100vh;
   width: 100%;
+  transition: background-color 0.3s ease;
+  /* 默认背景色，如果主题设置了背景色会被覆盖 */
+  background-color: #ffffff;
 }
 
 .module-wrapper {

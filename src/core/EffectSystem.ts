@@ -48,13 +48,6 @@ export class EffectSystem {
   }
   
   /**
-   * 创建滑动效果
-   */
-  static slide(direction: EffectDirection = EffectDirection.UP, duration = 600, delay = 0): EffectConfig {
-    return this.createEffect(EffectType.SLIDE, { direction, duration, delay })
-  }
-  
-  /**
    * 创建缩放效果
    */
   static zoom(duration = 600, delay = 0): EffectConfig {
@@ -99,24 +92,17 @@ export class EffectSystem {
   /**
    * 创建常用组合效果
    */
-  static fadeInUp(duration = 600, delay = 0): CombinedEffect {
-    return this.combine(
-      this.fade(duration, delay),
-      this.slide(EffectDirection.UP, duration, delay)
-    )
-  }
-  
   static fadeInZoom(duration = 600, delay = 0): CombinedEffect {
     return this.combine(
       this.fade(duration, delay),
       this.zoom(duration, delay)
     )
   }
-  
-  static slideZoom(direction: EffectDirection = EffectDirection.UP, duration = 600, delay = 0): CombinedEffect {
+
+  static zoomRotate(duration = 600, delay = 0): CombinedEffect {
     return this.combine(
-      this.slide(direction, duration, delay),
-      this.zoom(duration, delay)
+      this.zoom(duration, delay),
+      this.rotate(duration, delay)
     )
   }
   

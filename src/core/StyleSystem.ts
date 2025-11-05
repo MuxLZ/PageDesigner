@@ -100,9 +100,26 @@ export class StyleSystem {
   static applyThemeToCSS(theme: ColorTheme, element?: HTMLElement): void {
     const root = element || document.documentElement
     
+    // CSS变量名映射（匹配global.css中的变量名）
+    const cssVarMap: Record<string, string> = {
+      primary: '--primary-color',
+      secondary: '--secondary-color',
+      accent: '--accent-color',
+      success: '--success-color',
+      warning: '--warning-color',
+      danger: '--danger-color',
+      dark: '--dark-color',
+      light: '--light-color',
+      gray: '--gray-color',
+      border: '--border-color',
+      background: '--background-color',
+      text: '--text-color'
+    }
+    
     Object.entries(theme).forEach(([key, value]) => {
       if (value) {
-        const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`
+        // 使用映射的变量名，如果没有映射则使用默认转换
+        const cssVar = cssVarMap[key] || `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`
         root.style.setProperty(cssVar, value)
       }
     })

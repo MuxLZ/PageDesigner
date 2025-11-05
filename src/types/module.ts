@@ -46,7 +46,6 @@ export enum ModuleType {
 // 动画效果类型
 export enum EffectType {
   FADE = 'fade',                   // 淡入淡出
-  SLIDE = 'slide',                 // 滑动
   ZOOM = 'zoom',                   // 缩放
   ROTATE = 'rotate',               // 旋转
   BOUNCE = 'bounce',               // 弹跳
