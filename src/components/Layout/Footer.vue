@@ -6,9 +6,9 @@
           <!-- 公司信息 -->
           <div class="footer-section">
             <div class="footer-logo">
-              <span class="logo-text">智造科技</span>
+              <span class="logo-text">康养医院</span>
               <p class="company-desc">
-                专注工业自动化领域20年，为企业提供智能制造解决方案，助力工业4.0转型升级。
+                专注医疗康养领域20年，为患者提供专业医疗服务和健康管理方案，助力健康生活品质提升。
               </p>
             </div>
             <div class="social-links">
@@ -24,21 +24,21 @@
             </div>
           </div>
 
-          <!-- 产品服务 -->
+          <!-- 医疗服务 -->
           <div class="footer-section">
-            <h4 class="footer-title">产品服务</h4>
+            <h4 class="footer-title">医疗服务</h4>
             <ul class="footer-links">
-              <li><a href="/products/automation">自动化设备</a></li>
-              <li><a href="/products/robots">工业机器人</a></li>
-              <li><a href="/products/plc">PLC控制系统</a></li>
-              <li><a href="/products/sensors">智能传感器</a></li>
+              <li><a href="/products/medical-equipment">医疗设备</a></li>
+              <li><a href="/products/rehabilitation">康复治疗</a></li>
+              <li><a href="/products/health-management">健康管理</a></li>
+              <li><a href="/products/elderly-care">老年康养</a></li>
               <li><a href="/solutions">解决方案</a></li>
             </ul>
           </div>
 
-          <!-- 公司信息 -->
+          <!-- 医院信息 -->
           <div class="footer-section">
-            <h4 class="footer-title">公司信息</h4>
+            <h4 class="footer-title">医院信息</h4>
             <ul class="footer-links">
               <li><a href="/about">关于我们</a></li>
               <li><a href="/about/culture">企业文化</a></li>
@@ -54,7 +54,7 @@
             <div class="contact-info">
               <div class="contact-item">
                 <el-icon><Location /></el-icon>
-                <span>上海市浦东新区科技园区创新路123号</span>
+                <span>上海市浦东新区医疗健康园区健康路123号</span>
               </div>
               <div class="contact-item">
                 <el-icon><Phone /></el-icon>
@@ -62,7 +62,7 @@
               </div>
               <div class="contact-item">
                 <el-icon><Message /></el-icon>
-                <span>info@zhizao.com</span>
+                <span>info@kangyang.com</span>
               </div>
               <div class="contact-item">
                 <el-icon><Clock /></el-icon>
@@ -78,7 +78,7 @@
     <div class="footer-bottom">
       <div class="container">
         <div class="footer-bottom-content">
-          <p>&copy; 2024 智造科技有限公司. 保留所有权利.</p>
+          <p>&copy; 2024 康养医院. 保留所有权利.</p>
           <div class="footer-links-bottom">
             <a href="/privacy">隐私政策</a>
             <a href="/terms">服务条款</a>

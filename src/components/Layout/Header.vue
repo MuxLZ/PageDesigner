@@ -5,8 +5,8 @@
       <div class="container">
         <div class="top-info">
           <span><el-icon><Phone /></el-icon> 400-123-4567</span>
-          <span><el-icon><Message /></el-icon> info@zhizao.com</span>
-          <span><el-icon><Location /></el-icon> 上海市浦东新区科技园</span>
+          <span><el-icon><Message /></el-icon> info@kangyang.com</span>
+          <span><el-icon><Location /></el-icon> 上海市浦东新区医疗健康园区</span>
         </div>
       </div>
     </div>
@@ -18,8 +18,8 @@
           <!-- Logo -->
           <div class="logo">
             <router-link to="/">
-              <img src="https://picsum.photos/120/40?random=291" alt="智造科技" class="logo-img" />
-              <span class="logo-text">智造科技</span>
+              <img src="https://picsum.photos/120/40?random=291" alt="康养医院" class="logo-img" />
+              <span class="logo-text">康养医院</span>
             </router-link>
           </div>
 
@@ -32,7 +32,7 @@
           >
             <el-menu-item index="/">首页</el-menu-item>
             <el-menu-item index="/about">关于我们</el-menu-item>
-            <el-menu-item index="/products">产品中心</el-menu-item>
+            <el-menu-item index="/products">医疗服务</el-menu-item>
             <el-menu-item index="/solutions">解决方案</el-menu-item>
             <el-menu-item index="/news">新闻资讯</el-menu-item>
             <el-menu-item index="/contact">联系我们</el-menu-item>
@@ -51,13 +51,13 @@
       <div class="mobile-menu-overlay" @click="closeMobileMenu"></div>
       <div class="mobile-menu-content">
         <div class="mobile-menu-header">
-          <span class="logo-text">智造科技</span>
+          <span class="logo-text">康养医院</span>
           <el-icon class="close-btn" @click="closeMobileMenu"><Close /></el-icon>
         </div>
         <ul class="mobile-nav-list">
           <li><router-link to="/" @click="closeMobileMenu">首页</router-link></li>
           <li><router-link to="/about" @click="closeMobileMenu">关于我们</router-link></li>
-          <li><router-link to="/products" @click="closeMobileMenu">产品中心</router-link></li>
+          <li><router-link to="/products" @click="closeMobileMenu">医疗服务</router-link></li>
           <li><router-link to="/solutions" @click="closeMobileMenu">解决方案</router-link></li>
           <li><router-link to="/news" @click="closeMobileMenu">新闻资讯</router-link></li>
           <li><router-link to="/contact" @click="closeMobileMenu">联系我们</router-link></li>

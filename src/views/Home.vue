@@ -38,9 +38,9 @@
       <div class="container">
         <div class="about-grid">
           <div class="about-content" data-aos="fade-right">
-            <h2 class="section-title">智造未来，科技领先</h2>
+            <h2 class="section-title">医者仁心，健康守护</h2>
             <p class="section-subtitle">
-              智造科技专注工业自动化领域20年，为全球客户提供智能制造解决方案
+              康养医院专注医疗康养领域20年，为患者提供专业医疗服务和健康管理方案
             </p>
             <div class="about-features">
               <div class="feature-item">
@@ -48,8 +48,8 @@
                   <el-icon><Tools /></el-icon>
                 </div>
                 <div class="feature-content">
-                  <h4>专业技术</h4>
-                  <p>20年工业自动化经验，技术实力雄厚</p>
+                  <h4>专业医疗</h4>
+                  <p>20年医疗康养经验，医疗技术实力雄厚</p>
                 </div>
               </div>
               <div class="feature-item">
@@ -58,7 +58,7 @@
                 </div>
                 <div class="feature-content">
                   <h4>行业领先</h4>
-                  <p>服务500+企业，行业标杆案例丰富</p>
+                  <p>服务50000+患者，医疗服务质量优秀</p>
                 </div>
               </div>
               <div class="feature-item">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="feature-content">
                   <h4>品质保证</h4>
-                  <p>ISO9001认证，品质管理体系完善</p>
+                  <p>三级甲等医院认证，医疗质量管理体系完善</p>
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
             </el-button>
           </div>
           <div class="about-image" data-aos="fade-left">
-            <img src="https://picsum.photos/600/400?random=1" alt="智能工厂" />
+            <img src="https://picsum.photos/600/400?random=1" alt="康养医院" />
           </div>
         </div>
       </div>
@@ -87,20 +87,20 @@
       <div class="container">
         <div class="stats-grid">
           <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
-            <div class="stat-number">500+</div>
-            <div class="stat-label">服务企业</div>
+            <div class="stat-number">50000+</div>
+            <div class="stat-label">服务患者</div>
           </div>
           <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
             <div class="stat-number">20</div>
             <div class="stat-label">年专业经验</div>
           </div>
           <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
-            <div class="stat-number">1000+</div>
-            <div class="stat-label">成功案例</div>
+            <div class="stat-number">200+</div>
+            <div class="stat-label">专业医师</div>
           </div>
           <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
             <div class="stat-number">98%</div>
-            <div class="stat-label">客户满意度</div>
+            <div class="stat-label">患者满意度</div>
           </div>
         </div>
       </div>
@@ -110,8 +110,8 @@
     <section class="products-section section">
       <div class="container">
         <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title">核心产品</h2>
-          <p class="section-subtitle">为企业提供全方位的工业自动化解决方案</p>
+          <h2 class="section-title">核心服务</h2>
+          <p class="section-subtitle">为患者提供全方位的医疗康养服务</p>
         </div>
         
         <div class="products-grid">
@@ -139,7 +139,7 @@
         
         <div class="section-footer" data-aos="fade-up">
           <el-button type="primary" size="large">
-            查看更多产品
+            查看更多服务
             <el-icon class="el-icon--right"><ArrowRight /></el-icon>
           </el-button>
         </div>
@@ -150,8 +150,8 @@
     <section class="solutions-section section" style="background: var(--light-color);">
       <div class="container">
         <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title">行业解决方案</h2>
-          <p class="section-subtitle">针对不同行业提供定制化的智能制造解决方案</p>
+          <h2 class="section-title">医疗解决方案</h2>
+          <p class="section-subtitle">针对不同需求提供定制化的医疗康养解决方案</p>
         </div>
         
         <div class="solutions-tabs">
@@ -173,7 +173,7 @@
                     </li>
                   </ul>
                   <el-button type="primary" size="large">
-                    了解方案详情
+                    了解服务详情
                   </el-button>
                 </div>
                 <div class="solution-image" data-aos="fade-left">
@@ -190,8 +190,8 @@
     <section class="news-section section">
       <div class="container">
         <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title">新闻资讯</h2>
-          <p class="section-subtitle">了解行业动态，掌握前沿技术</p>
+          <h2 class="section-title">健康资讯</h2>
+          <p class="section-subtitle">了解医疗动态，掌握健康知识</p>
         </div>
         
         <div class="news-grid">
@@ -230,7 +230,7 @@
       <div class="container">
         <div class="section-header" data-aos="fade-up">
           <h2 class="section-title">合作伙伴</h2>
-          <p class="section-subtitle">与全球知名企业建立长期合作关系</p>
+          <p class="section-subtitle">与知名医疗机构建立长期合作关系</p>
         </div>
         
         <div class="partners-grid" data-aos="fade-up">
@@ -245,8 +245,8 @@
     <section class="contact-section gradient-bg">
       <div class="container">
         <div class="contact-content" data-aos="fade-up">
-          <h2>准备开始您的智能制造之旅？</h2>
-          <p>联系我们的专业团队，获取定制化解决方案</p>
+          <h2>准备开始您的健康之旅？</h2>
+          <p>联系我们的专业团队，获取个性化健康管理方案</p>
           <div class="contact-buttons">
             <el-button type="primary" size="large" class="contact-btn">
               免费咨询
@@ -268,86 +268,86 @@ import { ref } from 'vue'
 // 轮播数据
 const heroSlides = ref([
   {
-    title: '智能制造 · 引领未来',
-    subtitle: '专业的工业自动化解决方案，助力企业数字化转型升级',
+    title: '专业医疗 · 健康守护',
+    subtitle: '专业的医疗康养服务，为您的健康生活保驾护航',
     background: 'https://picsum.photos/1920/1080?random=2'
   },
   {
-    title: '工业4.0 · 智慧工厂',
-    subtitle: '先进的智能制造技术，打造高效、节能的现代化工厂',
+    title: '康养服务 · 品质生活',
+    subtitle: '先进的医疗技术和人性化服务，打造舒适、温馨的康养环境',
     background: 'https://picsum.photos/1920/1080?random=3'
   },
   {
-    title: '技术创新 · 品质卓越',
-    subtitle: '20年专业经验，为全球500+企业提供优质服务',
+    title: '医者仁心 · 专业服务',
+    subtitle: '20年专业经验，为50000+患者提供优质医疗服务',
     background: 'https://picsum.photos/1920/1080?random=4'
   }
 ])
 
-// 产品数据
+// 服务数据
 const products = ref([
   {
-    name: '自动化生产线',
-    description: '高效、稳定的自动化生产线解决方案',
+    name: '专业医疗',
+    description: '三甲医院标准，提供专业诊断和治疗服务',
     image: 'https://picsum.photos/400/300?random=5',
-    features: ['高效率', '低能耗', '智能化']
+    features: ['专业医师', '先进设备', '精准诊断']
   },
   {
-    name: '工业机器人',
-    description: '精密、灵活的工业机器人系统',
+    name: '康复治疗',
+    description: '个性化康复方案，帮助患者恢复健康',
     image: 'https://picsum.photos/400/300?random=6',
-    features: ['精度高', '速度快', '可靠性强']
+    features: ['个性化', '专业指导', '效果显著']
   },
   {
-    name: 'PLC控制系统',
-    description: '稳定可靠的工业控制系统',
+    name: '健康管理',
+    description: '全方位健康管理服务，预防疾病发生',
     image: 'https://picsum.photos/400/300?random=7',
-    features: ['稳定性', '扩展性', '易维护']
+    features: ['定期体检', '健康档案', '专业咨询']
   },
   {
-    name: '智能传感器',
-    description: '高精度的智能检测设备',
+    name: '老年康养',
+    description: '温馨舒适的康养环境，专业护理服务',
     image: 'https://picsum.photos/400/300?random=8',
-    features: ['高精度', '实时监控', '数据分析']
+    features: ['专业护理', '舒适环境', '贴心服务']
   }
 ])
 
 // 解决方案数据
-const activeSolution = ref('汽车制造')
+const activeSolution = ref('慢性病管理')
 const solutions = ref([
   {
-    name: '汽车制造',
-    title: '汽车制造智能化解决方案',
-    description: '为汽车制造企业提供从零部件生产到整车装配的全流程自动化解决方案',
+    name: '慢性病管理',
+    title: '慢性病管理解决方案',
+    description: '为慢性病患者提供全程健康管理，包括疾病监测、用药指导、生活方式干预等',
     benefits: [
-      '提高生产效率30%以上',
-      '降低人工成本40%',
-      '提升产品质量稳定性',
-      '实现柔性化生产'
+      '提高治疗依从性',
+      '降低并发症风险',
+      '改善生活质量',
+      '建立健康档案'
     ],
     image: 'https://picsum.photos/500/350?random=9'
   },
   {
-    name: '电子制造',
-    title: '电子制造精密化解决方案',
-    description: '针对电子产品制造的高精度、高速度自动化生产线',
+    name: '康复治疗',
+    title: '康复治疗解决方案',
+    description: '针对术后康复、运动损伤等提供专业康复训练和治疗方案',
     benefits: [
-      '提升产品精度和一致性',
-      '缩短生产周期50%',
-      '降低不良品率',
-      '实现无人化生产'
+      '加速功能恢复',
+      '个性化康复计划',
+      '专业康复团队',
+      '全程跟踪指导'
     ],
     image: 'https://picsum.photos/500/350?random=10'
   },
   {
-    name: '食品饮料',
-    title: '食品饮料安全化解决方案',
-    description: '确保食品安全的全自动化生产和包装系统',
+    name: '老年康养',
+    title: '老年康养解决方案',
+    description: '为老年人提供医养结合的综合康养服务，包括医疗、护理、生活照料等',
     benefits: [
-      '保证食品安全标准',
-      '提高包装效率',
-      '降低人工接触风险',
-      '实现可追溯管理'
+      '医养结合服务',
+      '专业护理团队',
+      '舒适居住环境',
+      '24小时照护'
     ],
     image: 'https://picsum.photos/500/350?random=11'
   }
@@ -356,39 +356,39 @@ const solutions = ref([
 // 新闻数据
 const latestNews = ref([
   {
-    title: '智造科技荣获2024年度工业自动化创新奖',
-    excerpt: '凭借在工业4.0领域的突出贡献，智造科技荣获行业权威奖项...',
+    title: '康养医院荣获2024年度医疗服务质量优秀奖',
+    excerpt: '凭借在医疗康养领域的突出贡献，康养医院荣获行业权威奖项...',
     image: 'https://picsum.photos/400/250?random=12',
-    category: '公司新闻',
+    category: '医院新闻',
     date: '2024-01-15',
-    author: '智造科技'
+    author: '康养医院'
   },
   {
-    title: '工业机器人技术发展趋势分析',
-    excerpt: '随着人工智能技术的发展，工业机器人正朝着更加智能化的方向发展...',
+    title: '慢性病管理新方法研究进展',
+    excerpt: '随着医疗技术的发展，慢性病管理正朝着更加精准化和个性化的方向发展...',
     image: 'https://picsum.photos/400/250?random=13',
-    category: '行业动态',
+    category: '医疗动态',
     date: '2024-01-10',
-    author: '技术部'
+    author: '医疗部'
   },
   {
-    title: '智能制造助力企业数字化转型',
-    excerpt: '数字化转型已成为企业发展的必然趋势，智能制造技术发挥着重要作用...',
+    title: '健康管理助力生活品质提升',
+    excerpt: '健康管理已成为现代生活的必然需求，专业医疗服务发挥着重要作用...',
     image: 'https://picsum.photos/400/250?random=14',
-    category: '技术分享',
+    category: '健康知识',
     date: '2024-01-05',
-    author: '研发中心'
+    author: '健康管理中心'
   }
 ])
 
 // 合作伙伴数据
 const partners = ref([
-  { name: 'Siemens', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Siemens' },
-  { name: 'ABB', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=ABB' },
-  { name: 'Schneider', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Schneider' },
-  { name: 'Rockwell', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Rockwell' },
-  { name: 'KUKA', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=KUKA' },
-  { name: 'Fanuc', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Fanuc' }
+  { name: '医疗设备', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=医疗设备' },
+  { name: '康复中心', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=康复中心' },
+  { name: '健康管理', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=健康管理' },
+  { name: '医疗研究', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=医疗研究' },
+  { name: '康养机构', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=康养机构' },
+  { name: '健康科技', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=健康科技' }
 ])
 
 const handleSolutionTab = (tab: any) => {

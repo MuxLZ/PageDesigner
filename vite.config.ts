@@ -21,7 +21,26 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    host: '0.0.0.0', // 支持公网访问
+    port: 8091,
     open: true
+  },
+  preview: {
+    host: '0.0.0.0', // 生产预览模式也支持公网访问
+    port: 8091,
+    open: false, // 生产环境不自动打开浏览器，避免服务器环境报错
+    strictPort: true, // 如果端口被占用则退出
+    cors: true // 启用 CORS
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    // 确保构建时正确处理路由
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   }
 }) 

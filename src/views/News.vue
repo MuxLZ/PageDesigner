@@ -3,8 +3,8 @@
     <section class="page-hero gradient-bg">
       <div class="container">
         <div class="hero-content">
-          <h1 class="page-title">新闻资讯</h1>
-          <p class="page-subtitle">了解行业动态，掌握前沿技术</p>
+          <h1 class="page-title">健康资讯</h1>
+          <p class="page-subtitle">了解医疗动态，掌握健康知识</p>
         </div>
       </div>
     </section>
@@ -36,9 +36,9 @@
 import { ref } from 'vue'
 
 const newsList = ref([
-  { id: 1, title: '智造科技荣获2024年度创新奖', excerpt: '公司在工业4.0领域的突出贡献获得认可...', category: '公司新闻', date: '2024-01-15', author: '智造科技', image: 'https://picsum.photos/400/250?random=30' },
-  { id: 2, title: '工业机器人技术发展趋势', excerpt: '人工智能推动工业机器人智能化发展...', category: '行业动态', date: '2024-01-10', author: '技术部', image: 'https://picsum.photos/400/250?random=31' },
-  { id: 3, title: '智能制造助力数字化转型', excerpt: '智能制造技术在企业转型中的重要作用...', category: '技术分享', date: '2024-01-05', author: '研发中心', image: 'https://picsum.photos/400/250?random=32' }
+  { id: 1, title: '康养医院荣获2024年度医疗服务质量优秀奖', excerpt: '医院在医疗康养领域的突出贡献获得认可...', category: '医院新闻', date: '2024-01-15', author: '康养医院', image: 'https://picsum.photos/400/250?random=30' },
+  { id: 2, title: '慢性病管理新方法研究进展', excerpt: '医疗技术推动慢性病管理精准化发展...', category: '医疗动态', date: '2024-01-10', author: '医疗部', image: 'https://picsum.photos/400/250?random=31' },
+  { id: 3, title: '健康管理助力生活品质提升', excerpt: '健康管理在现代生活中的重要作用...', category: '健康知识', date: '2024-01-05', author: '健康管理中心', image: 'https://picsum.photos/400/250?random=32' }
 ])
 </script>
 

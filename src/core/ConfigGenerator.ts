@@ -51,8 +51,8 @@ export class ConfigGenerator {
           ...base,
           slides: [
             {
-              title: '智能制造 · 引领未来',
-              subtitle: '专业的工业自动化解决方案，助力企业数字化转型升级',
+              title: '专业医疗 · 健康守护',
+              subtitle: '专业的医疗康养服务，为您的健康生活保驾护航',
               background: 'https://picsum.photos/1920/1080?random=1',
               buttons: [
                 { text: '了解更多', type: 'primary', link: '/about' },
@@ -60,19 +60,19 @@ export class ConfigGenerator {
               ]
             },
             {
-              title: '工业4.0 · 智慧工厂',
-              subtitle: '先进的智能制造技术，打造高效、节能的现代化工厂',
+              title: '康养服务 · 品质生活',
+              subtitle: '先进的医疗技术和人性化服务，打造舒适、温馨的康养环境',
               background: 'https://picsum.photos/1920/1080?random=2',
               buttons: [
                 { text: '查看方案', type: 'primary', link: '/solutions' }
               ]
             },
             {
-              title: '技术创新 · 品质卓越',
-              subtitle: '20年专业经验，为全球500+企业提供优质服务',
+              title: '医者仁心 · 专业服务',
+              subtitle: '20年专业经验，为50000+患者提供优质医疗服务',
               background: 'https://picsum.photos/1920/1080?random=3',
               buttons: [
-                { text: '产品中心', type: 'primary', link: '/products' }
+                { text: '医疗服务', type: 'primary', link: '/products' }
               ]
             }
           ],
@@ -89,38 +89,38 @@ export class ConfigGenerator {
           columns: 3,
           items: [
             {
-              title: '自动化生产线',
-              description: '高效、稳定的自动化生产线解决方案',
+              title: '专业医疗',
+              description: '三甲医院标准，提供专业诊断和治疗服务',
               image: 'https://picsum.photos/400/300?random=10',
               icon: 'Tools'
             },
             {
-              title: '工业机器人',
-              description: '精密、灵活的工业机器人系统',
+              title: '康复治疗',
+              description: '个性化康复方案，帮助患者恢复健康',
               image: 'https://picsum.photos/400/300?random=11',
               icon: 'Setting'
             },
             {
-              title: 'PLC控制系统',
-              description: '稳定可靠的工业控制系统',
+              title: '健康管理',
+              description: '全方位健康管理服务，预防疾病发生',
               image: 'https://picsum.photos/400/300?random=12',
               icon: 'Monitor'
             },
             {
-              title: '智能传感器',
-              description: '高精度的智能检测设备',
+              title: '老年康养',
+              description: '温馨舒适的康养环境，专业护理服务',
               image: 'https://picsum.photos/400/300?random=13',
               icon: 'View'
             },
             {
-              title: '视觉检测系统',
-              description: 'AI驱动的智能视觉检测',
+              title: '慢性病管理',
+              description: '专业的慢性病管理服务，全程跟踪管理',
               image: 'https://picsum.photos/400/300?random=14',
               icon: 'Camera'
             },
             {
-              title: 'MES管理系统',
-              description: '智能制造执行系统',
+              title: '健康体检',
+              description: '全面的健康体检服务，建立个人健康档案',
               image: 'https://picsum.photos/400/300?random=15',
               icon: 'DataAnalysis'
             }
@@ -133,13 +133,13 @@ export class ConfigGenerator {
           columns: 2,
           items: [
             {
-              title: '智造未来，科技领先',
-              content: '智造科技专注工业自动化领域20年，为全球客户提供智能制造解决方案。公司拥有一支由资深工程师组成的专业团队，在工业自动化、智能制造、工业4.0等领域积累了丰富的经验。',
+              title: '医者仁心，健康守护',
+              content: '康养医院专注医疗康养领域20年，为患者提供专业医疗服务和健康管理方案。医院拥有一支由资深医师组成的专业团队，在医疗诊断、康复治疗、健康管理、老年康养等领域积累了丰富的经验。',
               image: 'https://picsum.photos/600/400?random=20'
             },
             {
-              title: '专业技术团队',
-              content: '我们的团队拥有20年以上的工业自动化经验，技术实力雄厚。已成功服务500+企业，行业标杆案例丰富。ISO9001认证，品质管理体系完善，为客户提供全方位的技术支持。',
+              title: '专业医疗团队',
+              content: '我们的团队拥有20年以上的医疗康养经验，医疗技术实力雄厚。已成功服务50000+患者，医疗服务质量优秀。三级甲等医院认证，医疗质量管理体系完善，为患者提供全方位的医疗服务。',
               image: 'https://picsum.photos/600/400?random=21'
             }
           ]
@@ -152,32 +152,32 @@ export class ConfigGenerator {
             {
               year: '2024',
               title: '行业领先',
-              description: '服务客户超过500家，成为行业领军企业，荣获多项行业大奖'
+              description: '服务患者超过50000人，成为区域医疗康养标杆，荣获多项医疗奖项'
             },
             {
               year: '2020',
               title: '数字化升级',
-              description: '完成数字化转型，建立智能工厂示范基地，推出工业4.0解决方案'
+              description: '完成医疗信息化建设，建立健康管理平台，推出综合康养服务方案'
             },
             {
               year: '2016',
               title: '战略转型',
-              description: '全面转向智能制造，业务范围扩展至全国，服务客户超过100家'
+              description: '全面转向医养结合，服务范围扩展至周边区域，服务患者超过10000人'
             },
             {
               year: '2012',
               title: '技术突破',
-              description: '自主研发的PLC控制系统获得国家专利，技术实力得到认可'
+              description: '引进先进医疗设备和技术，医疗实力得到认可'
             },
             {
               year: '2008',
-              title: '业务扩展',
-              description: '业务范围扩展至全国多个城市，建立完善的销售和服务网络'
+              title: '服务扩展',
+              description: '服务范围扩展至周边区域，建立完善的医疗服务网络'
             },
             {
               year: '2004',
-              title: '公司成立',
-              description: '智造科技在上海成立，开始专注工业自动化领域'
+              title: '医院成立',
+              description: '康养医院在上海成立，开始专注医疗康养领域'
             }
           ]
         }
@@ -186,27 +186,27 @@ export class ConfigGenerator {
         return {
           ...base,
           logo: {
-            text: '智造科技',
+            text: '康养医院',
             image: 'https://picsum.photos/120/40?random=100'
           },
           menu: {
             items: [
               { label: '首页', link: '/' },
               { 
-                label: '产品中心', 
+                label: '医疗服务', 
                 link: '/products',
                 children: [
-                  { label: '自动化设备', link: '/products/automation' },
-                  { label: '工业机器人', link: '/products/robots' },
-                  { label: 'PLC控制系统', link: '/products/plc' }
+                  { label: '医疗设备', link: '/products/medical-equipment' },
+                  { label: '康复治疗', link: '/products/rehabilitation' },
+                  { label: '健康管理', link: '/products/health-management' }
                 ]
               },
               { 
                 label: '解决方案', 
                 link: '/solutions',
                 children: [
-                  { label: '智能制造', link: '/solutions/manufacturing' },
-                  { label: '智慧工厂', link: '/solutions/factory' }
+                  { label: '慢性病管理', link: '/solutions/chronic-disease' },
+                  { label: '康复治疗', link: '/solutions/rehabilitation' }
                 ]
               },
               { label: '关于我们', link: '/about' },
@@ -230,28 +230,28 @@ export class ConfigGenerator {
           ...base,
           sections: [
             {
-              title: '产品服务',
+              title: '医疗服务',
               links: [
-                { text: '自动化设备', link: '/products/automation' },
-                { text: '工业机器人', link: '/products/robots' },
-                { text: 'PLC控制系统', link: '/products/plc' },
-                { text: '智能传感器', link: '/products/sensors' },
+                { text: '医疗设备', link: '/products/medical-equipment' },
+                { text: '康复治疗', link: '/products/rehabilitation' },
+                { text: '健康管理', link: '/products/health-management' },
+                { text: '老年康养', link: '/products/elderly-care' },
                 { text: '解决方案', link: '/solutions' }
               ]
             },
             {
-              title: '公司信息',
+              title: '医院信息',
               links: [
                 { text: '关于我们', link: '/about' },
-                { text: '企业文化', link: '/about/culture' },
+                { text: '医院文化', link: '/about/culture' },
                 { text: '团队介绍', link: '/about/team' },
-                { text: '新闻资讯', link: '/news' },
+                { text: '健康资讯', link: '/news' },
                 { text: '人才招聘', link: '/careers' }
               ]
             },
             {
               title: '联系我们',
-              content: '上海市浦东新区科技园区创新路123号\n电话：400-123-4567\n邮箱：info@zhizao.com\n工作时间：周一至周五 9:00-18:00'
+              content: '上海市浦东新区医疗健康园区健康路123号\n电话：400-123-4567\n邮箱：info@kangyang.com\n工作时间：周一至周五 9:00-18:00'
             }
           ],
           socialLinks: [
@@ -259,7 +259,7 @@ export class ConfigGenerator {
             { icon: 'ChatDotRound', link: 'https://wechat.com' },
             { icon: 'Share', link: 'https://linkedin.com' }
           ],
-          copyright: `© ${new Date().getFullYear()} 智造科技有限公司. 保留所有权利.`,
+          copyright: `© ${new Date().getFullYear()} 康养医院. 保留所有权利.`,
           backgroundColor: '#1f2937',
           textColor: '#ffffff'
         }
@@ -268,10 +268,10 @@ export class ConfigGenerator {
         return {
           ...base,
           items: [
-            { number: '500', label: '服务企业', suffix: '+' },
+            { number: '50000', label: '服务患者', suffix: '+' },
             { number: '20', label: '年专业经验', suffix: '' },
-            { number: '1000', label: '成功案例', suffix: '+' },
-            { number: '98', label: '客户满意度', suffix: '%' }
+            { number: '200', label: '专业医师', suffix: '+' },
+            { number: '98', label: '患者满意度', suffix: '%' }
           ],
           columns: 4,
           backgroundColor: 'linear-gradient(135deg, #1e3a8a, #3b82f6)',
@@ -297,9 +297,9 @@ export class ConfigGenerator {
           title: '核心优势',
           subtitle: '我们的专业服务',
           items: [
-            { icon: 'Tools', title: '专业技术', description: '20年工业自动化经验，技术实力雄厚' },
-            { icon: 'Trophy', title: '行业领先', description: '服务500+企业，行业标杆案例丰富' },
-            { icon: 'Star', title: '品质保证', description: 'ISO9001认证，品质管理体系完善' }
+            { icon: 'Tools', title: '专业医疗', description: '20年医疗康养经验，医疗技术实力雄厚' },
+            { icon: 'Trophy', title: '行业领先', description: '服务50000+患者，医疗服务质量优秀' },
+            { icon: 'Star', title: '品质保证', description: '三级甲等医院认证，医疗质量管理体系完善' }
           ],
           layout: 'horizontal',
           columns: 3
@@ -347,8 +347,8 @@ export class ConfigGenerator {
       case ModuleType.CTA:
         return {
           ...base,
-          title: '准备开始您的智能制造之旅？',
-          subtitle: '联系我们的专业团队，获取定制化解决方案',
+          title: '准备开始您的健康之旅？',
+          subtitle: '联系我们的专业团队，获取个性化健康管理方案',
           buttons: [
             { text: '免费咨询', type: 'primary', link: '/contact', icon: 'Phone' },
             { text: '在线留言', type: 'secondary', link: '/contact' }
@@ -360,26 +360,26 @@ export class ConfigGenerator {
       case ModuleType.PRODUCTS:
         return {
           ...base,
-          title: '核心产品',
-          subtitle: '为企业提供全方位的工业自动化解决方案',
+          title: '核心服务',
+          subtitle: '为患者提供全方位的医疗康养服务',
           items: [
             {
-              name: '自动化生产线',
-              description: '高效、稳定的自动化生产线解决方案',
+              name: '专业医疗',
+              description: '三甲医院标准，提供专业诊断和治疗服务',
               image: 'https://picsum.photos/400/300?random=60',
-              features: ['高效率', '低能耗', '智能化']
+              features: ['专业医师', '先进设备', '精准诊断']
             },
             {
-              name: '工业机器人',
-              description: '精密、灵活的工业机器人系统',
+              name: '康复治疗',
+              description: '个性化康复方案，帮助患者恢复健康',
               image: 'https://picsum.photos/400/300?random=61',
-              features: ['精度高', '速度快', '可靠性强']
+              features: ['个性化', '专业指导', '效果显著']
             },
             {
-              name: 'PLC控制系统',
-              description: '稳定可靠的工业控制系统',
+              name: '健康管理',
+              description: '全方位健康管理服务，预防疾病发生',
               image: 'https://picsum.photos/400/300?random=62',
-              features: ['稳定性', '扩展性', '易维护']
+              features: ['定期体检', '健康档案', '专业咨询']
             }
           ],
           columns: 3
@@ -388,24 +388,24 @@ export class ConfigGenerator {
       case ModuleType.NEWS:
         return {
           ...base,
-          title: '新闻资讯',
-          subtitle: '了解行业动态，掌握前沿技术',
+          title: '健康资讯',
+          subtitle: '了解医疗动态，掌握健康知识',
           items: [
             {
-              title: '智造科技荣获2024年度工业自动化创新奖',
-              excerpt: '凭借在工业4.0领域的突出贡献，智造科技荣获行业权威奖项...',
+              title: '康养医院荣获2024年度医疗服务质量优秀奖',
+              excerpt: '凭借在医疗康养领域的突出贡献，康养医院荣获行业权威奖项...',
               image: 'https://picsum.photos/400/250?random=70',
-              category: '公司新闻',
+              category: '医院新闻',
               date: '2024-01-15',
-              author: '智造科技'
+              author: '康养医院'
             },
             {
-              title: '工业机器人技术发展趋势分析',
-              excerpt: '随着人工智能技术的发展，工业机器人正朝着更加智能化的方向发展...',
+              title: '慢性病管理新方法研究进展',
+              excerpt: '随着医疗技术的发展，慢性病管理正朝着更加精准化和个性化的方向发展...',
               image: 'https://picsum.photos/400/250?random=71',
-              category: '行业动态',
+              category: '医疗动态',
               date: '2024-01-10',
-              author: '技术部'
+              author: '医疗部'
             }
           ],
           columns: 3
@@ -415,14 +415,14 @@ export class ConfigGenerator {
         return {
           ...base,
           title: '合作伙伴',
-          subtitle: '与全球知名企业建立长期合作关系',
+          subtitle: '与知名医疗机构建立长期合作关系',
           items: [
-            { name: 'Siemens', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Siemens' },
-            { name: 'ABB', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=ABB' },
-            { name: 'Schneider', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Schneider' },
-            { name: 'Rockwell', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Rockwell' },
-            { name: 'KUKA', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=KUKA' },
-            { name: 'Fanuc', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Fanuc' }
+            { name: '医疗设备', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=医疗设备' },
+            { name: '康复中心', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=康复中心' },
+            { name: '健康管理', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=健康管理' },
+            { name: '医疗研究', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=医疗研究' },
+            { name: '康养机构', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=康养机构' },
+            { name: '健康科技', logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=健康科技' }
           ],
           columns: 6,
           grayscale: true,
@@ -437,14 +437,14 @@ export class ConfigGenerator {
           items: [
             {
               name: '张建华',
-              position: '创始人兼CEO',
-              bio: '20年工业自动化经验，清华大学硕士，行业资深专家',
+              position: '院长兼主任医师',
+              bio: '20年医疗康养经验，医学博士，医疗行业资深专家',
               avatar: 'https://i.pravatar.cc/150?img=33'
             },
             {
               name: '李明',
-              position: '技术总监',
-              bio: '15年技术研发经验，主导多项核心技术突破',
+              position: '医疗总监',
+              bio: '15年医疗临床经验，主导多项医疗技术突破',
               avatar: 'https://i.pravatar.cc/150?img=45'
             }
           ],
@@ -457,9 +457,9 @@ export class ConfigGenerator {
           title: '资质荣誉',
           subtitle: '权威认证，实力见证',
           items: [
-            { title: 'ISO9001质量管理体系认证', image: 'https://via.placeholder.com/200x200/1e3a8a/ffffff?text=ISO9001' },
-            { title: '国家高新技术企业', image: 'https://via.placeholder.com/200x200/3b82f6/ffffff?text=高新企业' },
-            { title: '2023年度创新企业奖', image: 'https://via.placeholder.com/200x200/f59e0b/ffffff?text=创新奖' }
+            { title: '三级甲等医院认证', image: 'https://via.placeholder.com/200x200/1e3a8a/ffffff?text=三甲医院' },
+            { title: '医保定点医疗机构', image: 'https://via.placeholder.com/200x200/3b82f6/ffffff?text=医保定点' },
+            { title: '2023年度医疗服务质量优秀奖', image: 'https://via.placeholder.com/200x200/f59e0b/ffffff?text=服务优秀' }
           ],
           columns: 4
         }
@@ -467,13 +467,13 @@ export class ConfigGenerator {
       case ModuleType.ABOUT:
         return {
           ...base,
-          title: '智造未来，科技领先',
-          subtitle: '智造科技专注工业自动化领域20年',
-          content: '公司拥有一支由资深工程师组成的专业团队，在工业自动化、智能制造、工业4.0等领域积累了丰富的经验。',
+          title: '医者仁心，健康守护',
+          subtitle: '康养医院专注医疗康养领域20年',
+          content: '医院拥有一支由资深医师组成的专业团队，在医疗诊断、康复治疗、健康管理、老年康养等领域积累了丰富的经验。',
           image: 'https://picsum.photos/600/400?random=80',
           features: [
-            { icon: 'Target', title: '使命', description: '推动制造业智能化转型' },
-            { icon: 'View', title: '愿景', description: '成为全球领先的智能制造解决方案提供商' }
+            { icon: 'Target', title: '使命', description: '提供优质医疗服务，守护患者健康' },
+            { icon: 'View', title: '愿景', description: '成为区域领先的医疗康养服务提供商' }
           ],
           layout: 'left-image'
         }
@@ -481,13 +481,13 @@ export class ConfigGenerator {
       case ModuleType.CULTURE:
         return {
           ...base,
-          title: '企业文化',
+          title: '医院文化',
           subtitle: '以人为本，追求卓越',
-          content: '我们坚持创新驱动、客户至上、团队协作、社会责任的企业文化理念。',
+          content: '我们坚持医者仁心、患者至上、团队协作、社会责任的文化理念。',
           image: 'https://picsum.photos/600/400?random=81',
           items: [
-            { title: '创新驱动', description: '持续技术创新，推动行业进步' },
-            { title: '客户至上', description: '以客户需求为导向，提供优质服务' }
+            { title: '医者仁心', description: '持续医疗创新，推动健康事业发展' },
+            { title: '患者至上', description: '以患者需求为导向，提供优质医疗服务' }
           ],
           layout: 'left-image'
         }
@@ -495,25 +495,25 @@ export class ConfigGenerator {
       case ModuleType.SOLUTIONS:
         return {
           ...base,
-          title: '行业解决方案',
-          subtitle: '针对不同行业提供定制化的智能制造解决方案',
+          title: '医疗解决方案',
+          subtitle: '针对不同需求提供定制化的医疗康养解决方案',
           tabs: [
             {
-              name: '汽车制造',
-              title: '汽车制造智能化解决方案',
-              description: '为汽车制造企业提供从零部件生产到整车装配的全流程自动化解决方案',
-              benefits: ['提高生产效率30%以上', '降低人工成本40%', '提升产品质量稳定性'],
+              name: '慢性病管理',
+              title: '慢性病管理解决方案',
+              description: '为慢性病患者提供全程健康管理，包括疾病监测、用药指导、生活方式干预等',
+              benefits: ['提高治疗依从性', '降低并发症风险', '改善生活质量'],
               image: 'https://picsum.photos/500/350?random=90'
             },
             {
-              name: '电子制造',
-              title: '电子制造精密化解决方案',
-              description: '针对电子产品制造的高精度、高速度自动化生产线',
-              benefits: ['提升产品精度和一致性', '缩短生产周期50%', '降低不良品率'],
+              name: '康复治疗',
+              title: '康复治疗解决方案',
+              description: '针对术后康复、运动损伤等提供专业康复训练和治疗方案',
+              benefits: ['加速功能恢复', '个性化康复计划', '专业康复团队'],
               image: 'https://picsum.photos/500/350?random=91'
             }
           ],
-          activeTab: '汽车制造'
+          activeTab: '慢性病管理'
         }
       
       case ModuleType.CONTACT:

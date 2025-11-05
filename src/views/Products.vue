@@ -4,12 +4,12 @@
     <section class="page-hero gradient-bg">
       <div class="container">
         <div class="hero-content" data-aos="fade-up">
-          <h1 class="page-title">产品中心</h1>
-          <p class="page-subtitle">专业的工业自动化设备，助力企业智能化升级</p>
+          <h1 class="page-title">医疗服务</h1>
+          <p class="page-subtitle">专业的医疗康养服务，助力健康生活品质提升</p>
           <nav class="breadcrumb">
             <el-breadcrumb separator="/">
               <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-              <el-breadcrumb-item>产品中心</el-breadcrumb-item>
+              <el-breadcrumb-item>医疗服务</el-breadcrumb-item>
             </el-breadcrumb>
           </nav>
         </div>
@@ -69,8 +69,8 @@
     <section class="product-advantages section" style="background: var(--light-color);">
       <div class="container">
         <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title">产品优势</h2>
-          <p class="section-subtitle">为什么选择我们的产品</p>
+          <h2 class="section-title">服务优势</h2>
+          <p class="section-subtitle">为什么选择我们的服务</p>
         </div>
         
         <div class="advantages-grid">
@@ -93,28 +93,28 @@
       <div class="container">
         <div class="support-content">
           <div class="support-text" data-aos="fade-right">
-            <h2 class="section-title">全方位技术支持</h2>
-            <p class="section-subtitle">从售前咨询到售后维护，我们提供全程专业服务</p>
+            <h2 class="section-title">全方位医疗服务</h2>
+            <p class="section-subtitle">从健康咨询到治疗康复，我们提供全程专业服务</p>
             <div class="support-features">
               <div class="support-feature">
                 <el-icon><Headset /></el-icon>
                 <div>
-                  <h4>24/7 技术支持</h4>
-                  <p>全天候技术热线，随时为您解答问题</p>
+                  <h4>24/7 医疗咨询</h4>
+                  <p>全天候医疗热线，随时为您解答健康问题</p>
                 </div>
               </div>
               <div class="support-feature">
                 <el-icon><Tools /></el-icon>
                 <div>
-                  <h4>免费安装调试</h4>
-                  <p>专业工程师上门安装调试，确保设备正常运行</p>
+                  <h4>专业诊疗服务</h4>
+                  <p>专业医师团队提供精准诊断和治疗服务</p>
                 </div>
               </div>
               <div class="support-feature">
                 <el-icon><Medal /></el-icon>
                 <div>
-                  <h4>质保服务</h4>
-                  <p>提供完善的质保服务，让您使用无忧</p>
+                  <h4>康复跟踪服务</h4>
+                  <p>提供完善的康复跟踪服务，让您康复无忧</p>
                 </div>
               </div>
             </div>
@@ -130,8 +130,8 @@
     <section class="contact-cta gradient-bg">
       <div class="container">
         <div class="cta-content" data-aos="fade-up">
-          <h2>需要定制化解决方案？</h2>
-          <p>联系我们的技术专家，为您量身定制最适合的产品方案</p>
+          <h2>需要个性化健康方案？</h2>
+          <p>联系我们的医疗专家，为您量身定制最适合的健康管理方案</p>
           <div class="cta-buttons">
             <el-button type="primary" size="large" @click="contactUs">
               立即咨询
@@ -199,202 +199,202 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// 当前激活的产品分类
-const activeCategory = ref('自动化设备')
+// 当前激活的服务分类
+const activeCategory = ref('医疗设备')
 
 // 产品详情弹窗
 const productDialogVisible = ref(false)
 const selectedProduct = ref(null)
 
-// 产品分类数据
+// 服务分类数据
 const productCategories = ref([
   {
-    name: '自动化设备',
+    name: '医疗设备',
     products: [
       {
-        name: '全自动装配线',
-        model: 'ZZ-AL-2000',
-        description: '高效智能的全自动装配生产线，适用于各种精密零件的自动化装配',
+        name: 'CT扫描设备',
+        model: 'KY-CT-3000',
+        description: '先进的CT扫描设备，提供高精度医学影像诊断',
         image: 'https://picsum.photos/400/300?random=17',
         specs: [
-          { name: '生产效率', value: '200件/小时' },
-          { name: '精度', value: '±0.02mm' },
-          { name: '功率', value: '15KW' },
-          { name: '重量', value: '2000kg' }
+          { name: '扫描速度', value: '0.5秒/层' },
+          { name: '分辨率', value: '0.625mm' },
+          { name: '最大扫描范围', value: '200cm' },
+          { name: '辐射剂量', value: '低剂量' }
         ],
         features: [
-          '高精度定位系统',
-          '智能视觉检测',
-          '故障自诊断功能',
-          '人机界面操作'
+          '高精度成像',
+          '快速扫描',
+          '低辐射剂量',
+          '智能诊断辅助'
         ]
       },
       {
-        name: '自动化包装线',
-        model: 'ZZ-PL-1500',
-        description: '多功能自动化包装生产线，支持多种包装方式',
+        name: '核磁共振设备',
+        model: 'KY-MRI-1500',
+        description: '高场强核磁共振设备，提供清晰软组织成像',
         image: 'https://picsum.photos/400/300?random=18',
         specs: [
-          { name: '包装速度', value: '150包/分钟' },
-          { name: '包装规格', value: '可调节' },
-          { name: '功率', value: '12KW' },
-          { name: '占地面积', value: '15㎡' }
+          { name: '场强', value: '1.5T' },
+          { name: '扫描序列', value: '多种序列' },
+          { name: '扫描范围', value: '全身' },
+          { name: '检查时间', value: '30-60分钟' }
         ],
         features: [
-          '多种包装方式',
-          '自动计数功能',
-          '废品自动剔除',
-          '远程监控系统'
+          '高场强成像',
+          '多种扫描序列',
+          '舒适检查体验',
+          '精确诊断'
         ]
       }
     ]
   },
   {
-    name: '工业机器人',
+    name: '康复治疗',
     products: [
       {
-        name: '六轴工业机器人',
-        model: 'ZZ-R6-1800',
-        description: '高精度六轴工业机器人，适用于焊接、搬运、装配等作业',
+        name: '物理治疗设备',
+        model: 'KY-PT-200',
+        description: '专业物理治疗设备，适用于各种康复训练',
         image: 'https://picsum.photos/400/300?random=19',
         specs: [
-          { name: '负载能力', value: '20kg' },
-          { name: '工作半径', value: '1800mm' },
-          { name: '重复精度', value: '±0.03mm' },
-          { name: '防护等级', value: 'IP54' }
+          { name: '治疗模式', value: '多种模式' },
+          { name: '频率范围', value: '1-100Hz' },
+          { name: '强度调节', value: '可调节' },
+          { name: '适用部位', value: '全身' }
         ],
         features: [
-          '高精度伺服控制',
-          '多种编程方式',
-          '安全防护系统',
-          '维护简便'
+          '多种治疗模式',
+          '个性化参数设置',
+          '安全可靠',
+          '操作简便'
         ]
       },
       {
-        name: 'SCARA机器人',
-        model: 'ZZ-SCARA-800',
-        description: '高速SCARA机器人，适用于电子产品装配和包装',
+        name: '运动康复设备',
+        model: 'KY-REHAB-500',
+        description: '专业运动康复设备，帮助患者恢复运动功能',
         image: 'https://picsum.photos/400/300?random=20',
         specs: [
-          { name: '负载能力', value: '5kg' },
-          { name: '工作半径', value: '800mm' },
-          { name: '最大速度', value: '10m/s' },
-          { name: '重复精度', value: '±0.01mm' }
+          { name: '训练模式', value: '主动/被动' },
+          { name: '阻力范围', value: '0-100kg' },
+          { name: '训练部位', value: '四肢/躯干' },
+          { name: '数据记录', value: '实时记录' }
         ],
         features: [
-          '超高速运动',
-          '紧凑型设计',
-          '易于集成',
-          '高性价比'
+          '主动被动结合',
+          '个性化训练计划',
+          '实时数据监测',
+          '专业指导'
         ]
       }
     ]
   },
   {
-    name: 'PLC控制系统',
+    name: '健康管理',
     products: [
       {
-        name: '中型PLC控制器',
-        model: 'ZZ-PLC-300',
-        description: '功能强大的中型PLC控制器，适用于中等规模的自动化控制',
+        name: '健康体检套餐',
+        model: 'KY-HEALTH-300',
+        description: '全面的健康体检服务，建立个人健康档案',
         image: 'https://picsum.photos/400/300?random=21',
         specs: [
-          { name: 'I/O点数', value: '256点' },
-          { name: '程序容量', value: '128K步' },
-          { name: '扫描速度', value: '0.1ms/K步' },
-          { name: '通信接口', value: '以太网/串口' }
+          { name: '检查项目', value: '50+项' },
+          { name: '检查时间', value: '2-3小时' },
+          { name: '报告时间', value: '3-5个工作日' },
+          { name: '档案管理', value: '电子档案' }
         ],
         features: [
-          '高速处理能力',
-          '丰富的扩展模块',
-          '多种通信协议',
-          '友好的编程环境'
+          '全面检查项目',
+          '专业医师解读',
+          '健康档案建立',
+          '定期随访'
         ]
       },
       {
-        name: '触摸屏HMI',
-        model: 'ZZ-HMI-10',
-        description: '10寸彩色触摸屏人机界面，支持多种通信协议',
+        name: '慢性病管理服务',
+        model: 'KY-CHRONIC-100',
+        description: '专业的慢性病管理服务，全程跟踪管理',
         image: 'https://picsum.photos/400/300?random=22',
         specs: [
-          { name: '屏幕尺寸', value: '10.1英寸' },
-          { name: '分辨率', value: '1024×600' },
-          { name: '显示颜色', value: '65536色' },
-          { name: '存储容量', value: '256MB' }
+          { name: '管理周期', value: '长期跟踪' },
+          { name: '服务内容', value: '监测/用药/指导' },
+          { name: '随访频率', value: '每月1次' },
+          { name: '档案管理', value: '电子档案' }
         ],
         features: [
-          '高清彩色显示',
-          '多点触控',
-          '丰富的图形库',
-          '多语言支持'
+          '全程跟踪管理',
+          '用药指导',
+          '生活方式干预',
+          '定期随访'
         ]
       }
     ]
   },
   {
-    name: '智能传感器',
+    name: '老年康养',
     products: [
       {
-        name: '激光位移传感器',
-        model: 'ZZ-LD-100',
-        description: '高精度激光位移传感器，适用于精密测量应用',
+        name: '医养结合服务',
+        model: 'KY-ELDERLY-200',
+        description: '专业的医养结合服务，医疗护理一体化',
         image: 'https://picsum.photos/400/300?random=23',
         specs: [
-          { name: '测量范围', value: '100mm' },
-          { name: '分辨率', value: '0.1μm' },
-          { name: '线性度', value: '±0.01%' },
-          { name: '响应频率', value: '50kHz' }
+          { name: '服务内容', value: '医疗/护理/生活' },
+          { name: '护理等级', value: '多等级' },
+          { name: '医疗支持', value: '24小时' },
+          { name: '居住环境', value: '舒适温馨' }
         ],
         features: [
-          '超高精度测量',
-          '非接触式检测',
-          '抗干扰能力强',
-          '体积小巧'
+          '医养结合',
+          '专业护理团队',
+          '24小时医疗支持',
+          '舒适居住环境'
         ]
       },
       {
-        name: '视觉检测系统',
-        model: 'ZZ-VS-2000',
-        description: '智能视觉检测系统，支持多种缺陷检测功能',
+        name: '康养社区',
+        model: 'KY-COMMUNITY-500',
+        description: '现代化康养社区，提供全方位康养服务',
         image: 'https://picsum.photos/400/300?random=24',
         specs: [
-          { name: '相机分辨率', value: '2000万像素' },
-          { name: '检测精度', value: '0.01mm' },
-          { name: '检测速度', value: '100件/分钟' },
-          { name: '光源', value: 'LED环形光源' }
+          { name: '社区规模', value: '500床位' },
+          { name: '服务设施', value: '齐全完善' },
+          { name: '医疗支持', value: '三甲医院' },
+          { name: '文化生活', value: '丰富多彩' }
         ],
         features: [
-          '深度学习算法',
-          '多种检测模式',
-          '实时图像处理',
-          '简单易用'
+          '现代化设施',
+          '医疗资源丰富',
+          '文化生活丰富',
+          '贴心服务'
         ]
       }
     ]
   }
 ])
 
-// 产品优势
+// 服务优势
 const advantages = ref([
   {
     icon: 'Medal',
-    title: '品质卓越',
-    description: '严格的质量控制体系，确保每一件产品都达到最高标准'
+    title: '医疗品质',
+    description: '严格的医疗质量控制体系，确保每一项服务都达到最高标准'
   },
   {
     icon: 'Tools',
     title: '技术先进',
-    description: '采用最新的技术和工艺，保持行业领先地位'
+    description: '采用最新的医疗技术和设备，保持行业领先地位'
   },
   {
     icon: 'Headset',
     title: '服务专业',
-    description: '专业的技术团队提供全方位的技术支持和服务'
+    description: '专业的医疗团队提供全方位的医疗服务和健康管理'
   },
   {
     icon: 'TrendCharts',
-    title: '性价比高',
-    description: '合理的价格配置，为客户提供最优的投资回报'
+    title: '医者仁心',
+    description: '以患者为中心，提供贴心、专业的医疗服务'
   }
 ])
 

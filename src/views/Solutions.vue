@@ -3,8 +3,8 @@
     <section class="page-hero gradient-bg">
       <div class="container">
         <div class="hero-content">
-          <h1 class="page-title">解决方案</h1>
-          <p class="page-subtitle">为不同行业提供定制化的智能制造解决方案</p>
+          <h1 class="page-title">医疗解决方案</h1>
+          <p class="page-subtitle">为不同需求提供定制化的医疗康养解决方案</p>
         </div>
       </div>
     </section>
@@ -31,9 +31,9 @@
 import { ref } from 'vue'
 
 const solutions = ref([
-      { id: 1, title: '汽车制造解决方案', description: '为汽车制造企业提供全流程自动化解决方案', image: 'https://picsum.photos/400/300?random=27' },
-    { id: 2, title: '电子制造解决方案', description: '高精度电子产品制造自动化方案', image: 'https://picsum.photos/400/300?random=28' },
-    { id: 3, title: '食品饮料解决方案', description: '安全可靠的食品生产自动化系统', image: 'https://picsum.photos/400/300?random=29' }
+      { id: 1, title: '慢性病管理解决方案', description: '为慢性病患者提供全程健康管理和治疗方案', image: 'https://picsum.photos/400/300?random=27' },
+    { id: 2, title: '康复治疗解决方案', description: '专业康复训练和治疗方案', image: 'https://picsum.photos/400/300?random=28' },
+    { id: 3, title: '老年康养解决方案', description: '医养结合的综合康养服务方案', image: 'https://picsum.photos/400/300?random=29' }
 ])
 </script>
 

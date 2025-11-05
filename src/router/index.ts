@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
     path: '/products',
     name: 'Products',
     component: () => import('@/views/Products.vue'),
-    meta: { title: '产品中心' }
+    meta: { title: '医疗服务' }
   },
   {
     path: '/solutions',
@@ -59,7 +59,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = `${to.meta.title} - 智造科技`
+  document.title = `${to.meta.title} - 康养医院`
   next()
 })
 

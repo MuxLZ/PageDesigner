@@ -18,8 +18,8 @@
               <div class="info-item">
                 <el-icon><Location /></el-icon>
                 <div>
-                  <h4>公司地址</h4>
-                  <p>上海市浦东新区科技园区创新路123号</p>
+                  <h4>医院地址</h4>
+                  <p>上海市浦东新区医疗健康园区健康路123号</p>
                 </div>
               </div>
               <div class="info-item">
@@ -33,7 +33,7 @@
                 <el-icon><Message /></el-icon>
                 <div>
                   <h4>邮箱地址</h4>
-                  <p>info@zhizao.com</p>
+                  <p>info@kangyang.com</p>
                 </div>
               </div>
             </div>

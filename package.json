@@ -1,10 +1,12 @@
 {
-  "name": "industrial-company-website",
+  "name": "hospital-healthcare-website",
   "version": "1.0.0",
-  "description": "工业企业官网模板",
+  "description": "医院康养官网模板",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build",
+    "build:check": "vue-tsc --noEmit && vite build",
+    "type-check": "vue-tsc --noEmit",
     "preview": "vite preview",
     "serve": "vite preview"
   },
@@ -27,6 +29,6 @@
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.1",
     "vite": "^4.4.7",
-    "vue-tsc": "^1.8.5"
+    "vue-tsc": "^2.0.0"
   }
 }

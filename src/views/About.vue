@@ -5,7 +5,7 @@
       <div class="container">
         <div class="hero-content" data-aos="fade-up">
           <h1 class="page-title">关于我们</h1>
-          <p class="page-subtitle">智造科技 - 您身边的工业自动化专家</p>
+          <p class="page-subtitle">康养医院 - 您身边的医疗健康专家</p>
           <nav class="breadcrumb">
             <el-breadcrumb separator="/">
               <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -21,28 +21,28 @@
       <div class="container">
         <div class="intro-grid">
           <div class="intro-content" data-aos="fade-right">
-            <h2 class="section-title">智造未来，科技领先</h2>
+            <h2 class="section-title">医者仁心，健康守护</h2>
             <p class="intro-text">
-              智造科技成立于2004年，是一家专注于工业自动化领域的高科技企业。20年来，我们始终坚持技术创新，致力于为客户提供最优质的智能制造解决方案。
+              康养医院成立于2004年，是一家专注于医疗康养领域的综合性医院。20年来，我们始终坚持医疗创新，致力于为患者提供最优质的医疗服务和健康管理方案。
             </p>
             <p class="intro-text">
-              公司拥有一支由资深工程师组成的专业团队，在工业自动化、智能制造、工业4.0等领域积累了丰富的经验。我们的产品和服务已成功应用于汽车、电子、食品、医药等多个行业。
+              医院拥有一支由资深医师组成的专业团队，在医疗诊断、康复治疗、健康管理、老年康养等领域积累了丰富的经验。我们的医疗服务已成功应用于慢性病管理、术后康复、老年护理等多个领域。
             </p>
             <div class="company-values">
               <div class="value-item">
                 <el-icon class="value-icon"><Target /></el-icon>
                 <h4>使命</h4>
-                <p>推动制造业智能化转型，提升企业竞争力</p>
+                <p>提供优质医疗服务，守护患者健康，提升生活品质</p>
               </div>
               <div class="value-item">
                 <el-icon class="value-icon"><View /></el-icon>
                 <h4>愿景</h4>
-                <p>成为全球领先的智能制造解决方案提供商</p>
+                <p>成为区域领先的医疗康养服务提供商</p>
               </div>
               <div class="value-item">
                 <el-icon class="value-icon"><Star /></el-icon>
                 <h4>价值观</h4>
-                <p>创新、专业、诚信、合作、共赢</p>
+                <p>医者仁心、专业、诚信、关爱、责任</p>
               </div>
             </div>
           </div>
@@ -128,20 +128,20 @@
             <p class="section-subtitle">以人为本，追求卓越</p>
             <div class="culture-items">
               <div class="culture-item">
-                <h4>创新驱动</h4>
-                <p>持续技术创新，推动行业进步</p>
+                <h4>医者仁心</h4>
+                <p>持续医疗创新，推动健康事业发展</p>
               </div>
               <div class="culture-item">
-                <h4>客户至上</h4>
-                <p>以客户需求为导向，提供优质服务</p>
+                <h4>患者至上</h4>
+                <p>以患者需求为导向，提供优质医疗服务</p>
               </div>
               <div class="culture-item">
                 <h4>团队协作</h4>
-                <p>发挥团队力量，实现共同目标</p>
+                <p>发挥医疗团队力量，实现共同目标</p>
               </div>
               <div class="culture-item">
                 <h4>社会责任</h4>
-                <p>积极承担社会责任，回馈社会</p>
+                <p>积极承担社会责任，回馈社会健康</p>
               </div>
             </div>
           </div>
@@ -175,33 +175,33 @@ import { ref } from 'vue'
 const milestones = ref([
   {
     year: '2004',
-    title: '公司成立',
-    description: '智造科技在上海成立，开始专注工业自动化领域'
+    title: '医院成立',
+    description: '康养医院在上海成立，开始专注医疗康养领域'
   },
   {
     year: '2008',
     title: '技术突破',
-    description: '自主研发的PLC控制系统获得国家专利，技术实力得到认可'
+    description: '引进先进医疗设备和技术，医疗实力得到认可'
   },
   {
     year: '2012',
-    title: '业务扩展',
-    description: '业务范围扩展至全国，服务客户超过100家'
+    title: '服务扩展',
+    description: '服务范围扩展至周边区域，服务患者超过10000人'
   },
   {
     year: '2016',
     title: '战略转型',
-    description: '全面转向智能制造，推出工业4.0解决方案'
+    description: '全面转向医养结合，推出综合康养服务方案'
   },
   {
     year: '2020',
     title: '数字化升级',
-    description: '完成数字化转型，建立智能工厂示范基地'
+    description: '完成医疗信息化建设，建立健康管理平台'
   },
   {
     year: '2024',
     title: '行业领先',
-    description: '服务客户超过500家，成为行业领军企业'
+    description: '服务患者超过50000人，成为区域医疗康养标杆'
   }
 ])
 
@@ -209,26 +209,26 @@ const milestones = ref([
 const teamMembers = ref([
   {
     name: '张建华',
-    position: '创始人兼CEO',
-    bio: '20年工业自动化经验，清华大学硕士，行业资深专家',
+    position: '院长兼主任医师',
+    bio: '20年医疗康养经验，医学博士，医疗行业资深专家',
     avatar: 'https://i.pravatar.cc/150?img=33'
   },
   {
     name: '李明',
-    position: '技术总监',
-    bio: '15年技术研发经验，主导多项核心技术突破',
+    position: '医疗总监',
+    bio: '15年医疗临床经验，主导多项医疗技术突破',
     avatar: 'https://i.pravatar.cc/150?img=45'
   },
   {
     name: '王丽',
-    position: '市场总监',
-    bio: '12年市场营销经验，深谙行业发展趋势',
+    position: '护理部主任',
+    bio: '12年护理管理经验，深谙医疗护理发展趋势',
     avatar: 'https://i.pravatar.cc/150?img=44'
   },
   {
     name: '陈强',
-    position: '生产总监',
-    bio: '18年生产管理经验，精通智能制造工艺',
+    position: '康复中心主任',
+    bio: '18年康复治疗经验，精通康复训练和理疗技术',
     avatar: 'https://i.pravatar.cc/150?img=50'
   }
 ])
@@ -236,28 +236,28 @@ const teamMembers = ref([
 // 资质荣誉数据
 const honors = ref([
   {
-    title: 'ISO9001质量管理体系认证',
-    image: 'https://via.placeholder.com/200x200/1e3a8a/ffffff?text=ISO9001'
+    title: '三级甲等医院认证',
+    image: 'https://via.placeholder.com/200x200/1e3a8a/ffffff?text=三甲医院'
   },
   {
-    title: '国家高新技术企业',
-    image: 'https://via.placeholder.com/200x200/3b82f6/ffffff?text=高新企业'
+    title: '医保定点医疗机构',
+    image: 'https://via.placeholder.com/200x200/3b82f6/ffffff?text=医保定点'
   },
   {
-    title: '2023年度创新企业奖',
-    image: 'https://via.placeholder.com/200x200/f59e0b/ffffff?text=创新奖'
+    title: '2023年度医疗服务质量优秀奖',
+    image: 'https://via.placeholder.com/200x200/f59e0b/ffffff?text=服务优秀'
   },
   {
-    title: '工业自动化优秀供应商',
-    image: 'https://via.placeholder.com/200x200/10b981/ffffff?text=优秀供应商'
+    title: '医疗康养示范机构',
+    image: 'https://via.placeholder.com/200x200/10b981/ffffff?text=示范机构'
   },
   {
-    title: '智能制造示范企业',
-    image: 'https://via.placeholder.com/200x200/8b5cf6/ffffff?text=示范企业'
+    title: '医养结合示范基地',
+    image: 'https://via.placeholder.com/200x200/8b5cf6/ffffff?text=示范基地'
   },
   {
-    title: '科技进步奖',
-    image: 'https://via.placeholder.com/200x200/ef4444/ffffff?text=科技奖'
+    title: '医疗科技进步奖',
+    image: 'https://via.placeholder.com/200x200/ef4444/ffffff?text=科技进步'
   }
 ])
 </script>
