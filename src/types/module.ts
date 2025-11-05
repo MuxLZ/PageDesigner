@@ -429,19 +429,118 @@ export interface SolutionsConfig extends BaseModuleConfig {
   activeTab?: string
 }
 
+// 页面头部配置（带面包屑）
+export interface PageHeroConfig extends BaseModuleConfig {
+  type: ModuleType.PAGE_HERO
+  title?: string
+  subtitle?: string
+  breadcrumb?: Array<{
+    label: string
+    link?: string
+  }>
+  backgroundColor?: string
+  textColor?: string
+  backgroundImage?: string
+}
+
+// 特性列表配置
+export interface FeatureListConfig extends BaseModuleConfig {
+  type: ModuleType.FEATURE_LIST
+  title?: string
+  subtitle?: string
+  items: Array<{
+    icon?: string
+    title: string
+    description?: string
+    [key: string]: any
+  }>
+  layout?: 'horizontal' | 'vertical' | 'grid'
+  columns?: number
+}
+
+// 卡片列表配置
+export interface CardListConfig extends BaseModuleConfig {
+  type: ModuleType.CARD_LIST
+  title?: string
+  subtitle?: string
+  items: Array<{
+    title: string
+    description?: string
+    image?: string
+    link?: string
+    tags?: string[]
+    meta?: Record<string, any>
+    [key: string]: any
+  }>
+  columns?: number
+  cardStyle?: 'default' | 'hover' | 'minimal'
+}
+
+// 图文混排配置
+export interface TextImageConfig extends BaseModuleConfig {
+  type: ModuleType.TEXT_IMAGE
+  title?: string
+  content?: string
+  image?: string
+  layout?: 'left-image' | 'right-image' | 'top-image' | 'bottom-image'
+  buttons?: Array<{
+    text: string
+    link?: string
+    type?: 'primary' | 'secondary'
+  }>
+}
+
+// 联系表单配置
+export interface ContactFormConfig extends BaseModuleConfig {
+  type: ModuleType.CONTACT_FORM
+  title?: string
+  fields?: Array<{
+    name: string
+    label: string
+    type: 'text' | 'email' | 'tel' | 'textarea' | 'select'
+    placeholder?: string
+    required?: boolean
+    options?: Array<{ label: string; value: string }>
+  }>
+  submitText?: string
+  submitAction?: string
+}
+
+// 行动号召配置
+export interface CTAConfig extends BaseModuleConfig {
+  type: ModuleType.CTA
+  title?: string
+  subtitle?: string
+  buttons?: Array<{
+    text: string
+    link?: string
+    type?: 'primary' | 'secondary'
+    icon?: string
+  }>
+  backgroundColor?: string
+  textColor?: string
+  backgroundImage?: string
+}
+
 // 模块配置联合类型
 export type ModuleConfig =
   | HeaderConfig
   | FooterConfig
+  | PageHeroConfig
   | CarouselConfig
   | GridConfig
   | ColumnConfig
+  | CardListConfig
+  | FeatureListConfig
+  | TextImageConfig
   | TimelineConfig
   | StatsConfig
   | ProductsConfig
   | NewsConfig
   | PartnersConfig
   | ContactConfig
+  | ContactFormConfig
+  | CTAConfig
   | AboutConfig
   | TeamConfig
   | HonorsConfig

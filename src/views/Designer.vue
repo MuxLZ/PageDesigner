@@ -20,17 +20,67 @@
       <div v-if="!previewMode" class="designer-sidebar">
         <div class="sidebar-section">
           <h3>模块库</h3>
-          <div class="module-library">
-            <div
-              v-for="moduleType in availableModules"
-              :key="moduleType"
-              class="module-item"
-              @click="addModule(moduleType)"
-            >
-              <el-icon><component :is="getModuleIcon(moduleType)" /></el-icon>
-              <span>{{ getModuleName(moduleType) }}</span>
-            </div>
-          </div>
+          <el-collapse v-model="moduleLibraryCollapse" accordion>
+            <!-- 布局模块 -->
+            <el-collapse-item :title="categoryNames[ModuleCategory.LAYOUT]" name="layout">
+              <div class="module-library">
+                <div
+                  v-for="moduleType in getModulesByCategory(ModuleCategory.LAYOUT)"
+                  :key="moduleType"
+                  class="module-item"
+                  @click="addModule(moduleType)"
+                >
+                  <el-icon><component :is="getModuleIcon(moduleType)" /></el-icon>
+                  <span>{{ getModuleName(moduleType) }}</span>
+                </div>
+              </div>
+            </el-collapse-item>
+            
+            <!-- 内容模块 -->
+            <el-collapse-item :title="categoryNames[ModuleCategory.CONTENT]" name="content">
+              <div class="module-library">
+                <div
+                  v-for="moduleType in getModulesByCategory(ModuleCategory.CONTENT)"
+                  :key="moduleType"
+                  class="module-item"
+                  @click="addModule(moduleType)"
+                >
+                  <el-icon><component :is="getModuleIcon(moduleType)" /></el-icon>
+                  <span>{{ getModuleName(moduleType) }}</span>
+                </div>
+              </div>
+            </el-collapse-item>
+            
+            <!-- 业务模块 -->
+            <el-collapse-item :title="categoryNames[ModuleCategory.BUSINESS]" name="business">
+              <div class="module-library">
+                <div
+                  v-for="moduleType in getModulesByCategory(ModuleCategory.BUSINESS)"
+                  :key="moduleType"
+                  class="module-item"
+                  @click="addModule(moduleType)"
+                >
+                  <el-icon><component :is="getModuleIcon(moduleType)" /></el-icon>
+                  <span>{{ getModuleName(moduleType) }}</span>
+                </div>
+              </div>
+            </el-collapse-item>
+            
+            <!-- 交互模块 -->
+            <el-collapse-item :title="categoryNames[ModuleCategory.INTERACTION]" name="interaction">
+              <div class="module-library">
+                <div
+                  v-for="moduleType in getModulesByCategory(ModuleCategory.INTERACTION)"
+                  :key="moduleType"
+                  class="module-item"
+                  @click="addModule(moduleType)"
+                >
+                  <el-icon><component :is="getModuleIcon(moduleType)" /></el-icon>
+                  <span>{{ getModuleName(moduleType) }}</span>
+                </div>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
         </div>
 
         <!-- 页面设置 -->
@@ -519,6 +569,663 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- 页面头部配置 -->
+                <div v-if="selectedModule.type === 'page-hero'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="背景色">
+                      <el-color-picker v-model="(selectedModule as any).backgroundColor" />
+                    </el-form-item>
+                    <el-form-item label="背景图">
+                      <el-input v-model="(selectedModule as any).backgroundImage" placeholder="图片URL" />
+                    </el-form-item>
+                    <el-form-item label="文字颜色">
+                      <el-color-picker v-model="(selectedModule as any).textColor" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>面包屑导航</h4>
+                      <el-button type="primary" size="small" @click="addBreadcrumbItem">添加项</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).breadcrumb" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>项 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeBreadcrumbItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标签">
+                            <el-input v-model="item.label" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="item.link" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 特性列表配置 -->
+                <div v-if="selectedModule.type === 'feature-list'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="布局方式">
+                      <el-select v-model="(selectedModule as any).layout">
+                        <el-option label="水平" value="horizontal" />
+                        <el-option label="垂直" value="vertical" />
+                        <el-option label="网格" value="grid" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="6" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>特性列表</h4>
+                      <el-button type="primary" size="small" @click="addFeatureItem">添加特性</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>特性 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeFeatureItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="图标">
+                            <el-input v-model="item.icon" placeholder="图标名称" />
+                          </el-form-item>
+                          <el-form-item label="标题">
+                            <el-input v-model="item.title" />
+                          </el-form-item>
+                          <el-form-item label="描述">
+                            <el-input v-model="item.description" type="textarea" :rows="2" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 卡片列表配置 -->
+                <div v-if="selectedModule.type === 'card-list'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="12" />
+                    </el-form-item>
+                    <el-form-item label="卡片样式">
+                      <el-select v-model="(selectedModule as any).cardStyle">
+                        <el-option label="默认" value="default" />
+                        <el-option label="悬停" value="hover" />
+                        <el-option label="简约" value="minimal" />
+                      </el-select>
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>卡片列表</h4>
+                      <el-button type="primary" size="small" @click="addCardListItem">添加卡片</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>卡片 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeCardListItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标题">
+                            <el-input v-model="item.title" />
+                          </el-form-item>
+                          <el-form-item label="描述">
+                            <el-input v-model="item.description" type="textarea" :rows="2" />
+                          </el-form-item>
+                          <el-form-item label="图片">
+                            <el-input v-model="item.image" placeholder="图片URL" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="item.link" placeholder="链接地址" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 图文混排配置 -->
+                <div v-if="selectedModule.type === 'text-image'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="内容">
+                      <el-input v-model="(selectedModule as any).content" type="textarea" :rows="4" />
+                    </el-form-item>
+                    <el-form-item label="图片">
+                      <el-input v-model="(selectedModule as any).image" placeholder="图片URL" />
+                    </el-form-item>
+                    <el-form-item label="布局方式">
+                      <el-select v-model="(selectedModule as any).layout">
+                        <el-option label="左图右文" value="left-image" />
+                        <el-option label="右图左文" value="right-image" />
+                        <el-option label="上图下文" value="top-image" />
+                        <el-option label="下图上文" value="bottom-image" />
+                      </el-select>
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>按钮列表</h4>
+                      <el-button type="primary" size="small" @click="addTextImageButton">添加按钮</el-button>
+                    </div>
+                    <div v-for="(btn, index) in (selectedModule as any).buttons" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>按钮 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeTextImageButton(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="文本">
+                            <el-input v-model="btn.text" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="btn.link" />
+                          </el-form-item>
+                          <el-form-item label="类型">
+                            <el-select v-model="btn.type">
+                              <el-option label="主要" value="primary" />
+                              <el-option label="次要" value="secondary" />
+                            </el-select>
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 联系表单配置 -->
+                <div v-if="selectedModule.type === 'contact-form'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="提交按钮文字">
+                      <el-input v-model="(selectedModule as any).submitText" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>表单字段</h4>
+                      <el-button type="primary" size="small" @click="addFormField">添加字段</el-button>
+                    </div>
+                    <div v-for="(field, index) in (selectedModule as any).fields" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>字段 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeFormField(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="字段名">
+                            <el-input v-model="field.name" />
+                          </el-form-item>
+                          <el-form-item label="标签">
+                            <el-input v-model="field.label" />
+                          </el-form-item>
+                          <el-form-item label="类型">
+                            <el-select v-model="field.type">
+                              <el-option label="文本" value="text" />
+                              <el-option label="邮箱" value="email" />
+                              <el-option label="电话" value="tel" />
+                              <el-option label="文本域" value="textarea" />
+                              <el-option label="下拉" value="select" />
+                            </el-select>
+                          </el-form-item>
+                          <el-form-item label="占位符">
+                            <el-input v-model="field.placeholder" />
+                          </el-form-item>
+                          <el-form-item label="必填">
+                            <el-switch v-model="field.required" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 行动号召配置 -->
+                <div v-if="selectedModule.type === 'cta'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="背景色">
+                      <el-color-picker v-model="(selectedModule as any).backgroundColor" />
+                    </el-form-item>
+                    <el-form-item label="背景图">
+                      <el-input v-model="(selectedModule as any).backgroundImage" placeholder="图片URL" />
+                    </el-form-item>
+                    <el-form-item label="文字颜色">
+                      <el-color-picker v-model="(selectedModule as any).textColor" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>按钮列表</h4>
+                      <el-button type="primary" size="small" @click="addCTAButton">添加按钮</el-button>
+                    </div>
+                    <div v-for="(btn, index) in (selectedModule as any).buttons" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>按钮 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeCTAButton(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="文本">
+                            <el-input v-model="btn.text" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="btn.link" />
+                          </el-form-item>
+                          <el-form-item label="类型">
+                            <el-select v-model="btn.type">
+                              <el-option label="主要" value="primary" />
+                              <el-option label="次要" value="secondary" />
+                            </el-select>
+                          </el-form-item>
+                          <el-form-item label="图标">
+                            <el-input v-model="btn.icon" placeholder="图标名称" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 产品展示配置 -->
+                <div v-if="selectedModule.type === 'products'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="12" />
+                    </el-form-item>
+                    <el-form-item label="显示更多">
+                      <el-switch v-model="(selectedModule as any).showMore" />
+                    </el-form-item>
+                    <el-form-item v-if="(selectedModule as any).showMore" label="更多链接">
+                      <el-input v-model="(selectedModule as any).moreLink" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>产品列表</h4>
+                      <el-button type="primary" size="small" @click="addProductItem">添加产品</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>产品 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeProductItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="名称">
+                            <el-input v-model="item.name" />
+                          </el-form-item>
+                          <el-form-item label="描述">
+                            <el-input v-model="item.description" type="textarea" :rows="2" />
+                          </el-form-item>
+                          <el-form-item label="图片">
+                            <el-input v-model="item.image" placeholder="图片URL" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="item.link" placeholder="链接地址" />
+                          </el-form-item>
+                        </el-form>
+                        <div v-if="item.features" class="section-links">
+                          <div class="items-header">
+                            <span>特性标签</span>
+                            <el-button type="primary" size="small" @click="addProductFeature(index)">添加特性</el-button>
+                          </div>
+                          <div v-for="(feature, featureIndex) in item.features" :key="featureIndex" class="link-item">
+                            <el-input v-model="item.features[featureIndex]" placeholder="特性文本" style="width: 85%; margin-right: 5%" />
+                            <el-button type="danger" text size="small" @click="removeProductFeature(index, featureIndex)">删除</el-button>
+                          </div>
+                        </div>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 新闻资讯配置 -->
+                <div v-if="selectedModule.type === 'news'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="12" />
+                    </el-form-item>
+                    <el-form-item label="显示更多">
+                      <el-switch v-model="(selectedModule as any).showMore" />
+                    </el-form-item>
+                    <el-form-item v-if="(selectedModule as any).showMore" label="更多链接">
+                      <el-input v-model="(selectedModule as any).moreLink" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>新闻列表</h4>
+                      <el-button type="primary" size="small" @click="addNewsItem">添加新闻</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>新闻 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeNewsItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标题">
+                            <el-input v-model="item.title" />
+                          </el-form-item>
+                          <el-form-item label="摘要">
+                            <el-input v-model="item.excerpt" type="textarea" :rows="2" />
+                          </el-form-item>
+                          <el-form-item label="图片">
+                            <el-input v-model="item.image" placeholder="图片URL" />
+                          </el-form-item>
+                          <el-form-item label="分类">
+                            <el-input v-model="item.category" />
+                          </el-form-item>
+                          <el-form-item label="日期">
+                            <el-input v-model="item.date" />
+                          </el-form-item>
+                          <el-form-item label="作者">
+                            <el-input v-model="item.author" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="item.link" placeholder="链接地址" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 合作伙伴配置 -->
+                <div v-if="selectedModule.type === 'partners'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="12" />
+                    </el-form-item>
+                    <el-form-item label="灰度显示">
+                      <el-switch v-model="(selectedModule as any).grayscale" />
+                    </el-form-item>
+                    <el-form-item label="悬停效果">
+                      <el-switch v-model="(selectedModule as any).hoverEffect" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>合作伙伴列表</h4>
+                      <el-button type="primary" size="small" @click="addPartnerItem">添加合作伙伴</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>合作伙伴 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removePartnerItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="名称">
+                            <el-input v-model="item.name" />
+                          </el-form-item>
+                          <el-form-item label="Logo">
+                            <el-input v-model="item.logo" placeholder="Logo URL" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="item.link" placeholder="链接地址" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 团队介绍配置 -->
+                <div v-if="selectedModule.type === 'team'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="6" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>团队成员列表</h4>
+                      <el-button type="primary" size="small" @click="addTeamMember">添加成员</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>成员 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeTeamMember(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="姓名">
+                            <el-input v-model="item.name" />
+                          </el-form-item>
+                          <el-form-item label="职位">
+                            <el-input v-model="item.position" />
+                          </el-form-item>
+                          <el-form-item label="简介">
+                            <el-input v-model="item.bio" type="textarea" :rows="3" />
+                          </el-form-item>
+                          <el-form-item label="头像">
+                            <el-input v-model="item.avatar" placeholder="头像URL" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 资质荣誉配置 -->
+                <div v-if="selectedModule.type === 'honors'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="6" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>荣誉列表</h4>
+                      <el-button type="primary" size="small" @click="addHonorItem">添加荣誉</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>荣誉 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeHonorItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标题">
+                            <el-input v-model="item.title" />
+                          </el-form-item>
+                          <el-form-item label="图片">
+                            <el-input v-model="item.image" placeholder="图片URL" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 解决方案配置 -->
+                <div v-if="selectedModule.type === 'solutions'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                    <el-form-item label="默认标签">
+                      <el-input v-model="(selectedModule as any).activeTab" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>解决方案标签</h4>
+                      <el-button type="primary" size="small" @click="addSolutionTab">添加标签</el-button>
+                    </div>
+                    <div v-for="(tab, index) in (selectedModule as any).tabs" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>标签 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeSolutionTab(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标签名">
+                            <el-input v-model="tab.name" />
+                          </el-form-item>
+                          <el-form-item label="标题">
+                            <el-input v-model="tab.title" />
+                          </el-form-item>
+                          <el-form-item label="描述">
+                            <el-input v-model="tab.description" type="textarea" :rows="3" />
+                          </el-form-item>
+                          <el-form-item label="图片">
+                            <el-input v-model="tab.image" placeholder="图片URL" />
+                          </el-form-item>
+                        </el-form>
+                        <div v-if="tab.benefits" class="section-links">
+                          <div class="items-header">
+                            <span>优势列表</span>
+                            <el-button type="primary" size="small" @click="addSolutionBenefit(index)">添加优势</el-button>
+                          </div>
+                          <div v-for="(benefit, benefitIndex) in tab.benefits" :key="benefitIndex" class="link-item">
+                            <el-input v-model="tab.benefits[benefitIndex]" placeholder="优势描述" style="width: 85%; margin-right: 5%" />
+                            <el-button type="danger" text size="small" @click="removeSolutionBenefit(index, benefitIndex)">删除</el-button>
+                          </div>
+                        </div>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 联系我们配置 -->
+                <div v-if="selectedModule.type === 'contact'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="标题">
+                      <el-input v-model="(selectedModule as any).title" />
+                    </el-form-item>
+                    <el-form-item label="副标题">
+                      <el-input v-model="(selectedModule as any).subtitle" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>按钮列表</h4>
+                      <el-button type="primary" size="small" @click="addContactButton">添加按钮</el-button>
+                    </div>
+                    <div v-for="(btn, index) in (selectedModule as any).buttons" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>按钮 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeContactButton(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="文本">
+                            <el-input v-model="btn.text" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="btn.link" />
+                          </el-form-item>
+                          <el-form-item label="类型">
+                            <el-select v-model="btn.type">
+                              <el-option label="主要" value="primary" />
+                              <el-option label="次要" value="secondary" />
+                            </el-select>
+                          </el-form-item>
+                          <el-form-item label="图标">
+                            <el-input v-model="btn.icon" placeholder="图标名称" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -567,10 +1274,11 @@ import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Edit } from '@element-plus/icons-vue'
 import type { PageConfig, ModuleConfig } from '@/types/module'
-import { ModuleType } from '@/types/module'
+import { ModuleType, ModuleCategory } from '@/types/module'
 import { ConfigGenerator } from '@/core/ConfigGenerator'
 import { StyleSystem } from '@/core/StyleSystem'
 import PageRenderer from '@/core/PageRenderer.vue'
+import { getModulesByCategory, getModuleName, getModuleIcon, categoryNames } from '@/utils/moduleHelper'
 
 // 页面配置
 const pageConfig = ref<PageConfig>(ConfigGenerator.generateDefaultPageConfig('新页面', '/new-page'))
@@ -584,6 +1292,9 @@ const previewMode = ref(false)
 // 折叠面板
 const activeCollapse = ref(['basic', 'style', 'effect', 'module'])
 
+// 模块库折叠面板
+const moduleLibraryCollapse = ref(['layout'])
+
 // 全局主题
 const globalTheme = computed({
   get: () => pageConfig.value.globalStyle?.theme || StyleSystem.createDefaultTheme(),
@@ -596,67 +1307,10 @@ const globalTheme = computed({
   }
 })
 
-// 可用模块列表
-const availableModules = [
-  ModuleType.HEADER,
-  ModuleType.CAROUSEL,
-  ModuleType.GRID,
-  ModuleType.COLUMN,
-  ModuleType.STATS,
-  ModuleType.TIMELINE,
-  ModuleType.FOOTER
-]
-
 // 排序后的模块
 const sortedModules = computed(() => {
   return ConfigGenerator.sortModules(pageConfig.value.modules)
 })
-
-// 获取模块图标
-const getModuleIcon = (type: ModuleType) => {
-  const iconMap: Record<ModuleType, string> = {
-    [ModuleType.HEADER]: 'Menu',
-    [ModuleType.FOOTER]: 'Grid',
-    [ModuleType.CAROUSEL]: 'Picture',
-    [ModuleType.GRID]: 'Grid',
-    [ModuleType.COLUMN]: 'Menu',
-    [ModuleType.TIMELINE]: 'Clock',
-    [ModuleType.STATS]: 'DataAnalysis',
-    [ModuleType.PRODUCTS]: 'Box',
-    [ModuleType.NEWS]: 'Document',
-    [ModuleType.PARTNERS]: 'Connection',
-    [ModuleType.CONTACT]: 'Phone',
-    [ModuleType.ABOUT]: 'InfoFilled',
-    [ModuleType.TEAM]: 'User',
-    [ModuleType.HONORS]: 'Trophy',
-    [ModuleType.CULTURE]: 'Star',
-    [ModuleType.SOLUTIONS]: 'Setting'
-  }
-  return iconMap[type] || 'Box'
-}
-
-// 获取模块名称
-const getModuleName = (type: ModuleType) => {
-  const nameMap: Record<ModuleType, string> = {
-    [ModuleType.HEADER]: '导航栏',
-    [ModuleType.FOOTER]: '页脚',
-    [ModuleType.CAROUSEL]: '轮播',
-    [ModuleType.GRID]: '宫格',
-    [ModuleType.COLUMN]: '分栏',
-    [ModuleType.TIMELINE]: '时间轴',
-    [ModuleType.STATS]: '数据统计',
-    [ModuleType.PRODUCTS]: '产品展示',
-    [ModuleType.NEWS]: '新闻资讯',
-    [ModuleType.PARTNERS]: '合作伙伴',
-    [ModuleType.CONTACT]: '联系我们',
-    [ModuleType.ABOUT]: '公司简介',
-    [ModuleType.TEAM]: '团队介绍',
-    [ModuleType.HONORS]: '资质荣誉',
-    [ModuleType.CULTURE]: '企业文化',
-    [ModuleType.SOLUTIONS]: '解决方案'
-  }
-  return nameMap[type] || type
-}
 
 // 添加模块
 const addModule = (type: ModuleType) => {
@@ -929,6 +1583,368 @@ const removeFooterLink = (sectionIndex: number, linkIndex: number) => {
     if (module.sections && module.sections[sectionIndex] && module.sections[sectionIndex].links) {
       module.sections[sectionIndex].links.splice(linkIndex, 1)
       ElMessage.success('已删除链接')
+    }
+  }
+}
+
+// 页面头部模块 - 添加面包屑项
+const addBreadcrumbItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.PAGE_HERO) {
+    const module = selectedModule.value as any
+    if (!module.breadcrumb) module.breadcrumb = []
+    module.breadcrumb.push({ label: '新项', link: '' })
+    ElMessage.success('已添加面包屑项')
+  }
+}
+
+// 页面头部模块 - 删除面包屑项
+const removeBreadcrumbItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.PAGE_HERO) {
+    const module = selectedModule.value as any
+    if (module.breadcrumb) {
+      module.breadcrumb.splice(index, 1)
+      ElMessage.success('已删除面包屑项')
+    }
+  }
+}
+
+// 特性列表模块 - 添加特性
+const addFeatureItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.FEATURE_LIST) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({ icon: 'Star', title: '新特性', description: '特性描述' })
+    ElMessage.success('已添加特性')
+  }
+}
+
+// 特性列表模块 - 删除特性
+const removeFeatureItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.FEATURE_LIST) {
+    const module = selectedModule.value as any
+    if (module.items) {
+      module.items.splice(index, 1)
+      ElMessage.success('已删除特性')
+    }
+  }
+}
+
+// 卡片列表模块 - 添加卡片
+const addCardListItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CARD_LIST) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      title: '新卡片',
+      description: '卡片描述',
+      image: 'https://picsum.photos/400/300?random=' + Date.now()
+    })
+    ElMessage.success('已添加卡片')
+  }
+}
+
+// 卡片列表模块 - 删除卡片
+const removeCardListItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CARD_LIST) {
+    const module = selectedModule.value as any
+    if (module.items) {
+      module.items.splice(index, 1)
+      ElMessage.success('已删除卡片')
+    }
+  }
+}
+
+// 图文混排模块 - 添加按钮
+const addTextImageButton = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.TEXT_IMAGE) {
+    const module = selectedModule.value as any
+    if (!module.buttons) module.buttons = []
+    module.buttons.push({ text: '新按钮', type: 'primary', link: '/' })
+    ElMessage.success('已添加按钮')
+  }
+}
+
+// 图文混排模块 - 删除按钮
+const removeTextImageButton = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.TEXT_IMAGE) {
+    const module = selectedModule.value as any
+    if (module.buttons) {
+      module.buttons.splice(index, 1)
+      ElMessage.success('已删除按钮')
+    }
+  }
+}
+
+// 联系表单模块 - 添加字段
+const addFormField = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CONTACT_FORM) {
+    const module = selectedModule.value as any
+    if (!module.fields) module.fields = []
+    module.fields.push({
+      name: 'field' + Date.now(),
+      label: '新字段',
+      type: 'text',
+      placeholder: '请输入',
+      required: false
+    })
+    ElMessage.success('已添加字段')
+  }
+}
+
+// 联系表单模块 - 删除字段
+const removeFormField = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CONTACT_FORM) {
+    const module = selectedModule.value as any
+    if (module.fields) {
+      module.fields.splice(index, 1)
+      ElMessage.success('已删除字段')
+    }
+  }
+}
+
+// 行动号召模块 - 添加按钮
+const addCTAButton = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CTA) {
+    const module = selectedModule.value as any
+    if (!module.buttons) module.buttons = []
+    module.buttons.push({ text: '新按钮', type: 'primary', link: '/' })
+    ElMessage.success('已添加按钮')
+  }
+}
+
+// 行动号召模块 - 删除按钮
+const removeCTAButton = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CTA) {
+    const module = selectedModule.value as any
+    if (module.buttons) {
+      module.buttons.splice(index, 1)
+      ElMessage.success('已删除按钮')
+    }
+  }
+}
+
+// 产品模块 - 添加产品
+const addProductItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.PRODUCTS) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      name: '新产品',
+      description: '产品描述',
+      image: 'https://picsum.photos/400/300?random=' + Date.now(),
+      features: []
+    })
+    ElMessage.success('已添加产品')
+  }
+}
+
+// 产品模块 - 删除产品
+const removeProductItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.PRODUCTS) {
+    const module = selectedModule.value as any
+    if (module.items) {
+      module.items.splice(index, 1)
+      ElMessage.success('已删除产品')
+    }
+  }
+}
+
+// 产品模块 - 添加特性
+const addProductFeature = (productIndex: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.PRODUCTS) {
+    const module = selectedModule.value as any
+    if (module.items && module.items[productIndex]) {
+      if (!module.items[productIndex].features) {
+        module.items[productIndex].features = []
+      }
+      module.items[productIndex].features.push('新特性')
+      ElMessage.success('已添加特性')
+    }
+  }
+}
+
+// 产品模块 - 删除特性
+const removeProductFeature = (productIndex: number, featureIndex: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.PRODUCTS) {
+    const module = selectedModule.value as any
+    if (module.items && module.items[productIndex] && module.items[productIndex].features) {
+      module.items[productIndex].features.splice(featureIndex, 1)
+      ElMessage.success('已删除特性')
+    }
+  }
+}
+
+// 新闻模块 - 添加新闻
+const addNewsItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.NEWS) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      title: '新新闻',
+      excerpt: '新闻摘要',
+      image: 'https://picsum.photos/400/250?random=' + Date.now(),
+      category: '分类',
+      date: new Date().toISOString().split('T')[0],
+      author: '作者'
+    })
+    ElMessage.success('已添加新闻')
+  }
+}
+
+// 新闻模块 - 删除新闻
+const removeNewsItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.NEWS) {
+    const module = selectedModule.value as any
+    if (module.items) {
+      module.items.splice(index, 1)
+      ElMessage.success('已删除新闻')
+    }
+  }
+}
+
+// 合作伙伴模块 - 添加合作伙伴
+const addPartnerItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.PARTNERS) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      name: '新合作伙伴',
+      logo: 'https://via.placeholder.com/120x60/f0f0f0/333333?text=Logo'
+    })
+    ElMessage.success('已添加合作伙伴')
+  }
+}
+
+// 合作伙伴模块 - 删除合作伙伴
+const removePartnerItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.PARTNERS) {
+    const module = selectedModule.value as any
+    if (module.items) {
+      module.items.splice(index, 1)
+      ElMessage.success('已删除合作伙伴')
+    }
+  }
+}
+
+// 团队模块 - 添加成员
+const addTeamMember = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.TEAM) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      name: '新成员',
+      position: '职位',
+      bio: '成员简介',
+      avatar: 'https://i.pravatar.cc/150?img=' + Math.floor(Math.random() * 70)
+    })
+    ElMessage.success('已添加成员')
+  }
+}
+
+// 团队模块 - 删除成员
+const removeTeamMember = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.TEAM) {
+    const module = selectedModule.value as any
+    if (module.items) {
+      module.items.splice(index, 1)
+      ElMessage.success('已删除成员')
+    }
+  }
+}
+
+// 荣誉模块 - 添加荣誉
+const addHonorItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HONORS) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      title: '新荣誉',
+      image: 'https://via.placeholder.com/200x200/1e3a8a/ffffff?text=荣誉'
+    })
+    ElMessage.success('已添加荣誉')
+  }
+}
+
+// 荣誉模块 - 删除荣誉
+const removeHonorItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HONORS) {
+    const module = selectedModule.value as any
+    if (module.items) {
+      module.items.splice(index, 1)
+      ElMessage.success('已删除荣誉')
+    }
+  }
+}
+
+// 解决方案模块 - 添加标签
+const addSolutionTab = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.SOLUTIONS) {
+    const module = selectedModule.value as any
+    if (!module.tabs) module.tabs = []
+    module.tabs.push({
+      name: '新方案',
+      title: '方案标题',
+      description: '方案描述',
+      benefits: [],
+      image: 'https://picsum.photos/500/350?random=' + Date.now()
+    })
+    ElMessage.success('已添加标签')
+  }
+}
+
+// 解决方案模块 - 删除标签
+const removeSolutionTab = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.SOLUTIONS) {
+    const module = selectedModule.value as any
+    if (module.tabs) {
+      module.tabs.splice(index, 1)
+      ElMessage.success('已删除标签')
+    }
+  }
+}
+
+// 解决方案模块 - 添加优势
+const addSolutionBenefit = (tabIndex: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.SOLUTIONS) {
+    const module = selectedModule.value as any
+    if (module.tabs && module.tabs[tabIndex]) {
+      if (!module.tabs[tabIndex].benefits) {
+        module.tabs[tabIndex].benefits = []
+      }
+      module.tabs[tabIndex].benefits.push('新优势')
+      ElMessage.success('已添加优势')
+    }
+  }
+}
+
+// 解决方案模块 - 删除优势
+const removeSolutionBenefit = (tabIndex: number, benefitIndex: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.SOLUTIONS) {
+    const module = selectedModule.value as any
+    if (module.tabs && module.tabs[tabIndex] && module.tabs[tabIndex].benefits) {
+      module.tabs[tabIndex].benefits.splice(benefitIndex, 1)
+      ElMessage.success('已删除优势')
+    }
+  }
+}
+
+// 联系我们模块 - 添加按钮
+const addContactButton = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CONTACT) {
+    const module = selectedModule.value as any
+    if (!module.buttons) module.buttons = []
+    module.buttons.push({ text: '新按钮', type: 'primary', link: '/contact' })
+    ElMessage.success('已添加按钮')
+  }
+}
+
+// 联系我们模块 - 删除按钮
+const removeContactButton = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CONTACT) {
+    const module = selectedModule.value as any
+    if (module.buttons) {
+      module.buttons.splice(index, 1)
+      ElMessage.success('已删除按钮')
     }
   }
 }

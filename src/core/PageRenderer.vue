@@ -31,11 +31,23 @@ import { StyleSystem } from './StyleSystem'
 // 导入模块组件
 import HeaderModule from '@/components/modules/HeaderModule.vue'
 import FooterModule from '@/components/modules/FooterModule.vue'
+import PageHeroModule from '@/components/modules/PageHeroModule.vue'
 import CarouselModule from '@/components/modules/CarouselModule.vue'
 import GridModule from '@/components/modules/GridModule.vue'
+import ColumnModule from '@/components/modules/ColumnModule.vue'
+import CardListModule from '@/components/modules/CardListModule.vue'
+import FeatureListModule from '@/components/modules/FeatureListModule.vue'
+import TextImageModule from '@/components/modules/TextImageModule.vue'
 import StatsModule from '@/components/modules/StatsModule.vue'
 import TimelineModule from '@/components/modules/TimelineModule.vue'
-import ColumnModule from '@/components/modules/ColumnModule.vue'
+import ProductsModule from '@/components/modules/ProductsModule.vue'
+import NewsModule from '@/components/modules/NewsModule.vue'
+import PartnersModule from '@/components/modules/PartnersModule.vue'
+import TeamModule from '@/components/modules/TeamModule.vue'
+import HonorsModule from '@/components/modules/HonorsModule.vue'
+import SolutionsModule from '@/components/modules/SolutionsModule.vue'
+import CTAModule from '@/components/modules/CTAModule.vue'
+import ContactFormModule from '@/components/modules/ContactFormModule.vue'
 
 interface Props {
   config: PageConfig
@@ -65,11 +77,23 @@ const handleModuleClick = (module: ModuleConfig) => {
 const moduleComponentMap = new Map<ModuleType, any>([
   [ModuleType.HEADER, HeaderModule],
   [ModuleType.FOOTER, FooterModule],
+  [ModuleType.PAGE_HERO, PageHeroModule],
   [ModuleType.CAROUSEL, CarouselModule],
   [ModuleType.GRID, GridModule],
+  [ModuleType.COLUMN, ColumnModule],
+  [ModuleType.CARD_LIST, CardListModule],
+  [ModuleType.FEATURE_LIST, FeatureListModule],
+  [ModuleType.TEXT_IMAGE, TextImageModule],
   [ModuleType.STATS, StatsModule],
   [ModuleType.TIMELINE, TimelineModule],
-  [ModuleType.COLUMN, ColumnModule]
+  [ModuleType.PRODUCTS, ProductsModule],
+  [ModuleType.NEWS, NewsModule],
+  [ModuleType.PARTNERS, PartnersModule],
+  [ModuleType.TEAM, TeamModule],
+  [ModuleType.HONORS, HonorsModule],
+  [ModuleType.SOLUTIONS, SolutionsModule],
+  [ModuleType.CTA, CTAModule],
+  [ModuleType.CONTACT_FORM, ContactFormModule]
 ])
 
 // 获取模块组件
