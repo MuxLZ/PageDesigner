@@ -516,7 +516,21 @@
                           <el-form-item label="链接">
                             <el-input v-model="item.link" />
                           </el-form-item>
+                          <el-form-item label="下拉菜单">
+                            <el-switch v-model="item.hasDropdown" @change="toggleMenuItemDropdown(item, index)" />
+                          </el-form-item>
                         </el-form>
+                        <div v-if="item.children && item.children.length > 0" class="section-links">
+                          <div class="items-header">
+                            <span>下拉菜单项</span>
+                            <el-button type="primary" size="small" @click="addDropdownItem(index)">添加子菜单</el-button>
+                          </div>
+                          <div v-for="(child, childIndex) in item.children" :key="childIndex" class="link-item">
+                            <el-input v-model="child.label" placeholder="子菜单标签" style="width: 40%; margin-right: 5%" />
+                            <el-input v-model="child.link" placeholder="子菜单链接" style="width: 40%; margin-right: 5%" />
+                            <el-button type="danger" text size="small" @click="removeDropdownItem(index, childIndex)">删除</el-button>
+                          </div>
+                        </div>
                       </el-card>
                     </div>
                   </div>
@@ -1599,9 +1613,62 @@ const addMenuItem = () => {
     if (!module.menu.items) module.menu.items = []
     module.menu.items.push({
       label: '新菜单',
-      link: '/'
+      link: '/',
+      hasDropdown: false,
+      children: []
     })
     ElMessage.success('已添加菜单项')
+  }
+}
+
+// 导航栏模块 - 切换菜单项下拉菜单
+const toggleMenuItemDropdown = (item: any, index: number) => {
+  if (item.hasDropdown) {
+    if (!item.children) {
+      item.children = [
+        { label: '子菜单1', link: '/' },
+        { label: '子菜单2', link: '/' }
+      ]
+    }
+  } else {
+    // 保留children数组，但可以通过UI控制是否显示
+    // 如果children为空，则移除hasDropdown标记
+    if (!item.children || item.children.length === 0) {
+      item.hasDropdown = false
+    }
+  }
+}
+
+// 导航栏模块 - 添加下拉菜单项
+const addDropdownItem = (menuIndex: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
+    const module = selectedModule.value as any
+    if (module.menu && module.menu.items && module.menu.items[menuIndex]) {
+      if (!module.menu.items[menuIndex].children) {
+        module.menu.items[menuIndex].children = []
+      }
+      module.menu.items[menuIndex].children.push({
+        label: '新子菜单',
+        link: '/'
+      })
+      module.menu.items[menuIndex].hasDropdown = true
+      ElMessage.success('已添加子菜单项')
+    }
+  }
+}
+
+// 导航栏模块 - 删除下拉菜单项
+const removeDropdownItem = (menuIndex: number, childIndex: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
+    const module = selectedModule.value as any
+    if (module.menu && module.menu.items && module.menu.items[menuIndex] && module.menu.items[menuIndex].children) {
+      module.menu.items[menuIndex].children.splice(childIndex, 1)
+      if (module.menu.items[menuIndex].children.length === 0) {
+        module.menu.items[menuIndex].hasDropdown = false
+        module.menu.items[menuIndex].children = []
+      }
+      ElMessage.success('已删除子菜单项')
+    }
   }
 }
 

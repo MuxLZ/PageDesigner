@@ -192,9 +192,24 @@ export class ConfigGenerator {
           menu: {
             items: [
               { label: '首页', link: '/' },
+              { 
+                label: '产品中心', 
+                link: '/products',
+                children: [
+                  { label: '自动化设备', link: '/products/automation' },
+                  { label: '工业机器人', link: '/products/robots' },
+                  { label: 'PLC控制系统', link: '/products/plc' }
+                ]
+              },
+              { 
+                label: '解决方案', 
+                link: '/solutions',
+                children: [
+                  { label: '智能制造', link: '/solutions/manufacturing' },
+                  { label: '智慧工厂', link: '/solutions/factory' }
+                ]
+              },
               { label: '关于我们', link: '/about' },
-              { label: '产品中心', link: '/products' },
-              { label: '解决方案', link: '/solutions' },
               { label: '新闻资讯', link: '/news' },
               { label: '联系我们', link: '/contact' }
             ]
