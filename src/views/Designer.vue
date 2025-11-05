@@ -146,18 +146,379 @@
             <!-- 模块特定配置 -->
             <el-collapse-item title="模块配置" name="module">
               <div v-if="selectedModule">
-                <el-form label-width="100px" size="small">
-                  <el-form-item v-if="selectedModule.type === 'carousel'" label="轮播高度">
-                    <el-input v-model="(selectedModule as any).height" />
-                  </el-form-item>
-                  <el-form-item v-if="selectedModule.type === 'grid'" label="列数">
-                    <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="12" />
-                  </el-form-item>
-                  <el-form-item v-if="selectedModule.type === 'stats'" label="列数">
-                    <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="6" />
-                  </el-form-item>
-                  <!-- 可以根据不同模块类型添加更多配置项 -->
-                </el-form>
+                <!-- 轮播模块配置 -->
+                <div v-if="selectedModule.type === 'carousel'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="轮播高度">
+                      <el-input v-model="(selectedModule as any).height" />
+                    </el-form-item>
+                    <el-form-item label="自动播放">
+                      <el-switch v-model="(selectedModule as any).autoplay" />
+                    </el-form-item>
+                    <el-form-item label="播放间隔(ms)">
+                      <el-input-number v-model="(selectedModule as any).interval" :min="1000" />
+                    </el-form-item>
+                    <el-form-item label="显示指示器">
+                      <el-switch v-model="(selectedModule as any).indicator" />
+                    </el-form-item>
+                    <el-form-item label="显示箭头">
+                      <el-switch v-model="(selectedModule as any).arrows" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>幻灯片列表</h4>
+                      <el-button type="primary" size="small" @click="addCarouselSlide">添加幻灯片</el-button>
+                    </div>
+                    <div v-for="(slide, index) in (selectedModule as any).slides" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>幻灯片 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeCarouselSlide(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标题">
+                            <el-input v-model="slide.title" />
+                          </el-form-item>
+                          <el-form-item label="副标题">
+                            <el-input v-model="slide.subtitle" type="textarea" :rows="2" />
+                          </el-form-item>
+                          <el-form-item label="内容">
+                            <el-input v-model="slide.content" type="textarea" :rows="2" />
+                          </el-form-item>
+                          <el-form-item label="背景图">
+                            <el-input v-model="slide.background" placeholder="图片URL" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 宫格模块配置 -->
+                <div v-if="selectedModule.type === 'grid'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="12" />
+                    </el-form-item>
+                    <el-form-item label="间距">
+                      <el-input v-model="(selectedModule as any).gap" placeholder="例: 30px" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>项目列表</h4>
+                      <el-button type="primary" size="small" @click="addGridItem">添加项目</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>项目 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeGridItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标题">
+                            <el-input v-model="item.title" />
+                          </el-form-item>
+                          <el-form-item label="描述">
+                            <el-input v-model="item.description" type="textarea" :rows="2" />
+                          </el-form-item>
+                          <el-form-item label="图片">
+                            <el-input v-model="item.image" placeholder="图片URL" />
+                          </el-form-item>
+                          <el-form-item label="图标">
+                            <el-input v-model="item.icon" placeholder="图标名称" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="item.link" placeholder="链接地址" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 时间轴模块配置 -->
+                <div v-if="selectedModule.type === 'timeline'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="布局方式">
+                      <el-select v-model="(selectedModule as any).layout">
+                        <el-option label="垂直" value="vertical" />
+                        <el-option label="水平" value="horizontal" />
+                        <el-option label="交替" value="alternate" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="线条颜色">
+                      <el-color-picker v-model="(selectedModule as any).lineColor" />
+                    </el-form-item>
+                    <el-form-item label="标记颜色">
+                      <el-color-picker v-model="(selectedModule as any).markerColor" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>时间点列表</h4>
+                      <el-button type="primary" size="small" @click="addTimelineItem">添加时间点</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>时间点 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeTimelineItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="年份">
+                            <el-input v-model="item.year" />
+                          </el-form-item>
+                          <el-form-item label="标题">
+                            <el-input v-model="item.title" />
+                          </el-form-item>
+                          <el-form-item label="描述">
+                            <el-input v-model="item.description" type="textarea" :rows="3" />
+                          </el-form-item>
+                          <el-form-item label="图标">
+                            <el-input v-model="item.icon" placeholder="图标名称" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 统计模块配置 -->
+                <div v-if="selectedModule.type === 'stats'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="列数">
+                      <el-input-number v-model="(selectedModule as any).columns" :min="1" :max="6" />
+                    </el-form-item>
+                    <el-form-item label="背景色">
+                      <el-color-picker v-model="(selectedModule as any).backgroundColor" />
+                    </el-form-item>
+                    <el-form-item label="文字颜色">
+                      <el-color-picker v-model="(selectedModule as any).textColor" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>统计数据列表</h4>
+                      <el-button type="primary" size="small" @click="addStatsItem">添加统计项</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>统计项 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeStatsItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="数字">
+                            <el-input v-model="item.number" />
+                          </el-form-item>
+                          <el-form-item label="标签">
+                            <el-input v-model="item.label" />
+                          </el-form-item>
+                          <el-form-item label="前缀">
+                            <el-input v-model="item.prefix" placeholder="例: ¥" />
+                          </el-form-item>
+                          <el-form-item label="后缀">
+                            <el-input v-model="item.suffix" placeholder="例: + 或 %" />
+                          </el-form-item>
+                          <el-form-item label="图标">
+                            <el-input v-model="item.icon" placeholder="图标名称" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 分栏模块配置 -->
+                <div v-if="selectedModule.type === 'column'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="布局方式">
+                      <el-select v-model="(selectedModule as any).layout">
+                        <el-option label="左图右文" value="left-image" />
+                        <el-option label="右图左文" value="right-image" />
+                        <el-option label="交替" value="alternate" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="间距">
+                      <el-input v-model="(selectedModule as any).gap" placeholder="例: 60px" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>栏目列表</h4>
+                      <el-button type="primary" size="small" @click="addColumnItem">添加栏目</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>栏目 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeColumnItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标题">
+                            <el-input v-model="item.title" />
+                          </el-form-item>
+                          <el-form-item label="内容">
+                            <el-input v-model="item.content" type="textarea" :rows="4" />
+                          </el-form-item>
+                          <el-form-item label="图片">
+                            <el-input v-model="item.image" placeholder="图片URL" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 导航栏模块配置 -->
+                <div v-if="selectedModule.type === 'header'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="固定导航">
+                      <el-switch v-model="(selectedModule as any).fixed" />
+                    </el-form-item>
+                    <el-form-item label="透明背景">
+                      <el-switch v-model="(selectedModule as any).transparent" />
+                    </el-form-item>
+                    <el-form-item label="背景色">
+                      <el-color-picker v-model="(selectedModule as any).backgroundColor" />
+                    </el-form-item>
+                  </el-form>
+                  <el-divider>Logo设置</el-divider>
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="Logo文字">
+                      <el-input v-model="(selectedModule as any).logo.text" />
+                    </el-form-item>
+                    <el-form-item label="Logo图片">
+                      <el-input v-model="(selectedModule as any).logo.image" placeholder="图片URL" />
+                    </el-form-item>
+                    <el-form-item label="Logo链接">
+                      <el-input v-model="(selectedModule as any).logo.link" placeholder="链接地址" />
+                    </el-form-item>
+                  </el-form>
+                  <el-divider>顶部联系栏</el-divider>
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="显示顶部栏">
+                      <el-switch v-model="(selectedModule as any).topBar.visible" />
+                    </el-form-item>
+                    <el-form-item label="背景色">
+                      <el-color-picker v-model="(selectedModule as any).topBar.backgroundColor" />
+                    </el-form-item>
+                    <el-form-item label="文字颜色">
+                      <el-color-picker v-model="(selectedModule as any).topBar.textColor" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>联系信息</h4>
+                      <el-button type="primary" size="small" @click="addTopBarItem">添加信息</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).topBar?.items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>信息 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeTopBarItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="图标">
+                            <el-input v-model="item.icon" placeholder="图标名称" />
+                          </el-form-item>
+                          <el-form-item label="文本">
+                            <el-input v-model="item.text" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                  <el-divider>导航菜单</el-divider>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>菜单项</h4>
+                      <el-button type="primary" size="small" @click="addMenuItem">添加菜单</el-button>
+                    </div>
+                    <div v-for="(item, index) in (selectedModule as any).menu?.items" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>菜单 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeMenuItem(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标签">
+                            <el-input v-model="item.label" />
+                          </el-form-item>
+                          <el-form-item label="链接">
+                            <el-input v-model="item.link" />
+                          </el-form-item>
+                        </el-form>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 页脚模块配置 -->
+                <div v-if="selectedModule.type === 'footer'" class="module-config-content">
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="背景色">
+                      <el-color-picker v-model="(selectedModule as any).backgroundColor" />
+                    </el-form-item>
+                    <el-form-item label="文字颜色">
+                      <el-color-picker v-model="(selectedModule as any).textColor" />
+                    </el-form-item>
+                    <el-form-item label="版权信息">
+                      <el-input v-model="(selectedModule as any).copyright" />
+                    </el-form-item>
+                  </el-form>
+                  <div class="content-items">
+                    <div class="items-header">
+                      <h4>页脚区块</h4>
+                      <el-button type="primary" size="small" @click="addFooterSection">添加区块</el-button>
+                    </div>
+                    <div v-for="(section, index) in (selectedModule as any).sections" :key="index" class="content-item">
+                      <el-card shadow="hover" class="item-card">
+                        <template #header>
+                          <div class="item-header">
+                            <span>区块 {{ index + 1 }}</span>
+                            <el-button type="danger" text size="small" @click="removeFooterSection(index)">删除</el-button>
+                          </div>
+                        </template>
+                        <el-form label-width="80px" size="small">
+                          <el-form-item label="标题">
+                            <el-input v-model="section.title" />
+                          </el-form-item>
+                          <el-form-item label="内容">
+                            <el-input v-model="section.content" type="textarea" :rows="3" />
+                          </el-form-item>
+                        </el-form>
+                        <div v-if="section.links" class="section-links">
+                          <div class="items-header">
+                            <span>链接列表</span>
+                            <el-button type="primary" size="small" @click="addFooterLink(index)">添加链接</el-button>
+                          </div>
+                          <div v-for="(link, linkIndex) in section.links" :key="linkIndex" class="link-item">
+                            <el-input v-model="link.text" placeholder="链接文本" style="width: 45%; margin-right: 5%" />
+                            <el-input v-model="link.link" placeholder="链接地址" style="width: 45%; margin-right: 5%" />
+                            <el-button type="danger" text size="small" @click="removeFooterLink(index, linkIndex)">删除</el-button>
+                          </div>
+                        </div>
+                      </el-card>
+                    </div>
+                  </div>
+                </div>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -358,6 +719,220 @@ const updateModuleConfig = (updates: Partial<ModuleConfig>) => {
   }
 }
 
+// 轮播模块 - 添加幻灯片
+const addCarouselSlide = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CAROUSEL) {
+    const module = selectedModule.value as any
+    if (!module.slides) module.slides = []
+    module.slides.push({
+      title: '新幻灯片',
+      subtitle: '副标题',
+      background: 'https://picsum.photos/1920/1080?random=' + Date.now()
+    })
+    ElMessage.success('已添加幻灯片')
+  }
+}
+
+// 轮播模块 - 删除幻灯片
+const removeCarouselSlide = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.CAROUSEL) {
+    const module = selectedModule.value as any
+    module.slides.splice(index, 1)
+    ElMessage.success('已删除幻灯片')
+  }
+}
+
+// 宫格模块 - 添加项目
+const addGridItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.GRID) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      title: '新项目',
+      description: '项目描述',
+      image: 'https://picsum.photos/400/300?random=' + Date.now()
+    })
+    ElMessage.success('已添加项目')
+  }
+}
+
+// 宫格模块 - 删除项目
+const removeGridItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.GRID) {
+    const module = selectedModule.value as any
+    module.items.splice(index, 1)
+    ElMessage.success('已删除项目')
+  }
+}
+
+// 时间轴模块 - 添加时间点
+const addTimelineItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.TIMELINE) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      year: new Date().getFullYear().toString(),
+      title: '新事件',
+      description: '事件描述'
+    })
+    ElMessage.success('已添加时间点')
+  }
+}
+
+// 时间轴模块 - 删除时间点
+const removeTimelineItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.TIMELINE) {
+    const module = selectedModule.value as any
+    module.items.splice(index, 1)
+    ElMessage.success('已删除时间点')
+  }
+}
+
+// 统计模块 - 添加统计项
+const addStatsItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.STATS) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      number: '0',
+      label: '新统计项'
+    })
+    ElMessage.success('已添加统计项')
+  }
+}
+
+// 统计模块 - 删除统计项
+const removeStatsItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.STATS) {
+    const module = selectedModule.value as any
+    module.items.splice(index, 1)
+    ElMessage.success('已删除统计项')
+  }
+}
+
+// 分栏模块 - 添加栏目
+const addColumnItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.COLUMN) {
+    const module = selectedModule.value as any
+    if (!module.items) module.items = []
+    module.items.push({
+      title: '新栏目',
+      content: '栏目内容',
+      image: 'https://picsum.photos/600/400?random=' + Date.now()
+    })
+    ElMessage.success('已添加栏目')
+  }
+}
+
+// 分栏模块 - 删除栏目
+const removeColumnItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.COLUMN) {
+    const module = selectedModule.value as any
+    module.items.splice(index, 1)
+    ElMessage.success('已删除栏目')
+  }
+}
+
+// 导航栏模块 - 添加顶部栏信息
+const addTopBarItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
+    const module = selectedModule.value as any
+    if (!module.topBar) module.topBar = { visible: true, items: [] }
+    if (!module.topBar.items) module.topBar.items = []
+    module.topBar.items.push({
+      icon: 'Phone',
+      text: '新信息'
+    })
+    ElMessage.success('已添加联系信息')
+  }
+}
+
+// 导航栏模块 - 删除顶部栏信息
+const removeTopBarItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
+    const module = selectedModule.value as any
+    if (module.topBar && module.topBar.items) {
+      module.topBar.items.splice(index, 1)
+      ElMessage.success('已删除联系信息')
+    }
+  }
+}
+
+// 导航栏模块 - 添加菜单项
+const addMenuItem = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
+    const module = selectedModule.value as any
+    if (!module.menu) module.menu = { items: [] }
+    if (!module.menu.items) module.menu.items = []
+    module.menu.items.push({
+      label: '新菜单',
+      link: '/'
+    })
+    ElMessage.success('已添加菜单项')
+  }
+}
+
+// 导航栏模块 - 删除菜单项
+const removeMenuItem = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
+    const module = selectedModule.value as any
+    if (module.menu && module.menu.items) {
+      module.menu.items.splice(index, 1)
+      ElMessage.success('已删除菜单项')
+    }
+  }
+}
+
+// 页脚模块 - 添加区块
+const addFooterSection = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.FOOTER) {
+    const module = selectedModule.value as any
+    if (!module.sections) module.sections = []
+    module.sections.push({
+      title: '新区块',
+      links: []
+    })
+    ElMessage.success('已添加区块')
+  }
+}
+
+// 页脚模块 - 删除区块
+const removeFooterSection = (index: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.FOOTER) {
+    const module = selectedModule.value as any
+    module.sections.splice(index, 1)
+    ElMessage.success('已删除区块')
+  }
+}
+
+// 页脚模块 - 添加链接
+const addFooterLink = (sectionIndex: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.FOOTER) {
+    const module = selectedModule.value as any
+    if (module.sections && module.sections[sectionIndex]) {
+      if (!module.sections[sectionIndex].links) {
+        module.sections[sectionIndex].links = []
+      }
+      module.sections[sectionIndex].links.push({
+        text: '新链接',
+        link: '/'
+      })
+      ElMessage.success('已添加链接')
+    }
+  }
+}
+
+// 页脚模块 - 删除链接
+const removeFooterLink = (sectionIndex: number, linkIndex: number) => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.FOOTER) {
+    const module = selectedModule.value as any
+    if (module.sections && module.sections[sectionIndex] && module.sections[sectionIndex].links) {
+      module.sections[sectionIndex].links.splice(linkIndex, 1)
+      ElMessage.success('已删除链接')
+    }
+  }
+}
+
 
 // 保存配置
 const saveConfig = () => {
@@ -527,6 +1102,55 @@ watch(globalTheme, (newTheme) => {
 
 .properties-content {
   /* 属性面板内容样式 */
+}
+
+.module-config-content {
+  padding: 10px 0;
+}
+
+.content-items {
+  margin-top: 20px;
+}
+
+.items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.items-header h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.content-item {
+  margin-bottom: 15px;
+}
+
+.item-card {
+  margin-bottom: 10px;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-links {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+.link-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 5px;
 }
 
 .designer-module-list {

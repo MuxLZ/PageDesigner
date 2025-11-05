@@ -2,24 +2,45 @@
  * 模块化系统类型定义
  */
 
+// 模块分类
+export enum ModuleCategory {
+  LAYOUT = 'layout',               // 布局模块
+  CONTENT = 'content',             // 内容模块
+  BUSINESS = 'business',            // 业务模块
+  INTERACTION = 'interaction'       // 交互模块
+}
+
 // 模块类型枚举
 export enum ModuleType {
-  CAROUSEL = 'carousel',           // 轮播
-  GRID = 'grid',                   // 宫格
-  COLUMN = 'column',               // 分栏
-  TIMELINE = 'timeline',           // 时间轴
+  // 布局模块
   HEADER = 'header',               // 导航栏
   FOOTER = 'footer',               // 页脚
-  STATS = 'stats',                 // 数据统计
+  PAGE_HERO = 'page-hero',         // 页面头部（带面包屑）
+  
+  // 内容模块
+  CAROUSEL = 'carousel',           // 轮播图
+  COLUMN = 'column',               // 分栏布局
+  GRID = 'grid',                   // 宫格布局
+  CARD_LIST = 'card-list',         // 卡片列表
+  FEATURE_LIST = 'feature-list',   // 特性列表（图标+文字）
+  TEXT_IMAGE = 'text-image',       // 图文混排
+  
+  // 业务模块
   PRODUCTS = 'products',           // 产品展示
   NEWS = 'news',                   // 新闻资讯
-  PARTNERS = 'partners',           // 合作伙伴
-  CONTACT = 'contact',             // 联系我们
-  ABOUT = 'about',                 // 公司简介
   TEAM = 'team',                   // 团队介绍
+  PARTNERS = 'partners',           // 合作伙伴
   HONORS = 'honors',               // 资质荣誉
+  SOLUTIONS = 'solutions',         // 解决方案（标签页）
+  ABOUT = 'about',                 // 公司简介
   CULTURE = 'culture',             // 企业文化
-  SOLUTIONS = 'solutions'          // 解决方案
+  
+  // 交互模块
+  STATS = 'stats',                 // 数据统计
+  TIMELINE = 'timeline',           // 时间轴
+  CONTACT = 'contact',             // 联系我们
+  CONTACT_FORM = 'contact-form',   // 联系表单
+  CTA = 'cta'                      // 行动号召
 }
 
 // 动画效果类型
