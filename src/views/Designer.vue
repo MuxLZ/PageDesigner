@@ -1256,6 +1256,26 @@
               @click="selectModule(module)"
             >
               <div class="module-item-info">
+                <div class="module-sort-buttons">
+                  <el-button
+                    type="text"
+                    size="small"
+                    :disabled="index === 0"
+                    @click.stop="moveModuleUp(index)"
+                    title="上移"
+                  >
+                    <el-icon><ArrowUp /></el-icon>
+                  </el-button>
+                  <el-button
+                    type="text"
+                    size="small"
+                    :disabled="index === sortedModules.length - 1"
+                    @click.stop="moveModuleDown(index)"
+                    title="下移"
+                  >
+                    <el-icon><ArrowDown /></el-icon>
+                  </el-button>
+                </div>
                 <el-icon><component :is="getModuleIcon(module.type)" /></el-icon>
                 <span>{{ module.name }}</span>
               </div>
@@ -1274,7 +1294,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Edit } from '@element-plus/icons-vue'
+import { Edit, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
 import type { PageConfig, ModuleConfig } from '@/types/module'
 import { ModuleType, ModuleCategory } from '@/types/module'
 import { ConfigGenerator } from '@/core/ConfigGenerator'
@@ -1376,9 +1396,53 @@ const deleteModuleById = (id: string) => {
   const index = pageConfig.value.modules.findIndex(m => m.id === id)
   if (index > -1) {
     pageConfig.value.modules.splice(index, 1)
-    selectedModule.value = null
+    if (selectedModule.value?.id === id) {
+      selectedModule.value = null
+    }
     ElMessage.success('模块已删除')
   }
+}
+
+// 上移模块
+const moveModuleUp = (index: number) => {
+  if (index <= 0) return
+  
+  const modules = [...pageConfig.value.modules]
+  const sorted = ConfigGenerator.sortModules(modules)
+  
+  // 交换位置
+  const temp = sorted[index]
+  sorted[index] = sorted[index - 1]
+  sorted[index - 1] = temp
+  
+  // 更新order属性
+  sorted.forEach((module, idx) => {
+    module.order = idx
+  })
+  
+  pageConfig.value.modules = sorted
+  ElMessage.success('模块已上移')
+}
+
+// 下移模块
+const moveModuleDown = (index: number) => {
+  const modules = [...pageConfig.value.modules]
+  const sorted = ConfigGenerator.sortModules(modules)
+  
+  if (index >= sorted.length - 1) return
+  
+  // 交换位置
+  const temp = sorted[index]
+  sorted[index] = sorted[index + 1]
+  sorted[index + 1] = temp
+  
+  // 更新order属性
+  sorted.forEach((module, idx) => {
+    module.order = idx
+  })
+  
+  pageConfig.value.modules = sorted
+  ElMessage.success('模块已下移')
 }
 
 // 更新模块配置
@@ -2238,6 +2302,26 @@ const importConfig = () => {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 1;
+}
+
+.module-sort-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: 5px;
+}
+
+.module-sort-buttons .el-button {
+  padding: 2px 4px;
+  min-height: auto;
+  height: 18px;
+  line-height: 1;
+}
+
+.module-sort-buttons .el-button.is-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .module-item-actions {
