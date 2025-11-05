@@ -42,7 +42,7 @@ const routes: RouteRecordRaw[] = [
     path: '/designer',
     name: 'Designer',
     component: () => import('@/views/Designer.vue'),
-    meta: { title: '页面设计器' }
+    meta: { title: '页面设计器', hideLayout: true }
   }
 ]
 

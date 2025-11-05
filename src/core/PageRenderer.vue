@@ -14,6 +14,7 @@
       <component
         :is="getModuleComponent(module.type)"
         :config="module"
+        :is-designer="props.isDesigner"
       />
     </div>
   </div>
@@ -40,11 +41,13 @@ interface Props {
   config: PageConfig
   selectable?: boolean  // 是否可选择
   selectedModuleId?: string  // 当前选中的模块ID
+  isDesigner?: boolean  // 是否在设计器模式
 }
 
 const props = withDefaults(defineProps<Props>(), {
   selectable: false,
-  selectedModuleId: undefined
+  selectedModuleId: undefined,
+  isDesigner: false
 })
 
 const emit = defineEmits<{

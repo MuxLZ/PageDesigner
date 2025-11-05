@@ -70,6 +70,7 @@
             :config="pageConfig"
             :selectable="!previewMode"
             :selected-module-id="selectedModule?.id"
+            :is-designer="true"
             @module-select="selectModule"
           />
         </div>

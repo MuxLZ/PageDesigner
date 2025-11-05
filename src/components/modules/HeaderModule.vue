@@ -2,7 +2,7 @@
   <BaseModuleWrapper :module-config="config">
     <header
       class="header-module"
-      :class="{ 'header-fixed': config.fixed, 'header-transparent': config.transparent }"
+      :class="{ 'header-fixed': config.fixed && !isDesigner, 'header-transparent': config.transparent }"
       :style="headerStyles"
     >
       <!-- 顶部联系栏 -->
@@ -92,9 +92,12 @@ import BaseModuleWrapper from './BaseModuleWrapper.vue'
 
 interface Props {
   config: HeaderConfig
+  isDesigner?: boolean  // 是否在设计器模式
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  isDesigner: false
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -163,6 +166,14 @@ const closeMobileMenu = () => {
   top: 0;
   left: 0;
   right: 0;
+}
+
+/* 在设计器模式下，即使有 fixed 类也不使用 fixed 定位 */
+.designer-preview .header-fixed {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
 }
 
 .header-transparent {
