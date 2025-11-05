@@ -19,7 +19,13 @@
       <!-- 左侧：模块库 -->
       <div v-if="!previewMode" class="designer-sidebar">
         <div class="sidebar-section">
-          <h3>模块库</h3>
+          <div class="sidebar-section-header">
+            <h3>模块库</h3>
+            <el-button type="text" size="small" @click="showImportModuleDialog = true">
+              <el-icon><Upload /></el-icon>
+              导入模块
+            </el-button>
+          </div>
           <el-collapse v-model="moduleLibraryCollapse" accordion>
             <!-- 布局模块 -->
             <el-collapse-item :title="categoryNames[ModuleCategory.LAYOUT]" name="layout">
@@ -1302,13 +1308,92 @@
         </div>
       </div>
     </div>
+
+    <!-- 导入模块对话框 -->
+    <el-dialog
+      v-model="showImportModuleDialog"
+      title="导入自定义模块"
+      width="600px"
+    >
+      <div class="import-module-guide">
+        <el-alert
+          title="模块导入说明"
+          type="info"
+          :closable="false"
+          style="margin-bottom: 20px;"
+        >
+          <template #default>
+            <div style="line-height: 1.8;">
+              <p>您可以导入自定义模块到设计器中。模块包应为 JSON 格式。</p>
+              <p>请参考 <a href="#" @click.stop.prevent="openModuleGuide">模块扩展指南</a> 了解如何创建模块包。</p>
+            </div>
+          </template>
+        </el-alert>
+
+        <el-upload
+          ref="uploadRef"
+          :auto-upload="false"
+          :on-change="handleModuleFileChange"
+          :file-list="moduleFileList"
+          accept=".json"
+          drag
+        >
+          <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
+          <div class="el-upload__text">
+            将模块包文件拖到此处，或<em>点击上传</em>
+          </div>
+          <template #tip>
+            <div class="el-upload__tip">
+              只能上传 JSON 格式的模块包文件
+            </div>
+          </template>
+        </el-upload>
+
+        <el-divider>或者手动添加</el-divider>
+
+        <el-button type="primary" @click="showImportGuide = true">
+          <el-icon><Document /></el-icon>
+          查看导入指南
+        </el-button>
+      </div>
+
+      <template #footer>
+        <el-button @click="showImportModuleDialog = false">取消</el-button>
+        <el-button type="primary" @click="importModule" :disabled="!modulePackage">导入</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 导入指南对话框 -->
+    <el-dialog
+      v-model="showImportGuide"
+      title="模块导入指南"
+      width="800px"
+    >
+      <div class="import-guide-content">
+        <h3>快速开始</h3>
+        <ol>
+          <li>在页面设计器中，点击"模块库" → "导入模块"</li>
+          <li>选择或上传模块配置文件（JSON 格式）</li>
+          <li>系统会自动验证并显示导入指南</li>
+        </ol>
+
+        <h3>模块包格式</h3>
+        <pre><code>{{ modulePackageExample }}</code></pre>
+
+        <h3>详细步骤</h3>
+        <p>请参考 <a href="/docs/MODULE_EXTENSION_GUIDE.md" target="_blank">模块扩展指南</a> 了解完整的模块开发流程。</p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Edit, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ModuleImporter } from '@/core/ModuleImporter'
+import type { ModulePackage } from '@/core/ModuleImporter'
+import { Edit, ArrowUp, ArrowDown, Upload, Document } from '@element-plus/icons-vue'
+import { UploadFilled } from '@element-plus/icons-vue'
 import type { PageConfig, ModuleConfig } from '@/types/module'
 import { ModuleType, ModuleCategory } from '@/types/module'
 import { ConfigGenerator } from '@/core/ConfigGenerator'
@@ -1330,6 +1415,76 @@ const activeCollapse = ref(['basic', 'style', 'effect', 'module'])
 
 // 模块库折叠面板
 const moduleLibraryCollapse = ref(['layout'])
+
+// 导入模块相关
+const showImportModuleDialog = ref(false)
+const showImportGuide = ref(false)
+const moduleFileList = ref<any[]>([])
+const modulePackage = ref<ModulePackage | null>(null)
+const uploadRef = ref()
+
+const modulePackageExample = `{
+  "moduleType": "my-custom-module",
+  "moduleName": "我的自定义模块",
+  "moduleCategory": "content",
+  "moduleIcon": "Box",
+  "defaultConfig": {
+    "title": "默认标题",
+    "content": "默认内容"
+  },
+  "componentPath": "@/components/modules/MyCustomModule.vue",
+  "version": "1.0.0",
+  "description": "模块描述",
+  "author": "作者名称"
+}`
+
+// 处理模块文件上传
+const handleModuleFileChange = (file: any) => {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    try {
+      const packageData = ModuleImporter.importModulePackageFromJSON(e.target?.result as string)
+      const validation = ModuleImporter.validateModulePackage(packageData)
+      
+      if (validation.valid) {
+        modulePackage.value = packageData
+        ElMessage.success('模块包格式验证通过')
+      } else {
+        ElMessage.error(`模块包验证失败：${validation.errors.join(', ')}`)
+        modulePackage.value = null
+      }
+    } catch (error: any) {
+      ElMessage.error(`读取文件失败：${error.message}`)
+      modulePackage.value = null
+    }
+  }
+  reader.readAsText(file.raw)
+}
+
+// 导入模块
+const importModule = async () => {
+  if (!modulePackage.value) {
+    ElMessage.warning('请先上传模块包文件')
+    return
+  }
+
+  const guide = ModuleImporter.generateImportGuide(modulePackage.value)
+  
+  await ElMessageBox.alert(guide, '模块导入指南', {
+    confirmButtonText: '我已了解',
+    type: 'info',
+    dangerouslyUseHTMLString: false
+  })
+
+  ElMessage.info('请按照上述步骤手动完成模块导入，或查看模块扩展指南获取详细说明')
+  showImportModuleDialog.value = false
+}
+
+// 打开模块指南
+const openModuleGuide = () => {
+  // 可以打开新窗口或显示文档
+  window.open('/docs/MODULE_EXTENSION_GUIDE.md', '_blank')
+}
 
 // 全局主题
 const globalTheme = computed({
@@ -2395,6 +2550,47 @@ const importConfig = () => {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.sidebar-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.sidebar-section-header h3 {
+  margin: 0;
+}
+
+.import-module-guide {
+  padding: 10px 0;
+}
+
+.import-guide-content {
+  line-height: 1.8;
+}
+
+.import-guide-content h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.import-guide-content ol {
+  padding-left: 20px;
+}
+
+.import-guide-content pre {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.875rem;
+}
+
+.import-guide-content code {
+  color: #333;
 }
 </style>
 
