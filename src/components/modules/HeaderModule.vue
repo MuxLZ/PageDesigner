@@ -17,18 +17,18 @@
             <!-- Logo在顶部 -->
             <div v-if="shouldShowLogoInTop" class="logo-top">
               <router-link :to="logoLink">
-                <img v-if="config.logo?.image" :src="config.logo.image" :alt="config.logo?.text || 'Logo'" class="logo-img" />
-                <span v-if="config.logo?.text" class="logo-text">{{ config.logo.text }}</span>
+                <img v-if="logoConfig?.image" :src="logoConfig.image" :alt="logoConfig?.text || 'Logo'" class="logo-img" />
+                <span v-if="logoConfig?.text" class="logo-text">{{ logoConfig.text }}</span>
               </router-link>
             </div>
             <!-- 顶部联系信息 -->
             <div 
+              v-if="topBarInfoVisible"
               class="top-info" 
               :class="topInfoClass"
-              v-if="config.topBar?.visible && config.topBar?.items && config.topBar.items.length > 0"
             >
               <span
-                v-for="(item, index) in config.topBar.items"
+                v-for="(item, index) in (topBarConfig?.items || [])"
                 :key="index"
               >
                 <el-icon v-if="item.icon"><component :is="item.icon" /></el-icon>
@@ -46,8 +46,8 @@
             <!-- Logo在主导航栏 -->
             <div v-if="shouldShowLogoInNav" class="logo">
               <router-link :to="logoLink">
-                <img v-if="config.logo?.image" :src="config.logo.image" :alt="config.logo?.text || 'Logo'" class="logo-img" />
-                <span v-if="config.logo?.text" class="logo-text">{{ config.logo.text }}</span>
+                <img v-if="logoConfig?.image" :src="logoConfig.image" :alt="logoConfig?.text || 'Logo'" class="logo-img" />
+                <span v-if="logoConfig?.text" class="logo-text">{{ logoConfig.text }}</span>
               </router-link>
             </div>
 
@@ -56,15 +56,16 @@
               v-if="config.menu"
               mode="horizontal"
               :default-active="activeIndex"
+              :default-openeds="[]"
               class="nav-menu"
               :style="menuStyles"
               @select="handleSelect"
             >
-              <template v-for="(item, index) in config.menu.items" :key="index">
+              <template v-for="(item, index) in menuItems" :key="index">
                 <!-- 带下拉菜单的菜单项 -->
                 <el-sub-menu
-                  v-if="item.children && item.children.length > 0"
-                  :index="(item.link && item.link !== '') ? item.link : `submenu-${index}`"
+                  v-if="hasMenuChildren(item)"
+                  :index="getMenuIndex(item, index, 'submenu')"
                 >
                   <template #title>
                     <span :style="menuItemStyles">{{ item.label }}</span>
@@ -72,7 +73,7 @@
                   <el-menu-item
                     v-for="(child, childIndex) in item.children"
                     :key="childIndex"
-                    :index="child.link"
+                    :index="getMenuIndex(child, index, 'child', childIndex)"
                     :style="subMenuItemStyles"
                   >
                     {{ child.label }}
@@ -81,7 +82,7 @@
                 <!-- 普通菜单项 -->
                 <el-menu-item
                   v-else
-                  :index="item.link"
+                  :index="getMenuIndex(item, index, 'menu')"
                   :style="menuItemStyles"
                 >
                   {{ item.label }}
@@ -100,23 +101,23 @@
       <!-- 移动端菜单 -->
       <transition name="mobile-menu">
         <div v-if="mobileMenuActive" class="mobile-menu">
-          <div class="mobile-menu-overlay" @click="closeMobileMenu"></div>
-          <div class="mobile-menu-content">
+        <div class="mobile-menu-overlay" @click="closeMobileMenu"></div>
+        <div class="mobile-menu-content">
           <div class="mobile-menu-header">
-            <div v-if="config.logo && logoVisible" class="mobile-logo">
-              <img v-if="config.logo.image" :src="config.logo.image" :alt="config.logo.text || 'Logo'" class="logo-img" />
-              <span v-if="config.logo.text" class="logo-text">{{ config.logo.text }}</span>
+            <div v-if="logoConfig && logoVisible" class="mobile-logo">
+              <img v-if="logoConfig.image" :src="logoConfig.image" :alt="logoConfig.text || 'Logo'" class="logo-img" />
+              <span v-if="logoConfig.text" class="logo-text">{{ logoConfig.text }}</span>
             </div>
             <el-icon class="close-btn" @click="closeMobileMenu"><Close /></el-icon>
           </div>
           <ul class="mobile-nav-list">
             <li
-              v-for="(item, index) in config.menu?.items"
+              v-for="(item, index) in menuItems"
               :key="index"
             >
               <router-link
-                v-if="!item.children || item.children.length === 0"
-                :to="item.link"
+                v-if="!hasMenuChildren(item)"
+                :to="item.link || '/'"
                 @click="closeMobileMenu"
               >
                 {{ item.label }}
@@ -128,14 +129,14 @@
                     v-for="(child, childIndex) in item.children"
                     :key="childIndex"
                   >
-                    <router-link :to="child.link" @click="closeMobileMenu">{{ child.label }}</router-link>
+                    <router-link :to="child.link || '/'" @click="closeMobileMenu">{{ child.label }}</router-link>
                   </li>
                 </ul>
               </div>
             </li>
           </ul>
-          </div>
         </div>
+      </div>
       </transition>
     </header>
   </BaseModuleWrapper>
@@ -162,23 +163,28 @@ const router = useRouter()
 
 const mobileMenuActive = ref(false)
 
+// 提取常用配置为computed属性，避免重复访问
+const menuItems = computed(() => props.config.menu?.items || [])
+const logoConfig = computed(() => props.config.logo)
+const topBarConfig = computed(() => props.config.topBar)
+
 // Logo相关计算属性
 const logoVisible = computed(() => {
   // 如果logo配置不存在，默认不显示
-  if (!props.config.logo) {
+  if (!logoConfig.value) {
     return false
   }
   // 如果明确设置了visible，使用该值；否则默认true（向后兼容）
-  return props.config.logo.visible !== false
+  return logoConfig.value.visible !== false
 })
 
 const logoPosition = computed(() => {
   // 默认位置为 'nav'（主导航栏）
-  return props.config.logo?.position || 'nav'
+  return logoConfig.value?.position || 'nav'
 })
 
 const logoLink = computed(() => {
-  return props.config.logo?.link || '/'
+  return logoConfig.value?.link || '/'
 })
 
 const shouldShowLogoInNav = computed(() => {
@@ -191,14 +197,14 @@ const shouldShowLogoInTop = computed(() => {
 
 // 顶部联系栏位置
 const topBarPosition = computed(() => {
-  return props.config.topBar?.position || 'right'
+  return topBarConfig.value?.position || 'right'
 })
 
 // 顶部联系信息是否可见
 const topBarInfoVisible = computed(() => {
-  return props.config.topBar?.visible && 
-         props.config.topBar?.items && 
-         props.config.topBar.items.length > 0
+  return topBarConfig.value?.visible && 
+         topBarConfig.value?.items && 
+         topBarConfig.value.items.length > 0
 })
 
 // 顶部栏内容布局类
@@ -250,9 +256,13 @@ const topInfoClass = computed(() => {
 
 // 规范化路径用于匹配（移除hash和query）
 const activeIndex = computed(() => {
-  const path = route.path
-  // 移除hash和query参数，只保留路径部分
-  return path.split('?')[0].split('#')[0]
+  try {
+    const url = new URL(route.path, window.location.origin)
+    return url.pathname
+  } catch {
+    // 如果URL解析失败，使用fallback方法
+    return route.path.split('?')[0].split('#')[0]
+  }
 })
 
 // 提取公共的背景色获取逻辑
@@ -265,52 +275,40 @@ const getBackgroundColor = computed(() => {
   return props.config.style?.backgroundColor || props.config.backgroundColor
 })
 
-const headerStyles = computed(() => {
+// 通用的背景色样式生成函数
+const createBackgroundStyle = (bgColor?: string) => {
   const styles: Record<string, any> = {}
-  const bgColor = getBackgroundColor.value
   if (bgColor) {
     styles.backgroundColor = bgColor
   }
   return styles
-})
+}
+
+const headerStyles = computed(() => createBackgroundStyle(getBackgroundColor.value))
+
+const navStyles = computed(() => createBackgroundStyle(getBackgroundColor.value))
+
+const menuStyles = computed(() => createBackgroundStyle(getBackgroundColor.value))
 
 const topBarStyles = computed(() => {
   const styles: Record<string, any> = {}
-  if (props.config.topBar?.backgroundColor) {
-    styles.backgroundColor = props.config.topBar.backgroundColor
+  const topBar = topBarConfig.value
+  if (topBar?.backgroundColor) {
+    styles.backgroundColor = topBar.backgroundColor
   }
-  if (props.config.topBar?.textColor) {
-    styles.color = props.config.topBar.textColor
-  }
-  return styles
-})
-
-const navStyles = computed(() => {
-  const styles: Record<string, any> = {}
-  const bgColor = getBackgroundColor.value
-  if (bgColor) {
-    styles.backgroundColor = bgColor
+  if (topBar?.textColor) {
+    styles.color = topBar.textColor
   }
   return styles
 })
 
-const menuStyles = computed(() => {
-  const styles: Record<string, any> = {}
-  const bgColor = getBackgroundColor.value
-  if (bgColor) {
-    styles.backgroundColor = bgColor
-  }
-  return styles
-})
-
+// 菜单项样式计算
 const menuItemStyles = computed(() => {
   const styles: Record<string, any> = {}
   // 优先使用样式设置中的字体颜色（主导航栏）
-  if (props.config.style?.font?.color) {
-    styles.color = props.config.style.font.color
-  } else if (props.config.menu?.textColor) {
-    // 兼容旧配置
-    styles.color = props.config.menu.textColor
+  const textColor = props.config.style?.font?.color || props.config.menu?.textColor
+  if (textColor) {
+    styles.color = textColor
   }
   // 应用字体大小（主导航栏）
   if (props.config.style?.font?.size) {
@@ -334,6 +332,22 @@ const subMenuItemStyles = computed(() => {
   }
   return styles
 })
+
+// 菜单项工具函数：判断是否有子菜单
+const hasMenuChildren = (item: any): boolean => {
+  return Array.isArray(item.children) && item.children.length > 0
+}
+
+// 菜单项工具函数：生成菜单索引
+const getMenuIndex = (item: any, index: number, type: 'menu' | 'submenu' | 'child', childIndex?: number): string => {
+  if (type === 'submenu') {
+    return (item.link && item.link !== '') ? item.link : `submenu-${index}`
+  }
+  if (type === 'child' && childIndex !== undefined) {
+    return item.link || `child-${index}-${childIndex}`
+  }
+  return item.link || `menu-${index}`
+}
 
 const handleSelect = (key: string) => {
   // 检查是否是子菜单索引（子菜单索引格式为 submenu-{index}）
@@ -427,10 +441,7 @@ watch(() => route.path, () => {
 
 /* Logo在顶部且联系信息在中间/右侧时的布局 */
 .top-bar-content.has-logo-with-info {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  width: 100%;
 }
 
 .top-info {

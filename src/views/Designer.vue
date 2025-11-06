@@ -457,7 +457,7 @@
                   <el-form label-width="100px" size="small">
                     <el-form-item label="显示Logo">
                       <el-switch 
-                        v-model="(selectedModule as any).logo.visible" 
+                        v-model="(selectedModule as any).logo.visible"
                         :active-value="true"
                         :inactive-value="false"
                         @change="ensureLogoConfig"
@@ -569,15 +569,20 @@
                             <el-switch v-model="item.hasDropdown" @change="toggleMenuItemDropdown(item, index)" />
                           </el-form-item>
                         </el-form>
-                        <div v-if="item.children && item.children.length > 0" class="section-links">
+                        <div v-if="item.hasDropdown && Array.isArray(item.children)" class="section-links">
                           <div class="items-header">
                             <span>下拉菜单项</span>
                             <el-button type="primary" size="small" @click="addDropdownItem(index)">添加子菜单</el-button>
                           </div>
+                          <div v-if="item.children && item.children.length > 0">
                           <div v-for="(child, childIndex) in item.children" :key="childIndex" class="link-item">
                             <el-input v-model="child.label" placeholder="子菜单标签" style="width: 40%; margin-right: 5%" />
                             <el-input v-model="child.link" placeholder="子菜单链接" style="width: 40%; margin-right: 5%" />
                             <el-button type="danger" text size="small" @click="removeDropdownItem(index, childIndex)">删除</el-button>
+                            </div>
+                          </div>
+                          <div v-else class="empty-dropdown-tip" style="padding: 10px; color: #909399; font-size: 0.875rem;">
+                            暂无子菜单项，点击"添加子菜单"按钮添加
                           </div>
                         </div>
                       </el-card>
@@ -1898,19 +1903,24 @@ const addMenuItem = () => {
 
 // 导航栏模块 - 切换菜单项下拉菜单
 const toggleMenuItemDropdown = (item: any, index: number) => {
+  if (!item) {
+    console.warn('toggleMenuItemDropdown: item is undefined', index)
+    return
+  }
+  
   if (item.hasDropdown) {
-    if (!item.children) {
+    // 如果children不存在、不是数组或者是空数组，创建默认子菜单项
+    if (!item.children || !Array.isArray(item.children) || item.children.length === 0) {
       item.children = [
         { label: '子菜单1', link: '/' },
         { label: '子菜单2', link: '/' }
       ]
+      ElMessage.success('已启用下拉菜单，已创建默认子菜单项')
     }
   } else {
-    // 保留children数组，但可以通过UI控制是否显示
-    // 如果children为空，则移除hasDropdown标记
-    if (!item.children || item.children.length === 0) {
-      item.hasDropdown = false
-    }
+    // 关闭下拉菜单时，不清空children数组，保留数据以便下次开启
+    // 但可以通过UI控制是否显示
+    // 注意：不清空children，这样下次开启时还有数据
   }
 }
 
@@ -1918,16 +1928,29 @@ const toggleMenuItemDropdown = (item: any, index: number) => {
 const addDropdownItem = (menuIndex: number) => {
   if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
     const module = selectedModule.value as any
-    if (module.menu && module.menu.items && module.menu.items[menuIndex]) {
-      if (!module.menu.items[menuIndex].children) {
-        module.menu.items[menuIndex].children = []
+    if (module.menu && 
+        module.menu.items && 
+        menuIndex >= 0 && 
+        menuIndex < module.menu.items.length &&
+        module.menu.items[menuIndex]) {
+      const menuItem = module.menu.items[menuIndex]
+      
+      // 确保children是数组
+      if (!Array.isArray(menuItem.children)) {
+        menuItem.children = []
       }
-      module.menu.items[menuIndex].children.push({
+      
+      menuItem.children.push({
         label: '新子菜单',
         link: '/'
       })
-      module.menu.items[menuIndex].hasDropdown = true
+      
+      // 确保hasDropdown属性存在
+      menuItem.hasDropdown = true
+      
       ElMessage.success('已添加子菜单项')
+    } else {
+      console.warn('addDropdownItem: Invalid menuIndex', menuIndex)
     }
   }
 }
@@ -1936,13 +1959,27 @@ const addDropdownItem = (menuIndex: number) => {
 const removeDropdownItem = (menuIndex: number, childIndex: number) => {
   if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
     const module = selectedModule.value as any
-    if (module.menu && module.menu.items && module.menu.items[menuIndex] && module.menu.items[menuIndex].children) {
+    if (module.menu && 
+        module.menu.items && 
+        menuIndex >= 0 && 
+        menuIndex < module.menu.items.length &&
+        module.menu.items[menuIndex] &&
+        Array.isArray(module.menu.items[menuIndex].children) &&
+        childIndex >= 0 &&
+        childIndex < module.menu.items[menuIndex].children.length) {
+      
       module.menu.items[menuIndex].children.splice(childIndex, 1)
+      
+      // 删除后不自动关闭下拉菜单，保留children数组为空数组
+      // 这样用户可以继续添加新的子菜单项
+      // 如果用户想要关闭下拉菜单，可以通过开关手动关闭
       if (module.menu.items[menuIndex].children.length === 0) {
-        module.menu.items[menuIndex].hasDropdown = false
-        module.menu.items[menuIndex].children = []
+        // 保留children为空数组，不清空，这样toggleMenuItemDropdown可以检测到并创建默认数据
+        // 不自动设置hasDropdown = false，让用户自己决定是否关闭
       }
       ElMessage.success('已删除子菜单项')
+    } else {
+      console.warn('removeDropdownItem: Invalid indices', { menuIndex, childIndex })
     }
   }
 }
