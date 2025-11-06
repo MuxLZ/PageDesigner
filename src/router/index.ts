@@ -43,6 +43,12 @@ const routes: RouteRecordRaw[] = [
     name: 'Designer',
     component: () => import('@/views/Designer.vue'),
     meta: { title: '页面设计器', hideLayout: true }
+  },
+  {
+    path: '/preview',
+    name: 'Preview',
+    component: () => import('@/views/Preview.vue'),
+    meta: { title: '页面预览', hideLayout: true }
   }
 ]
 

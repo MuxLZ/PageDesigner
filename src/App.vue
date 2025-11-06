@@ -16,7 +16,12 @@ const route = useRoute()
 
 // 根据路由meta判断是否隐藏布局
 const hideLayout = computed(() => {
-  return (route.meta as any)?.hideLayout === true
+  const shouldHide = (route.meta as any)?.hideLayout === true
+  // 调试信息（开发环境）
+  if (import.meta.env.DEV) {
+    console.log('Current route:', route.path, 'hideLayout:', shouldHide, 'meta:', route.meta)
+  }
+  return shouldHide
 })
 </script>
 

@@ -4,9 +4,11 @@
     <div class="designer-toolbar">
       <div class="toolbar-left">
         <h2>页面设计器</h2>
-        <el-button type="primary" @click="saveConfig">保存配置</el-button>
-        <el-button @click="exportConfig">导出配置</el-button>
-        <el-button @click="importConfig">导入配置</el-button>
+        <div class="toolbar-buttons">
+          <el-button type="primary" @click="saveConfig">保存配置</el-button>
+          <el-button @click="exportConfig">导出配置</el-button>
+          <el-button @click="importConfig">导入配置</el-button>
+        </div>
       </div>
       <div class="toolbar-right">
         <el-button @click="previewMode = !previewMode">
@@ -1437,6 +1439,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ModuleImporter } from '@/core/ModuleImporter'
 import type { ModulePackage } from '@/core/ModuleImporter'
@@ -1448,6 +1451,8 @@ import { ConfigGenerator } from '@/core/ConfigGenerator'
 import { StyleSystem } from '@/core/StyleSystem'
 import PageRenderer from '@/core/PageRenderer.vue'
 import { getModulesByCategory, getModuleName, getModuleIcon, categoryNames } from '@/utils/moduleHelper'
+
+const route = useRoute()
 
 // 页面配置
 const pageConfig = ref<PageConfig>(ConfigGenerator.generateDefaultPageConfig('新页面', '/new-page'))
@@ -1554,6 +1559,21 @@ watch(() => globalTheme.value, (newTheme) => {
 
 // 页面加载时初始化主题
 onMounted(() => {
+  // 从URL参数或localStorage加载配置
+  const loadConfig = route.query.loadConfig as string
+  if (loadConfig === 'true') {
+    try {
+      const stored = localStorage.getItem('pageConfig')
+      if (stored) {
+        const config = ConfigGenerator.importConfig(stored)
+        pageConfig.value = config as PageConfig
+        ElMessage.success('配置已加载')
+      }
+    } catch (e) {
+      ElMessage.warning('加载配置失败，使用默认配置')
+    }
+  }
+  
   // 确保主题被应用
   const theme = pageConfig.value.globalStyle?.theme || StyleSystem.createDefaultTheme()
   StyleSystem.applyThemeToCSS(theme)
@@ -2475,12 +2495,19 @@ const importConfig = () => {
 .toolbar-left {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .toolbar-left h2 {
   margin: 0;
   font-size: 1.25rem;
+  white-space: nowrap;
+}
+
+.toolbar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .designer-content {

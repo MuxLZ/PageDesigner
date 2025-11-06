@@ -392,6 +392,8 @@ watch(() => route.path, () => {
   top: 0;
   left: 0;
   right: 0;
+  /* 确保固定导航栏始终在最上层 */
+  z-index: 9999;
 }
 
 /* 在设计器模式下，即使有 fixed 类也不使用 fixed 定位 */
@@ -578,7 +580,8 @@ watch(() => route.path, () => {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 2000;
+  /* 移动端菜单应该在固定导航栏之上 */
+  z-index: 10000;
 }
 
 /* Vue Transition 动画 */
