@@ -455,6 +455,36 @@
                   </el-form>
                   <el-divider>Logo设置</el-divider>
                   <el-form label-width="100px" size="small">
+                    <el-form-item label="显示Logo">
+                      <el-switch 
+                        v-model="(selectedModule as any).logo.visible" 
+                        :active-value="true"
+                        :inactive-value="false"
+                        @change="ensureLogoConfig"
+                      />
+                      <div class="form-item-tip">控制Logo是否显示</div>
+                    </el-form-item>
+                    <el-form-item label="Logo位置">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <el-button 
+                          :type="getLogoPosition(selectedModule) === 'nav' ? 'primary' : 'default'"
+                          size="small"
+                          @click="setLogoPosition('nav')"
+                        >
+                          {{ getLogoPosition(selectedModule) === 'nav' ? '✓ 主导航栏' : '主导航栏' }}
+                        </el-button>
+                        <el-button 
+                          :type="getLogoPosition(selectedModule) === 'top' ? 'primary' : 'default'"
+                          size="small"
+                          @click="setLogoPosition('top')"
+                        >
+                          {{ getLogoPosition(selectedModule) === 'top' ? '✓ 顶部栏' : '顶部栏' }}
+                        </el-button>
+                      </div>
+                      <div class="form-item-tip">
+                        当前：{{ getLogoPosition(selectedModule) === 'nav' ? '与主导航栏同行' : '与顶部联系栏同行' }}
+                      </div>
+                    </el-form-item>
                     <el-form-item label="Logo文字">
                       <el-input v-model="(selectedModule as any).logo.text" />
                     </el-form-item>
@@ -467,8 +497,21 @@
                   </el-form>
                   <el-divider>顶部联系栏</el-divider>
                   <el-form label-width="100px" size="small">
-                    <el-form-item label="显示顶部栏">
+                    <el-form-item :label="getTopBarLabel(selectedModule)">
                       <el-switch v-model="(selectedModule as any).topBar.visible" />
+                      <div class="form-item-tip">
+                        {{ getTopBarTip(selectedModule) }}
+                      </div>
+                    </el-form-item>
+                    <el-form-item label="联系信息位置">
+                      <el-radio-group v-model="(selectedModule as any).topBar.position" size="small">
+                        <el-radio label="left">左侧</el-radio>
+                        <el-radio label="center">中间</el-radio>
+                        <el-radio label="right">右侧</el-radio>
+                      </el-radio-group>
+                      <div class="form-item-tip">
+                        {{ getTopBarPositionTip(selectedModule) }}
+                      </div>
                     </el-form-item>
                     <el-form-item label="背景色">
                       <el-color-picker v-model="(selectedModule as any).topBar.backgroundColor" />
@@ -1733,6 +1776,83 @@ const removeColumnItem = (index: number) => {
     module.items.splice(index, 1)
     ElMessage.success('已删除栏目')
   }
+}
+
+// 导航栏模块 - 确保Logo配置存在
+const ensureLogoConfig = () => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
+    const module = selectedModule.value as any
+    if (!module.logo) {
+      module.logo = { visible: true, position: 'nav' }
+    }
+    // 如果visible未定义，设置为true（向后兼容）
+    if (module.logo.visible === undefined) {
+      module.logo.visible = true
+    }
+    // 如果position未定义，设置为nav（向后兼容）
+    if (!module.logo.position) {
+      module.logo.position = 'nav'
+    }
+  }
+}
+
+// 导航栏模块 - 获取Logo位置
+const getLogoPosition = (module: any) => {
+  if (!module || module.type !== ModuleType.HEADER || !module.logo) {
+    return 'nav'
+  }
+  return module.logo.position || 'nav'
+}
+
+// 导航栏模块 - 设置Logo位置
+const setLogoPosition = (position: 'nav' | 'top') => {
+  if (selectedModule.value && selectedModule.value.type === ModuleType.HEADER) {
+    const module = selectedModule.value as any
+    if (!module.logo) {
+      module.logo = { visible: true, position: 'nav' }
+    }
+    const currentPosition = getLogoPosition(module)
+    if (currentPosition !== position) {
+      module.logo.position = position
+      ElMessage.success(`Logo已切换到${position === 'nav' ? '主导航栏' : '顶部栏'}`)
+    }
+  }
+}
+
+// 导航栏模块 - 获取顶部栏标签文字
+const getTopBarLabel = (module: any) => {
+  if (!module || module.type !== ModuleType.HEADER) {
+    return '显示顶部栏'
+  }
+  const logoPosition = getLogoPosition(module)
+  if (logoPosition === 'top') {
+    return '显示联系信息'
+  }
+  return '显示顶部栏'
+}
+
+// 导航栏模块 - 获取顶部栏提示文字
+const getTopBarTip = (module: any) => {
+  if (!module || module.type !== ModuleType.HEADER) {
+    return '控制顶部联系栏的显示'
+  }
+  const logoPosition = getLogoPosition(module)
+  if (logoPosition === 'top') {
+    return 'Logo在顶部栏显示时，此开关控制联系信息的显示'
+  }
+  return '控制顶部联系栏的显示'
+}
+
+// 导航栏模块 - 获取顶部栏位置提示文字
+const getTopBarPositionTip = (module: any) => {
+  if (!module || module.type !== ModuleType.HEADER) {
+    return '控制联系信息在顶部栏的位置'
+  }
+  const logoPosition = getLogoPosition(module)
+  if (logoPosition === 'top') {
+    return 'Logo在顶部时，选择左侧会将联系信息放在Logo右侧，不会覆盖Logo'
+  }
+  return '控制联系信息在顶部栏的位置（左侧、中间、右侧）'
 }
 
 // 导航栏模块 - 添加顶部栏信息

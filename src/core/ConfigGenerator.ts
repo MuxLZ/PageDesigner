@@ -187,7 +187,9 @@ export class ConfigGenerator {
           ...base,
           logo: {
             text: '康养医院',
-            image: 'https://picsum.photos/120/40?random=100'
+            image: 'https://picsum.photos/120/40?random=100',
+            visible: true,
+            position: 'nav' as const
           },
           menu: {
             items: [
@@ -216,6 +218,7 @@ export class ConfigGenerator {
           },
           topBar: {
             visible: true,
+            position: 'right' as const,
             items: [
               { icon: 'Phone', text: '400-123-4567' },
               { icon: 'Message', text: 'info@zhizao.com' },

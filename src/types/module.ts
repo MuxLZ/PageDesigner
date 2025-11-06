@@ -164,6 +164,8 @@ export interface HeaderConfig extends BaseModuleConfig {
     image?: string
     text?: string
     link?: string
+    visible?: boolean           // 是否显示Logo，默认true
+    position?: 'nav' | 'top'   // Logo位置：'nav'与主导航栏同行，'top'与顶部联系栏同行，默认'nav'
   }
   menu?: {
     items: Array<{
@@ -181,6 +183,7 @@ export interface HeaderConfig extends BaseModuleConfig {
     backgroundColor?: string
     textColor?: string
     items?: Array<{ icon?: string; text: string }>
+    position?: 'left' | 'center' | 'right'  // 联系信息位置：左侧、中间、右侧，默认右侧
   }
   backgroundColor?: string
   fixed?: boolean                  // 是否固定

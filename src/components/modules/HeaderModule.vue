@@ -7,19 +7,34 @@
     >
       <!-- 顶部联系栏 -->
       <div
-        v-if="config.topBar?.visible"
+        v-if="config.topBar?.visible || shouldShowLogoInTop"
         class="top-bar"
+        :class="{ 'has-logo': shouldShowLogoInTop }"
         :style="topBarStyles"
       >
         <div class="container">
-          <div class="top-info">
-            <span
-              v-for="(item, index) in config.topBar?.items"
-              :key="index"
+          <div class="top-bar-content" :class="topBarContentClass">
+            <!-- Logo在顶部 -->
+            <div v-if="shouldShowLogoInTop" class="logo-top">
+              <router-link :to="logoLink">
+                <img v-if="config.logo?.image" :src="config.logo.image" :alt="config.logo?.text || 'Logo'" class="logo-img" />
+                <span v-if="config.logo?.text" class="logo-text">{{ config.logo.text }}</span>
+              </router-link>
+            </div>
+            <!-- 顶部联系信息 -->
+            <div 
+              class="top-info" 
+              :class="topInfoClass"
+              v-if="config.topBar?.visible && config.topBar?.items && config.topBar.items.length > 0"
             >
-              <el-icon v-if="item.icon"><component :is="item.icon" /></el-icon>
-              {{ item.text }}
-            </span>
+              <span
+                v-for="(item, index) in config.topBar.items"
+                :key="index"
+              >
+                <el-icon v-if="item.icon"><component :is="item.icon" /></el-icon>
+                {{ item.text }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -28,11 +43,11 @@
       <nav class="main-nav" :style="navStyles">
         <div class="container">
           <div class="nav-content">
-            <!-- Logo -->
-            <div v-if="config.logo" class="logo">
-              <router-link to="/">
-                <img v-if="config.logo.image" :src="config.logo.image" alt="" class="logo-img" />
-                <span v-if="config.logo.text" class="logo-text">{{ config.logo.text }}</span>
+            <!-- Logo在主导航栏 -->
+            <div v-if="shouldShowLogoInNav" class="logo">
+              <router-link :to="logoLink">
+                <img v-if="config.logo?.image" :src="config.logo.image" :alt="config.logo?.text || 'Logo'" class="logo-img" />
+                <span v-if="config.logo?.text" class="logo-text">{{ config.logo.text }}</span>
               </router-link>
             </div>
 
@@ -49,7 +64,7 @@
                 <!-- 带下拉菜单的菜单项 -->
                 <el-sub-menu
                   v-if="item.children && item.children.length > 0"
-                  :index="item.link || `submenu-${index}`"
+                  :index="(item.link && item.link !== '') ? item.link : `submenu-${index}`"
                 >
                   <template #title>
                     <span :style="menuItemStyles">{{ item.label }}</span>
@@ -58,7 +73,7 @@
                     v-for="(child, childIndex) in item.children"
                     :key="childIndex"
                     :index="child.link"
-                    :style="menuItemStyles"
+                    :style="subMenuItemStyles"
                   >
                     {{ child.label }}
                   </el-menu-item>
@@ -75,7 +90,7 @@
             </el-menu>
 
             <!-- 移动端菜单按钮 -->
-            <div class="mobile-menu-btn" @click="toggleMobileMenu">
+            <div v-if="config.menu" class="mobile-menu-btn" @click="toggleMobileMenu">
               <el-icon><Menu /></el-icon>
             </div>
           </div>
@@ -83,11 +98,15 @@
       </nav>
 
       <!-- 移动端菜单 -->
-      <div class="mobile-menu" :class="{ active: mobileMenuActive }">
-        <div class="mobile-menu-overlay" @click="closeMobileMenu"></div>
-        <div class="mobile-menu-content">
+      <transition name="mobile-menu">
+        <div v-if="mobileMenuActive" class="mobile-menu">
+          <div class="mobile-menu-overlay" @click="closeMobileMenu"></div>
+          <div class="mobile-menu-content">
           <div class="mobile-menu-header">
-            <span v-if="config.logo?.text" class="logo-text">{{ config.logo.text }}</span>
+            <div v-if="config.logo && logoVisible" class="mobile-logo">
+              <img v-if="config.logo.image" :src="config.logo.image" :alt="config.logo.text || 'Logo'" class="logo-img" />
+              <span v-if="config.logo.text" class="logo-text">{{ config.logo.text }}</span>
+            </div>
             <el-icon class="close-btn" @click="closeMobileMenu"><Close /></el-icon>
           </div>
           <ul class="mobile-nav-list">
@@ -115,15 +134,17 @@
               </div>
             </li>
           </ul>
+          </div>
         </div>
-      </div>
+      </transition>
     </header>
   </BaseModuleWrapper>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { Menu, Close } from '@element-plus/icons-vue'
 import type { HeaderConfig } from '@/types/module'
 import BaseModuleWrapper from './BaseModuleWrapper.vue'
 
@@ -140,15 +161,115 @@ const route = useRoute()
 const router = useRouter()
 
 const mobileMenuActive = ref(false)
-const activeIndex = computed(() => route.path)
+
+// Logo相关计算属性
+const logoVisible = computed(() => {
+  // 如果logo配置不存在，默认不显示
+  if (!props.config.logo) {
+    return false
+  }
+  // 如果明确设置了visible，使用该值；否则默认true（向后兼容）
+  return props.config.logo.visible !== false
+})
+
+const logoPosition = computed(() => {
+  // 默认位置为 'nav'（主导航栏）
+  return props.config.logo?.position || 'nav'
+})
+
+const logoLink = computed(() => {
+  return props.config.logo?.link || '/'
+})
+
+const shouldShowLogoInNav = computed(() => {
+  return logoVisible.value && logoPosition.value === 'nav'
+})
+
+const shouldShowLogoInTop = computed(() => {
+  return logoVisible.value && logoPosition.value === 'top'
+})
+
+// 顶部联系栏位置
+const topBarPosition = computed(() => {
+  return props.config.topBar?.position || 'right'
+})
+
+// 顶部联系信息是否可见
+const topBarInfoVisible = computed(() => {
+  return props.config.topBar?.visible && 
+         props.config.topBar?.items && 
+         props.config.topBar.items.length > 0
+})
+
+// 顶部栏内容布局类
+const topBarContentClass = computed(() => {
+  const classes: string[] = []
+  
+  // 如果联系信息不可见，Logo应该默认在左侧，不受位置设置影响
+  if (!topBarInfoVisible.value) {
+    // 只有Logo显示时，使用默认左侧布局
+    if (shouldShowLogoInTop.value) {
+      classes.push('position-left')
+    }
+    return classes
+  }
+  
+  // 联系信息可见时，根据位置和Logo位置决定布局
+  const position = topBarPosition.value
+  
+  // Logo在顶部时的处理
+  if (shouldShowLogoInTop.value) {
+    // Logo应该始终在左侧，联系信息根据position设置位置
+    if (position === 'left') {
+      // Logo在左，联系信息在Logo右侧（使用flex gap）
+      classes.push('has-logo-left')
+    } else {
+      // Logo在左，联系信息在center/right，使用特殊布局
+      classes.push('has-logo-with-info')
+    }
+  } else {
+    // Logo不在顶部，按联系信息位置布局
+    classes.push(`position-${position}`)
+  }
+  
+  return classes
+})
+
+// 顶部联系信息类
+const topInfoClass = computed(() => {
+  const classes: string[] = []
+  const position = topBarPosition.value
+  
+  // 如果Logo在顶部且联系信息在左侧，不应用位置类，使用flex布局
+  if (!shouldShowLogoInTop.value || position !== 'left') {
+    classes.push(`position-${position}`)
+  }
+  
+  return classes
+})
+
+// 规范化路径用于匹配（移除hash和query）
+const activeIndex = computed(() => {
+  const path = route.path
+  // 移除hash和query参数，只保留路径部分
+  return path.split('?')[0].split('#')[0]
+})
+
+// 提取公共的背景色获取逻辑
+const getBackgroundColor = computed(() => {
+  // 如果是透明模式，返回transparent
+  if (props.config.transparent) {
+    return 'transparent'
+  }
+  // 优先使用样式设置中的背景色，如果没有则使用导航栏配置的背景色
+  return props.config.style?.backgroundColor || props.config.backgroundColor
+})
 
 const headerStyles = computed(() => {
   const styles: Record<string, any> = {}
-  // 优先使用样式设置中的背景色，如果没有则使用导航栏配置的背景色
-  if (props.config.style?.backgroundColor) {
-    styles.backgroundColor = props.config.style.backgroundColor
-  } else if (props.config.backgroundColor) {
-    styles.backgroundColor = props.config.backgroundColor
+  const bgColor = getBackgroundColor.value
+  if (bgColor) {
+    styles.backgroundColor = bgColor
   }
   return styles
 })
@@ -166,23 +287,18 @@ const topBarStyles = computed(() => {
 
 const navStyles = computed(() => {
   const styles: Record<string, any> = {}
-  // 优先使用样式设置中的背景色，应用到主导航栏容器
-  if (props.config.style?.backgroundColor) {
-    styles.backgroundColor = props.config.style.backgroundColor
-  } else if (props.config.backgroundColor) {
-    styles.backgroundColor = props.config.backgroundColor
+  const bgColor = getBackgroundColor.value
+  if (bgColor) {
+    styles.backgroundColor = bgColor
   }
   return styles
 })
 
 const menuStyles = computed(() => {
   const styles: Record<string, any> = {}
-  // 导航菜单的背景色应该与主导航栏一致
-  // 优先使用样式设置中的背景色，如果没有则使用导航栏配置的背景色
-  if (props.config.style?.backgroundColor) {
-    styles.backgroundColor = props.config.style.backgroundColor
-  } else if (props.config.backgroundColor) {
-    styles.backgroundColor = props.config.backgroundColor
+  const bgColor = getBackgroundColor.value
+  if (bgColor) {
+    styles.backgroundColor = bgColor
   }
   return styles
 })
@@ -203,8 +319,35 @@ const menuItemStyles = computed(() => {
   return styles
 })
 
+// 子菜单项样式（可以独立配置）
+const subMenuItemStyles = computed(() => {
+  const styles: Record<string, any> = {}
+  // 子菜单可以使用不同的字体大小
+  if (props.config.style?.font?.size) {
+    // 子菜单字体可以稍微小一点
+    const baseSize = parseFloat(props.config.style.font.size)
+    if (!isNaN(baseSize)) {
+      styles.fontSize = `${baseSize * 0.9}px`
+    }
+  } else {
+    styles.fontSize = '0.9rem'
+  }
+  return styles
+})
+
 const handleSelect = (key: string) => {
-  router.push(key)
+  // 检查是否是子菜单索引（子菜单索引格式为 submenu-{index}）
+  if (key.startsWith('submenu-')) {
+    // 子菜单索引不进行路由跳转，由el-sub-menu自己处理
+    return
+  }
+  
+  // 验证路由路径
+  if (key && key.startsWith('/')) {
+    router.push(key).catch((error) => {
+      console.warn(`Route navigation failed for: ${key}`, error)
+    })
+  }
 }
 
 const toggleMobileMenu = () => {
@@ -214,6 +357,11 @@ const toggleMobileMenu = () => {
 const closeMobileMenu = () => {
   mobileMenuActive.value = false
 }
+
+// 监听路由变化，自动关闭移动端菜单
+watch(() => route.path, () => {
+  mobileMenuActive.value = false
+})
 </script>
 
 <style scoped>
@@ -250,16 +398,91 @@ const closeMobileMenu = () => {
   font-size: 0.875rem;
 }
 
+.top-bar-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* 默认布局（右侧） */
+.top-bar-content.position-right {
+  justify-content: flex-end;
+}
+
+/* 中间布局 */
+.top-bar-content.position-center {
+  justify-content: center;
+}
+
+/* 左侧布局（无Logo时） */
+.top-bar-content.position-left {
+  justify-content: flex-start;
+}
+
+/* Logo在顶部且联系信息在左侧时的布局 */
+.top-bar-content.has-logo-left {
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+/* Logo在顶部且联系信息在中间/右侧时的布局 */
+.top-bar-content.has-logo-with-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .top-info {
   display: flex;
-  justify-content: flex-end;
   gap: 30px;
+}
+
+/* 右侧位置（默认） */
+.top-info.position-right {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+/* 中间位置 */
+.top-info.position-center {
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 左侧位置（无Logo时） */
+.top-info.position-left {
+  justify-content: flex-start;
 }
 
 .top-info span {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.logo-top {
+  display: flex;
+  align-items: center;
+}
+
+.logo-top a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--dark-color);
+}
+
+.logo-top .logo-img {
+  height: 32px;
+  margin-right: 8px;
+}
+
+.logo-top .logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
 }
 
 .main-nav {
@@ -339,7 +562,6 @@ const closeMobileMenu = () => {
 }
 
 .mobile-menu {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -348,8 +570,25 @@ const closeMobileMenu = () => {
   z-index: 2000;
 }
 
-.mobile-menu.active {
-  display: block;
+/* Vue Transition 动画 */
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+  opacity: 0;
+}
+
+.mobile-menu-enter-active .mobile-menu-content,
+.mobile-menu-leave-active .mobile-menu-content {
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu-enter-from .mobile-menu-content,
+.mobile-menu-leave-to .mobile-menu-content {
+  transform: translateX(100%);
 }
 
 .mobile-menu-overlay {
@@ -368,11 +607,6 @@ const closeMobileMenu = () => {
   width: 280px;
   height: 100%;
   background: white;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-}
-
-.mobile-menu.active .mobile-menu-content {
   transform: translateX(0);
 }
 
@@ -387,6 +621,22 @@ const closeMobileMenu = () => {
 .close-btn {
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-logo .logo-img {
+  height: 32px;
+}
+
+.mobile-logo .logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
 }
 
 .mobile-nav-list {
@@ -453,6 +703,41 @@ const closeMobileMenu = () => {
 @media (max-width: 768px) {
   .top-bar {
     display: none;
+  }
+  
+  /* 移动端：如果Logo在顶部，仍然显示顶部栏 */
+  .top-bar.has-logo {
+    display: block;
+    padding: 12px 0;
+  }
+  
+  /* 移动端：顶部Logo和联系信息改为垂直布局 */
+  .top-bar.has-logo .top-bar-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  /* 移动端：Logo在左侧时的布局调整 */
+  .top-bar.has-logo .top-bar-content.has-logo-left,
+  .top-bar.has-logo .top-bar-content.has-logo-with-info {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .top-bar.has-logo .top-info {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  /* 移动端：移除位置特定的margin */
+  .top-info.position-center,
+  .top-info.position-right {
+    margin-left: 0;
+    margin-right: 0;
   }
   
   .nav-menu {
