@@ -964,6 +964,166 @@
                       </el-select>
                     </el-form-item>
                   </el-form>
+
+                  <!-- 文字样式设置 -->
+                  <el-divider content-position="left">文字样式</el-divider>
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="文字大小">
+                      <el-input 
+                        v-model="getTextImageTextStyle(selectedModule).fontSize" 
+                        placeholder="如: 16px 或 1rem"
+                      />
+                      <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                        支持 px、rem、em 等单位
+                      </div>
+                    </el-form-item>
+                  </el-form>
+
+                  <!-- 文本外框设置 -->
+                  <el-divider content-position="left">文本外框</el-divider>
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="显示外框">
+                      <el-switch v-model="getTextImageTextBox(selectedModule).show" />
+                    </el-form-item>
+                    <el-form-item 
+                      v-if="getTextImageTextBox(selectedModule).show" 
+                      label="外框颜色"
+                    >
+                      <el-color-picker v-model="getTextImageTextBox(selectedModule).color" />
+                    </el-form-item>
+                    <el-form-item 
+                      v-if="getTextImageTextBox(selectedModule).show" 
+                      label="外框宽度"
+                    >
+                      <el-input-number 
+                        v-model="getTextImageTextBox(selectedModule).width" 
+                        :min="0" 
+                        :max="20"
+                        :step="1"
+                        placeholder="边框宽度(px)"
+                      />
+                      <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                        边框宽度，单位为px，默认1px
+                      </div>
+                    </el-form-item>
+                    <el-form-item 
+                      v-if="getTextImageTextBox(selectedModule).show" 
+                      label="文本与外框距离"
+                    >
+                      <el-input 
+                        :model-value="getTextImageTextBoxPadding(selectedModule)"
+                        @update:model-value="(val) => getTextImageTextBox(selectedModule).padding = val"
+                        placeholder="如: 20px 或 20"
+                      />
+                      <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                        统一内边距，支持 px 单位或数字
+                      </div>
+                    </el-form-item>
+                    <el-form-item 
+                      v-if="getTextImageTextBox(selectedModule).show" 
+                      label="外框弯曲度"
+                    >
+                      <el-input-number 
+                        v-model="getTextImageTextBox(selectedModule).borderRadius" 
+                        :min="0" 
+                        :max="100"
+                        placeholder="圆角大小(px)"
+                      />
+                    </el-form-item>
+                  </el-form>
+
+                  <!-- 堆叠效果设置 -->
+                  <el-divider content-position="left">堆叠效果</el-divider>
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="启用堆叠">
+                      <el-switch v-model="getTextImageStackLayout(selectedModule).enabled" />
+                    </el-form-item>
+                    <template v-if="getTextImageStackLayout(selectedModule).enabled">
+                      <el-form-item label="图片位置">
+                        <el-select v-model="getTextImageStackLayout(selectedModule).position">
+                          <el-option label="左侧" value="left" />
+                          <el-option label="右侧" value="right" />
+                          <el-option label="上方" value="top" />
+                          <el-option label="下方" value="bottom" />
+                          <el-option label="覆盖" value="overlay" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="水平偏移">
+                        <el-input-number 
+                          v-model="getTextImageStackOffset(selectedModule).x" 
+                          :step="10"
+                          placeholder="px，负值可覆盖"
+                        />
+                        <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                          负值可使图片覆盖文本外框
+                        </div>
+                      </el-form-item>
+                      <el-form-item label="垂直偏移">
+                        <el-input-number 
+                          v-model="getTextImageStackOffset(selectedModule).y" 
+                          :step="10"
+                          placeholder="px，负值可覆盖"
+                        />
+                        <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                          负值可使图片覆盖文本外框
+                        </div>
+                      </el-form-item>
+                      <el-form-item label="堆叠层级">
+                        <el-input-number 
+                          v-model="getTextImageStackLayout(selectedModule).zIndex" 
+                          :min="0"
+                          :max="10"
+                          placeholder="数字越大越在上层"
+                        />
+                        <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                          图片层级，建议设置为2以上以覆盖文本外框
+                        </div>
+                      </el-form-item>
+                      <el-form-item label="文本区域宽度">
+                        <el-input 
+                          :model-value="getTextImageStackTextWidth(selectedModule)"
+                          @update:model-value="(val) => {
+                            const layout = getTextImageStackLayout(selectedModule)
+                            if (!val || val.trim() === '') {
+                              layout.textWidth = undefined
+                            } else {
+                              // 尝试解析为数字或字符串
+                              const numVal = parseFloat(val)
+                              if (!isNaN(numVal) && val.trim().match(/^\d+$/)) {
+                                layout.textWidth = numVal
+                              } else {
+                                layout.textWidth = val
+                              }
+                            }
+                          }"
+                          placeholder="如: 500px 或 50%，留空默认50%"
+                        />
+                        <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                          设置文本区域宽度，不占满整行，支持 px 或百分比，留空默认50%
+                        </div>
+                      </el-form-item>
+                      <el-divider content-position="left">图片大小</el-divider>
+                      <el-form-item label="图片宽度">
+                        <el-input-number 
+                          v-model="getTextImageStackImageSize(selectedModule).width" 
+                          :min="0"
+                          :step="50"
+                          placeholder="px，留空自适应"
+                        />
+                      </el-form-item>
+                      <el-form-item label="图片高度">
+                        <el-input-number 
+                          v-model="getTextImageStackImageSize(selectedModule).height" 
+                          :min="0"
+                          :step="50"
+                          placeholder="px，留空自适应"
+                        />
+                      </el-form-item>
+                    </template>
+                  </el-form>
+
+                  <!-- 按钮列表 -->
+                  <el-divider content-position="left">按钮列表</el-divider>
                   <div class="content-items">
                     <div class="items-header">
                       <h4>按钮列表</h4>
@@ -2377,6 +2537,146 @@ const removeTextImageButton = (index: number) => {
       ElMessage.success('已删除按钮')
     }
   }
+}
+
+// 获取图文混排文字样式配置（确保对象存在）
+const getTextImageTextStyle = (module: ModuleConfig | null) => {
+  if (!module || module.type !== ModuleType.TEXT_IMAGE) {
+    return { fontSize: undefined }
+  }
+  const textImageModule = module as any
+  if (!textImageModule.textStyle) {
+    textImageModule.textStyle = { fontSize: undefined }
+  }
+  return textImageModule.textStyle
+}
+
+// 获取图文混排文本外框配置（确保对象存在）
+const getTextImageTextBox = (module: ModuleConfig | null) => {
+  if (!module || module.type !== ModuleType.TEXT_IMAGE) {
+    return { show: false, color: '#000000', width: 1, padding: '20px', borderRadius: 0 }
+  }
+  const textImageModule = module as any
+  if (!textImageModule.textBox) {
+    textImageModule.textBox = {
+      show: false,
+      color: '#000000',
+      width: 1,
+      padding: '20px',
+      borderRadius: 0
+    }
+  }
+  if (textImageModule.textBox.show === undefined) {
+    textImageModule.textBox.show = false
+  }
+  if (!textImageModule.textBox.color) {
+    textImageModule.textBox.color = '#000000'
+  }
+  if (textImageModule.textBox.width === undefined) {
+    textImageModule.textBox.width = 1
+  }
+  if (!textImageModule.textBox.padding) {
+    textImageModule.textBox.padding = '20px'
+  }
+  if (textImageModule.textBox.borderRadius === undefined) {
+    textImageModule.textBox.borderRadius = 0
+  }
+  return textImageModule.textBox
+}
+
+// 获取图文混排文本外框内边距（用于双向绑定）
+const getTextImageTextBoxPadding = (module: ModuleConfig | null) => {
+  const box = getTextImageTextBox(module)
+  if (typeof box.padding === 'string' || typeof box.padding === 'number') {
+    return box.padding
+  }
+  // 如果是对象，返回统一值或空
+  return box.padding?.horizontal || box.padding?.vertical || '20px'
+}
+
+// 设置图文混排文本外框内边距
+const setTextImageTextBoxPadding = (module: ModuleConfig | null, value: string | number) => {
+  const box = getTextImageTextBox(module)
+  box.padding = value
+}
+
+// 获取图文混排堆叠布局配置（确保对象存在）
+const getTextImageStackLayout = (module: ModuleConfig | null) => {
+  if (!module || module.type !== ModuleType.TEXT_IMAGE) {
+    return {
+      enabled: false,
+      position: 'right',
+      offset: { x: 0, y: 0 },
+      zIndex: 2
+    }
+  }
+  const textImageModule = module as any
+  if (!textImageModule.stackLayout) {
+    textImageModule.stackLayout = {
+      enabled: false,
+      position: 'right',
+      offset: { x: 0, y: 0 },
+      zIndex: 2
+    }
+  }
+  if (textImageModule.stackLayout.enabled === undefined) {
+    textImageModule.stackLayout.enabled = false
+  }
+  if (!textImageModule.stackLayout.position) {
+    textImageModule.stackLayout.position = 'right'
+  }
+  if (!textImageModule.stackLayout.offset) {
+    textImageModule.stackLayout.offset = { x: 0, y: 0 }
+  }
+  if (textImageModule.stackLayout.zIndex === undefined) {
+    textImageModule.stackLayout.zIndex = 2
+  }
+  return textImageModule.stackLayout
+}
+
+// 获取图文混排堆叠偏移配置（确保对象存在）
+const getTextImageStackOffset = (module: ModuleConfig | null) => {
+  const stackLayout = getTextImageStackLayout(module)
+  if (!stackLayout.offset) {
+    stackLayout.offset = { x: 0, y: 0 }
+  }
+  if (stackLayout.offset.x === undefined) {
+    stackLayout.offset.x = 0
+  }
+  if (stackLayout.offset.y === undefined) {
+    stackLayout.offset.y = 0
+  }
+  return stackLayout.offset
+}
+
+// 获取图文混排堆叠文本宽度（用于双向绑定）
+const getTextImageStackTextWidth = (module: ModuleConfig | null) => {
+  const stackLayout = getTextImageStackLayout(module)
+  if (stackLayout.textWidth === undefined) {
+    return ''
+  }
+  if (typeof stackLayout.textWidth === 'number') {
+    return `${stackLayout.textWidth}px`
+  }
+  return stackLayout.textWidth
+}
+
+// 获取图文混排堆叠图片大小配置（确保对象存在）
+const getTextImageStackImageSize = (module: ModuleConfig | null) => {
+  const stackLayout = getTextImageStackLayout(module)
+  if (!stackLayout.imageSize) {
+    stackLayout.imageSize = {
+      width: undefined,
+      height: undefined
+    }
+  }
+  if (stackLayout.imageSize.width === undefined) {
+    stackLayout.imageSize.width = undefined
+  }
+  if (stackLayout.imageSize.height === undefined) {
+    stackLayout.imageSize.height = undefined
+  }
+  return stackLayout.imageSize
 }
 
 // 联系表单模块 - 添加字段

@@ -515,6 +515,33 @@ export interface TextImageConfig extends BaseModuleConfig {
     link?: string
     type?: 'primary' | 'secondary'
   }>
+  // 文字样式配置
+  textStyle?: {
+    fontSize?: string | number        // 文字大小
+  }
+  // 文本外框配置
+  textBox?: {
+    show?: boolean                    // 是否显示外框
+    color?: string                    // 外框颜色（边框颜色）
+    width?: string | number           // 外框宽度（边框宽度）
+    padding?: string | number | SpacingConfig  // 文本与外框距离（内边距）
+    borderRadius?: string | number    // 外框弯曲度（圆角）
+  }
+  // 图片与文本位置配置（堆叠效果）
+  stackLayout?: {
+    enabled?: boolean                 // 是否启用堆叠效果
+    position?: 'left' | 'right' | 'top' | 'bottom' | 'overlay'  // 图片相对文本的位置
+    offset?: {
+      x?: string | number            // 水平偏移（支持负值实现覆盖）
+      y?: string | number            // 垂直偏移（支持负值实现覆盖）
+    }
+    zIndex?: number                   // 堆叠层级（图片可覆盖文本外框）
+    textWidth?: string | number       // 文本区域宽度（堆叠模式下，不占满整行）
+    imageSize?: {
+      width?: string | number         // 图片宽度
+      height?: string | number        // 图片高度
+    }
+  }
 }
 
 // 联系表单配置
