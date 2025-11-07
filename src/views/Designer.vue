@@ -613,7 +613,19 @@
                         <el-option label="左图右文" value="left-image" />
                         <el-option label="右图左文" value="right-image" />
                         <el-option label="交替" value="alternate" />
+                        <el-option label="灵活布局" value="flexible" />
                       </el-select>
+                    </el-form-item>
+                    <el-form-item 
+                      v-if="(selectedModule as any).layout === 'flexible'" 
+                      label="Grid列数"
+                    >
+                      <el-input-number 
+                        v-model="(selectedModule as any).gridColumns" 
+                        :min="1" 
+                        :max="12" 
+                        :default-value="2"
+                      />
                     </el-form-item>
                     <el-form-item label="间距">
                       <el-input v-model="(selectedModule as any).gap" placeholder="例: 60px" />
@@ -642,6 +654,26 @@
                           <el-form-item label="图片">
                             <el-input v-model="item.image" placeholder="图片URL" />
                           </el-form-item>
+                          <template v-if="(selectedModule as any).layout === 'flexible'">
+                            <el-form-item label="占据栏数">
+                              <el-input-number 
+                                v-model="item.columnSpan" 
+                                :min="1" 
+                                :max="(selectedModule as any).gridColumns || 12"
+                                :default-value="1"
+                                placeholder="图片占据的栏数"
+                              />
+                            </el-form-item>
+                            <el-form-item label="占据行数">
+                              <el-input-number 
+                                v-model="item.rowSpan" 
+                                :min="1" 
+                                :max="10"
+                                :default-value="1"
+                                placeholder="图片占据的行数"
+                              />
+                            </el-form-item>
+                          </template>
                         </el-form>
                       </el-card>
                     </div>
@@ -2305,11 +2337,17 @@ const addColumnItem = () => {
   if (selectedModule.value && selectedModule.value.type === ModuleType.COLUMN) {
     const module = selectedModule.value as any
     if (!module.items) module.items = []
-    module.items.push({
+    const newItem: any = {
       title: '新栏目',
       content: '栏目内容',
       image: 'https://picsum.photos/600/400?random=' + Date.now()
-    })
+    }
+    // 如果是灵活布局，添加默认的栏数和行数
+    if (module.layout === 'flexible') {
+      newItem.columnSpan = 1
+      newItem.rowSpan = 1
+    }
+    module.items.push(newItem)
     ElMessage.success('已添加栏目')
   }
 }

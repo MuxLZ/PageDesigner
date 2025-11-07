@@ -288,10 +288,14 @@ export interface ColumnConfig extends BaseModuleConfig {
     title?: string
     content?: string
     image?: string
+    columnSpan?: number            // 图片占据的栏数（默认1）
+    rowSpan?: number                // 图片占据的行数（默认1）
+    position?: 'left' | 'right' | 'top' | 'bottom' // 图片位置（用于传统布局）
     [key: string]: any
   }>
-  layout?: 'left-image' | 'right-image' | 'alternate' // 布局方式
+  layout?: 'left-image' | 'right-image' | 'alternate' | 'flexible' // 布局方式，flexible为灵活布局
   gap?: string | number
+  gridColumns?: number              // Grid布局的总列数（默认2）
 }
 
 // 时间轴配置
