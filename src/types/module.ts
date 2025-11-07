@@ -145,6 +145,31 @@ export interface ModuleStyleConfig {
   responsive?: ResponsiveConfig   // 响应式配置
 }
 
+// 标题显示模块的子模块配置
+export interface TitleSubModuleConfig {
+  content: string                  // 子模块内容
+  icon?: string                    // 图标（可选）
+  backgroundColor?: string          // 背景色
+  border?: string                  // 边框（如 "1px solid #ccc"）
+  borderRadius?: string | number   // 弯曲度（圆角）
+  color?: string                   // 文字颜色
+  [key: string]: any               // 其他自定义属性
+}
+
+// 标题显示模块配置
+export interface TitleDisplayConfig {
+  enabled?: boolean                // 是否显示标题
+  title?: string                   // 标题内容
+  icon?: string                    // 图标（可选）
+  subtitle?: string                // 子标题内容（可选）
+  subModules?: TitleSubModuleConfig[] // 子模块列表（可以有多个）
+  position?: {
+    titlePosition?: 'left' | 'center' | 'right'  // 标题位置（默认 left）
+    subModulesPosition?: 'left' | 'center' | 'right'  // 子模块位置（默认 right）
+  }
+  divider?: boolean                 // 是否显示分割线（标题与下方模块之间）
+}
+
 // 模块基础配置
 export interface BaseModuleConfig {
   id: string                       // 模块唯一ID
@@ -154,6 +179,7 @@ export interface BaseModuleConfig {
   order: number                    // 排序
   style?: ModuleStyleConfig        // 样式配置
   effect?: EffectConfig | CombinedEffect // 动画效果
+  titleDisplay?: TitleDisplayConfig // 标题显示配置
   data?: any                       // 模块数据
 }
 

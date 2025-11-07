@@ -184,22 +184,73 @@
               </el-form>
             </el-collapse-item>
 
-            <!-- 动画效果 -->
-            <el-collapse-item title="动画效果" name="effect">
-              <el-form label-width="100px" size="small">
-                <el-form-item label="效果类型">
-                  <el-select v-model="selectedModule.effect.type" placeholder="选择效果">
-                    <el-option label="淡入淡出" value="fade" />
-                    <el-option label="缩放" value="zoom" />
-                    <el-option label="旋转" value="rotate" />
-                  </el-select>
+            <!-- 标题显示模块 -->
+            <el-collapse-item title="标题显示模块" name="titleDisplay">
+              <el-form label-width="120px" size="small">
+                <el-form-item label="显示标题">
+                  <el-switch v-model="getTitleDisplay(selectedModule).enabled" />
                 </el-form-item>
-                <el-form-item label="持续时间">
-                  <el-input-number v-model="selectedModule.effect.duration" :min="0" />
-                </el-form-item>
-                <el-form-item label="延迟">
-                  <el-input-number v-model="selectedModule.effect.delay" :min="0" />
-                </el-form-item>
+                <template v-if="getTitleDisplay(selectedModule).enabled">
+                  <el-form-item label="标题内容">
+                    <el-input v-model="getTitleDisplay(selectedModule).title" placeholder="请输入标题" />
+                  </el-form-item>
+                  <el-form-item label="图标">
+                    <el-input v-model="getTitleDisplay(selectedModule).icon" placeholder="图标类名或URL（可选）" />
+                  </el-form-item>
+                  
+                  <el-divider content-position="left">位置设置</el-divider>
+                  <el-form-item label="标题位置">
+                    <el-radio-group v-model="getTitleDisplayPosition(selectedModule).titlePosition">
+                      <el-radio label="left">左侧</el-radio>
+                      <el-radio label="center">居中</el-radio>
+                      <el-radio label="right">右侧</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-form-item label="子模块位置">
+                    <el-radio-group v-model="getTitleDisplayPosition(selectedModule).subModulesPosition">
+                      <el-radio label="left">左侧</el-radio>
+                      <el-radio label="center">居中</el-radio>
+                      <el-radio label="right">右侧</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  
+                  <el-divider content-position="left">子模块</el-divider>
+                  <div v-for="(subModule, index) in getTitleDisplay(selectedModule).subModules" :key="index" style="margin-bottom: 16px; padding: 12px; border: 1px solid #e4e7ed; border-radius: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                      <strong>子模块 {{ index + 1 }}</strong>
+                      <el-button type="danger" size="small" text @click="removeSubModule(index)">删除</el-button>
+                    </div>
+                    <el-form label-width="100px" size="small">
+                      <el-form-item label="内容">
+                        <el-input v-model="subModule.content" placeholder="子模块内容" />
+                      </el-form-item>
+                      <el-form-item label="图标">
+                        <el-input v-model="subModule.icon" placeholder="图标类名或URL（可选）" />
+                      </el-form-item>
+                      <el-form-item label="背景色">
+                        <el-color-picker v-model="subModule.backgroundColor" />
+                      </el-form-item>
+                      <el-form-item label="边框">
+                        <el-input v-model="subModule.border" placeholder="如: 1px solid #ccc" />
+                      </el-form-item>
+                      <el-form-item label="弯曲度">
+                        <el-input-number v-model="subModule.borderRadius" :min="0" placeholder="圆角值" />
+                      </el-form-item>
+                      <el-form-item label="文字颜色">
+                        <el-color-picker v-model="subModule.color" />
+                      </el-form-item>
+                    </el-form>
+                  </div>
+                  <el-button type="primary" size="small" @click="addSubModule">添加子模块</el-button>
+                  
+                  <el-divider content-position="left">分割线</el-divider>
+                  <el-form-item label="显示分割线">
+                    <el-switch v-model="getTitleDisplay(selectedModule).divider" />
+                    <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                      在标题与下方模块之间显示分割线
+                    </div>
+                  </el-form-item>
+                </template>
               </el-form>
             </el-collapse-item>
 
@@ -1779,7 +1830,7 @@ const selectedModule = ref<ModuleConfig | null>(null)
 const previewMode = ref(false)
 
 // 折叠面板
-const activeCollapse = ref(['basic', 'style', 'effect', 'module'])
+const activeCollapse = ref(['basic', 'style', 'titleDisplay', 'module'])
 
 // 模块库折叠面板
 const moduleLibraryCollapse = ref(['layout'])
@@ -1917,6 +1968,16 @@ const addModule = (type: ModuleType) => {
       duration: 600,
       delay: 0,
       enabled: true
+    },
+    titleDisplay: {
+      enabled: false,
+      title: '',
+      subModules: [],
+      divider: false,
+      position: {
+        titlePosition: 'left',
+        subModulesPosition: 'right'
+      }
     }
   } as ModuleConfig
   
@@ -2096,6 +2157,79 @@ const getCarouselSlideAnimation = (module: ModuleConfig | null) => {
     carouselModule.slideAnimation.type = 'none'
   }
   return carouselModule.slideAnimation
+}
+
+// 获取标题显示配置
+const getTitleDisplay = (module: ModuleConfig | null) => {
+  if (!module) {
+    return { enabled: false, title: '', subModules: [], divider: false }
+  }
+  const moduleAny = module as any
+  if (!moduleAny.titleDisplay) {
+    moduleAny.titleDisplay = {
+      enabled: false,
+      title: '',
+      subModules: [],
+      divider: false,
+      position: {
+        titlePosition: 'left',
+        subModulesPosition: 'right'
+      }
+    }
+  }
+  // 确保 subModules 存在
+  if (!moduleAny.titleDisplay.subModules) {
+    moduleAny.titleDisplay.subModules = []
+  }
+  // 确保 position 存在
+  if (!moduleAny.titleDisplay.position) {
+    moduleAny.titleDisplay.position = {
+      titlePosition: 'left',
+      subModulesPosition: 'right'
+    }
+  }
+  return moduleAny.titleDisplay
+}
+
+// 获取标题显示位置配置
+const getTitleDisplayPosition = (module: ModuleConfig | null) => {
+  const titleDisplay = getTitleDisplay(module)
+  if (!titleDisplay.position) {
+    titleDisplay.position = {
+      titlePosition: 'left',
+      subModulesPosition: 'right'
+    }
+  }
+  return titleDisplay.position
+}
+
+// 添加子模块
+const addSubModule = () => {
+  if (selectedModule.value) {
+    const titleDisplay = getTitleDisplay(selectedModule.value)
+    if (!titleDisplay.subModules) {
+      titleDisplay.subModules = []
+    }
+    titleDisplay.subModules.push({
+      content: '新子模块',
+      backgroundColor: '',
+      border: '',
+      borderRadius: 0,
+      color: ''
+    })
+    ElMessage.success('已添加子模块')
+  }
+}
+
+// 删除子模块
+const removeSubModule = (index: number) => {
+  if (selectedModule.value) {
+    const titleDisplay = getTitleDisplay(selectedModule.value)
+    if (titleDisplay.subModules && titleDisplay.subModules.length > index) {
+      titleDisplay.subModules.splice(index, 1)
+      ElMessage.success('已删除子模块')
+    }
+  }
 }
 
 // 宫格模块 - 添加项目
