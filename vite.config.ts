@@ -23,7 +23,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', // 支持公网访问
     port: 8091,
-    open: true
+    open: false // 禁用自动打开浏览器，避免在Linux服务器环境报错
   },
   preview: {
     host: '0.0.0.0', // 生产预览模式也支持公网访问

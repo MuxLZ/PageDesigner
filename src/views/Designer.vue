@@ -225,6 +225,161 @@
                       <el-switch v-model="(selectedModule as any).arrows" />
                     </el-form-item>
                   </el-form>
+
+                  <!-- 轮播动画效果设置 -->
+                  <el-divider content-position="left">轮播动画效果</el-divider>
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="启用动画">
+                      <el-switch v-model="getCarouselSlideAnimation(selectedModule).enabled" />
+                    </el-form-item>
+                    <el-form-item v-if="getCarouselSlideAnimation(selectedModule).enabled" label="动画类型">
+                      <el-select v-model="getCarouselSlideAnimation(selectedModule).type" placeholder="选择动画类型">
+                        <el-option label="无动画" value="none" />
+                        <el-option label="缩放-由大到小" value="zoom-in" />
+                        <el-option label="缩放-由小到大" value="zoom-out" />
+                        <el-option label="平移-从左到右" value="pan-left" />
+                        <el-option label="平移-从右到左" value="pan-right" />
+                        <el-option label="平移-从上到下" value="pan-up" />
+                        <el-option label="平移-从下到上" value="pan-down" />
+                        <el-option label="旋转" value="rotate" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item v-if="getCarouselSlideAnimation(selectedModule).enabled && getCarouselSlideAnimation(selectedModule).type !== 'none'" label="动画时长(ms)">
+                      <el-input-number 
+                        v-model="getCarouselSlideAnimation(selectedModule).duration" 
+                        :min="1000" 
+                        :max="30000"
+                        :step="500"
+                        placeholder="默认等于播放间隔"
+                      />
+                      <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                        留空则使用播放间隔时间
+                      </div>
+                    </el-form-item>
+                  </el-form>
+                  
+                  <!-- 标题样式设置 -->
+                  <el-divider content-position="left">标题样式</el-divider>
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="字体大小">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).font.size" placeholder="如: 3.5rem" />
+                    </el-form-item>
+                    <el-form-item label="字体粗细">
+                      <el-select v-model="getCarouselTitleStyle(selectedModule).font.weight" placeholder="选择字体粗细" clearable>
+                        <el-option label="正常" value="normal" />
+                        <el-option label="粗体" value="bold" />
+                        <el-option label="100" value="100" />
+                        <el-option label="200" value="200" />
+                        <el-option label="300" value="300" />
+                        <el-option label="400" value="400" />
+                        <el-option label="500" value="500" />
+                        <el-option label="600" value="600" />
+                        <el-option label="700" value="700" />
+                        <el-option label="800" value="800" />
+                        <el-option label="900" value="900" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="字体颜色">
+                      <el-color-picker v-model="getCarouselTitleStyle(selectedModule).font.color" />
+                    </el-form-item>
+                    <el-form-item label="字体族">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).font.family" placeholder="如: Arial, sans-serif" />
+                    </el-form-item>
+                    <el-form-item label="行高">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).font.lineHeight" placeholder="如: 1.2" />
+                    </el-form-item>
+                    <el-form-item label="字间距">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).font.letterSpacing" placeholder="如: 2px" />
+                    </el-form-item>
+                    <el-form-item label="文本对齐">
+                      <el-select v-model="getCarouselTitleStyle(selectedModule).textAlign" placeholder="选择对齐方式" clearable>
+                        <el-option label="左对齐" value="left" />
+                        <el-option label="居中" value="center" />
+                        <el-option label="右对齐" value="right" />
+                        <el-option label="两端对齐" value="justify" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="透明度">
+                      <el-slider v-model="getCarouselTitleStyle(selectedModule).opacity" :min="0" :max="1" :step="0.1" show-input />
+                    </el-form-item>
+                    <el-form-item label="文字阴影">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).textShadow" placeholder="如: 2px 2px 4px rgba(0,0,0,0.5)" />
+                    </el-form-item>
+                    <el-form-item label="上边距">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).margin.top" placeholder="如: 20px" />
+                    </el-form-item>
+                    <el-form-item label="下边距">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).margin.bottom" placeholder="如: 20px" />
+                    </el-form-item>
+                    <el-form-item label="左边距">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).margin.left" placeholder="如: 20px" />
+                    </el-form-item>
+                    <el-form-item label="右边距">
+                      <el-input v-model="getCarouselTitleStyle(selectedModule).margin.right" placeholder="如: 20px" />
+                    </el-form-item>
+                  </el-form>
+
+                  <!-- 副标题样式设置 -->
+                  <el-divider content-position="left">副标题样式</el-divider>
+                  <el-form label-width="100px" size="small">
+                    <el-form-item label="字体大小">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).font.size" placeholder="如: 1.25rem" />
+                    </el-form-item>
+                    <el-form-item label="字体粗细">
+                      <el-select v-model="getCarouselSubtitleStyle(selectedModule).font.weight" placeholder="选择字体粗细" clearable>
+                        <el-option label="正常" value="normal" />
+                        <el-option label="粗体" value="bold" />
+                        <el-option label="100" value="100" />
+                        <el-option label="200" value="200" />
+                        <el-option label="300" value="300" />
+                        <el-option label="400" value="400" />
+                        <el-option label="500" value="500" />
+                        <el-option label="600" value="600" />
+                        <el-option label="700" value="700" />
+                        <el-option label="800" value="800" />
+                        <el-option label="900" value="900" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="字体颜色">
+                      <el-color-picker v-model="getCarouselSubtitleStyle(selectedModule).font.color" />
+                    </el-form-item>
+                    <el-form-item label="字体族">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).font.family" placeholder="如: Arial, sans-serif" />
+                    </el-form-item>
+                    <el-form-item label="行高">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).font.lineHeight" placeholder="如: 1.5" />
+                    </el-form-item>
+                    <el-form-item label="字间距">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).font.letterSpacing" placeholder="如: 1px" />
+                    </el-form-item>
+                    <el-form-item label="文本对齐">
+                      <el-select v-model="getCarouselSubtitleStyle(selectedModule).textAlign" placeholder="选择对齐方式" clearable>
+                        <el-option label="左对齐" value="left" />
+                        <el-option label="居中" value="center" />
+                        <el-option label="右对齐" value="right" />
+                        <el-option label="两端对齐" value="justify" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="透明度">
+                      <el-slider v-model="getCarouselSubtitleStyle(selectedModule).opacity" :min="0" :max="1" :step="0.1" show-input />
+                    </el-form-item>
+                    <el-form-item label="文字阴影">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).textShadow" placeholder="如: 1px 1px 2px rgba(0,0,0,0.3)" />
+                    </el-form-item>
+                    <el-form-item label="上边距">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).margin.top" placeholder="如: 10px" />
+                    </el-form-item>
+                    <el-form-item label="下边距">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).margin.bottom" placeholder="如: 10px" />
+                    </el-form-item>
+                    <el-form-item label="左边距">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).margin.left" placeholder="如: 10px" />
+                    </el-form-item>
+                    <el-form-item label="右边距">
+                      <el-input v-model="getCarouselSubtitleStyle(selectedModule).margin.right" placeholder="如: 10px" />
+                    </el-form-item>
+                  </el-form>
+
                   <div class="content-items">
                     <div class="items-header">
                       <h4>幻灯片列表</h4>
@@ -1710,6 +1865,77 @@ const removeCarouselSlide = (index: number) => {
     module.slides.splice(index, 1)
     ElMessage.success('已删除幻灯片')
   }
+}
+
+// 获取轮播标题样式配置（确保对象存在）
+const getCarouselTitleStyle = (module: ModuleConfig | null) => {
+  if (!module || module.type !== ModuleType.CAROUSEL) {
+    return { font: {}, margin: {}, opacity: 1 }
+  }
+  const carouselModule = module as any
+  if (!carouselModule.titleStyle) {
+    carouselModule.titleStyle = {
+      font: {},
+      margin: {},
+      opacity: 1
+    }
+  }
+  if (!carouselModule.titleStyle.font) {
+    carouselModule.titleStyle.font = {}
+  }
+  if (!carouselModule.titleStyle.margin) {
+    carouselModule.titleStyle.margin = {}
+  }
+  if (carouselModule.titleStyle.opacity === undefined) {
+    carouselModule.titleStyle.opacity = 1
+  }
+  return carouselModule.titleStyle
+}
+
+// 获取轮播副标题样式配置（确保对象存在）
+const getCarouselSubtitleStyle = (module: ModuleConfig | null) => {
+  if (!module || module.type !== ModuleType.CAROUSEL) {
+    return { font: {}, margin: {}, opacity: 0.9 }
+  }
+  const carouselModule = module as any
+  if (!carouselModule.subtitleStyle) {
+    carouselModule.subtitleStyle = {
+      font: {},
+      margin: {},
+      opacity: 0.9
+    }
+  }
+  if (!carouselModule.subtitleStyle.font) {
+    carouselModule.subtitleStyle.font = {}
+  }
+  if (!carouselModule.subtitleStyle.margin) {
+    carouselModule.subtitleStyle.margin = {}
+  }
+  if (carouselModule.subtitleStyle.opacity === undefined) {
+    carouselModule.subtitleStyle.opacity = 0.9
+  }
+  return carouselModule.subtitleStyle
+}
+
+// 获取轮播动画配置（确保对象存在）
+const getCarouselSlideAnimation = (module: ModuleConfig | null) => {
+  if (!module || module.type !== ModuleType.CAROUSEL) {
+    return { enabled: false, type: 'none' }
+  }
+  const carouselModule = module as any
+  if (!carouselModule.slideAnimation) {
+    carouselModule.slideAnimation = {
+      enabled: false,
+      type: 'none'
+    }
+  }
+  if (carouselModule.slideAnimation.enabled === undefined) {
+    carouselModule.slideAnimation.enabled = false
+  }
+  if (!carouselModule.slideAnimation.type) {
+    carouselModule.slideAnimation.type = 'none'
+  }
+  return carouselModule.slideAnimation
 }
 
 // 宫格模块 - 添加项目

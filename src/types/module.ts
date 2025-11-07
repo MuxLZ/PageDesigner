@@ -190,8 +190,25 @@ export interface HeaderConfig extends BaseModuleConfig {
   transparent?: boolean           // 是否透明
 }
 
+// 文本样式配置（用于轮播图标题和副标题）
+export interface CarouselTextStyleConfig {
+  font?: FontConfig                // 字体配置
+  textAlign?: 'left' | 'center' | 'right' | 'justify' // 文本对齐
+  position?: {
+    top?: string | number          // 上边距
+    right?: string | number        // 右边距
+    bottom?: string | number       // 下边距
+    left?: string | number         // 左边距
+  }
+  margin?: SpacingConfig           // 外边距
+  padding?: SpacingConfig          // 内边距
+  transform?: string               // CSS transform
+  opacity?: number                 // 透明度
+  textShadow?: string              // 文字阴影
+}
+
 // 轮播配置
-export interface CarouselConfig extends BaseModuleConfig {
+export interface CarouselConfig extends Omit<BaseModuleConfig, 'effect'> {
   type: ModuleType.CAROUSEL
   slides: Array<{
     image?: string
@@ -210,7 +227,15 @@ export interface CarouselConfig extends BaseModuleConfig {
   height?: string                  // 高度
   indicator?: boolean              // 是否显示指示器
   arrows?: boolean                 // 是否显示箭头
-  effect?: 'slide' | 'fade' | 'cube' | 'coverflow' // 切换效果
+  transitionEffect?: 'slide' | 'fade' | 'cube' | 'coverflow' // 轮播切换效果
+  effect?: EffectConfig | CombinedEffect // 动画效果（继承自 BaseModuleConfig）
+  titleStyle?: CarouselTextStyleConfig  // 标题样式配置
+  subtitleStyle?: CarouselTextStyleConfig // 副标题样式配置
+  slideAnimation?: {
+    type?: 'none' | 'zoom-in' | 'zoom-out' | 'pan-left' | 'pan-right' | 'pan-up' | 'pan-down' | 'rotate' // 幻灯片动画类型
+    duration?: number              // 动画持续时间（ms），默认等于 interval
+    enabled?: boolean              // 是否启用动画
+  }
 }
 
 // 宫格配置
