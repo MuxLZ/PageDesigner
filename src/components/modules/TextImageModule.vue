@@ -242,23 +242,43 @@ const imageStyle = computed(() => {
       break
     case 'left':
       styles.left = offsetX
-      styles.top = offset.y !== undefined ? offsetY : '50%'
-      styles.transform = 'translateY(-50%)'
+      if (offset.y !== undefined) {
+        styles.top = offsetY
+        styles.transform = 'none'
+      } else {
+        styles.top = '50%'
+        styles.transform = 'translateY(-50%)'
+      }
       break
     case 'right':
       styles.right = offsetX
-      styles.top = offset.y !== undefined ? offsetY : '50%'
-      styles.transform = 'translateY(-50%)'
+      if (offset.y !== undefined) {
+        styles.top = offsetY
+        styles.transform = 'none'
+      } else {
+        styles.top = '50%'
+        styles.transform = 'translateY(-50%)'
+      }
       break
     case 'top':
       styles.top = offsetY
-      styles.left = offset.x !== undefined ? offsetX : '50%'
-      styles.transform = 'translateX(-50%)'
+      if (offset.x !== undefined) {
+        styles.left = offsetX
+        styles.transform = 'none'
+      } else {
+        styles.left = '50%'
+        styles.transform = 'translateX(-50%)'
+      }
       break
     case 'bottom':
       styles.bottom = offsetY
-      styles.left = offset.x !== undefined ? offsetX : '50%'
-      styles.transform = 'translateX(-50%)'
+      if (offset.x !== undefined) {
+        styles.left = offsetX
+        styles.transform = 'none'
+      } else {
+        styles.left = '50%'
+        styles.transform = 'translateX(-50%)'
+      }
       break
   }
   

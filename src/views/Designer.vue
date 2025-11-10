@@ -167,19 +167,19 @@
             <el-collapse-item title="样式设置" name="style">
               <el-form label-width="100px" size="small">
                 <el-form-item label="背景色">
-                  <el-color-picker v-model="selectedModule.style.backgroundColor" />
+                  <el-color-picker v-model="getModuleStyle(selectedModule).backgroundColor" />
                 </el-form-item>
                 <el-form-item label="内边距">
-                  <el-input v-model="selectedModule.style.padding" placeholder="例: 20px" />
+                  <el-input v-model="getModuleStyle(selectedModule).padding" placeholder="例: 20px" />
                 </el-form-item>
                 <el-form-item label="外边距">
-                  <el-input v-model="selectedModule.style.margin" placeholder="例: 20px" />
+                  <el-input v-model="getModuleStyle(selectedModule).margin" placeholder="例: 20px" />
                 </el-form-item>
                 <el-form-item label="字体大小">
-                  <el-input v-model="selectedModule.style.font.size" placeholder="例: 16px" />
+                  <el-input v-model="getModuleStyle(selectedModule).font.size" placeholder="例: 16px" />
                 </el-form-item>
                 <el-form-item label="字体颜色">
-                  <el-color-picker v-model="selectedModule.style.font.color" />
+                  <el-color-picker v-model="getModuleStyle(selectedModule).font.color" />
                 </el-form-item>
               </el-form>
             </el-collapse-item>
@@ -1135,7 +1135,7 @@
                     >
                       <el-input 
                         :model-value="getTextImageTextBoxPadding(selectedModule)"
-                        @update:model-value="(val) => getTextImageTextBox(selectedModule).padding = val"
+                        @update:model-value="(val: any) => getTextImageTextBox(selectedModule).padding = val"
                         placeholder="如: 20px 或 20"
                       />
                       <div style="font-size: 12px; color: #909399; margin-top: 4px;">
@@ -1162,15 +1162,6 @@
                       <el-switch v-model="getTextImageStackLayout(selectedModule).enabled" />
                     </el-form-item>
                     <template v-if="getTextImageStackLayout(selectedModule).enabled">
-                      <el-form-item label="图片位置">
-                        <el-select v-model="getTextImageStackLayout(selectedModule).position">
-                          <el-option label="左侧" value="left" />
-                          <el-option label="右侧" value="right" />
-                          <el-option label="上方" value="top" />
-                          <el-option label="下方" value="bottom" />
-                          <el-option label="覆盖" value="overlay" />
-                        </el-select>
-                      </el-form-item>
                       <el-form-item label="水平偏移">
                         <el-input-number 
                           v-model="getTextImageStackOffset(selectedModule).x" 
@@ -1205,7 +1196,7 @@
                       <el-form-item label="文本区域宽度">
                         <el-input 
                           :model-value="getTextImageStackTextWidth(selectedModule)"
-                          @update:model-value="(val) => {
+                          @update:model-value="(val: string) => {
                             const layout = getTextImageStackLayout(selectedModule)
                             if (!val || val.trim() === '') {
                               layout.textWidth = undefined
@@ -1435,7 +1426,7 @@
                             <span>特性标签</span>
                             <el-button type="primary" size="small" @click="addProductFeature(index)">添加特性</el-button>
                           </div>
-                          <div v-for="(feature, featureIndex) in item.features" :key="featureIndex" class="link-item">
+                          <div v-for="(_, featureIndex) in item.features" :key="featureIndex" class="link-item">
                             <el-input v-model="item.features[featureIndex]" placeholder="特性文本" style="width: 85%; margin-right: 5%" />
                             <el-button type="danger" text size="small" @click="removeProductFeature(index, featureIndex)">删除</el-button>
                           </div>
@@ -1682,7 +1673,7 @@
                             <span>优势列表</span>
                             <el-button type="primary" size="small" @click="addSolutionBenefit(index)">添加优势</el-button>
                           </div>
-                          <div v-for="(benefit, benefitIndex) in tab.benefits" :key="benefitIndex" class="link-item">
+                          <div v-for="(_, benefitIndex) in tab.benefits" :key="benefitIndex" class="link-item">
                             <el-input v-model="tab.benefits[benefitIndex]" placeholder="优势描述" style="width: 85%; margin-right: 5%" />
                             <el-button type="danger" text size="small" @click="removeSolutionBenefit(index, benefitIndex)">删除</el-button>
                           </div>
@@ -1881,7 +1872,7 @@ import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ModuleImporter } from '@/core/ModuleImporter'
 import type { ModulePackage } from '@/core/ModuleImporter'
-import { Edit, ArrowUp, ArrowDown, Upload, Document } from '@element-plus/icons-vue'
+import { ArrowUp, ArrowDown, Upload, Document } from '@element-plus/icons-vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import type { PageConfig, ModuleConfig } from '@/types/module'
 import { ModuleType, ModuleCategory } from '@/types/module'
@@ -1907,6 +1898,14 @@ const activeCollapse = ref(['basic', 'style', 'titleDisplay', 'module'])
 
 // 模块库折叠面板
 const moduleLibraryCollapse = ref(['layout'])
+// 获取（并确保存在）模块样式对象，避免 template 中可空报错
+const getModuleStyle = (module: ModuleConfig | null): any => {
+  if (!module) return { font: {} }
+  const anyMod = module as any
+  if (!anyMod.style) anyMod.style = {}
+  if (!anyMod.style.font) anyMod.style.font = {}
+  return anyMod.style
+}
 
 // 导入模块相关
 const showImportModuleDialog = ref(false)
@@ -2131,12 +2130,7 @@ const moveModuleDown = (index: number) => {
   ElMessage.success('模块已下移')
 }
 
-// 更新模块配置
-const updateModuleConfig = (updates: Partial<ModuleConfig>) => {
-  if (selectedModule.value) {
-    Object.assign(selectedModule.value, updates)
-  }
-}
+// （已移除未使用的 updateModuleConfig）
 
 // 轮播模块 - 添加幻灯片
 const addCarouselSlide = () => {
@@ -2299,7 +2293,6 @@ const getDividerConfig = (module: ModuleConfig | null) => {
   if (!module) {
     return { enabled: false, style: 'solid', width: 1, color: '#e4e7ed', colorType: 'solid', gradient: '' }
   }
-  const moduleAny = module as any
   const titleDisplay = getTitleDisplay(module)
   
   // 如果divider是布尔值或不存在，转换为/创建配置对象
@@ -2862,11 +2855,7 @@ const getTextImageTextBoxPadding = (module: ModuleConfig | null) => {
   return box.padding?.horizontal || box.padding?.vertical || '20px'
 }
 
-// 设置图文混排文本外框内边距
-const setTextImageTextBoxPadding = (module: ModuleConfig | null, value: string | number) => {
-  const box = getTextImageTextBox(module)
-  box.padding = value
-}
+// （移除未使用的 setTextImageTextBoxPadding）
 
 // 获取图文混排堆叠布局配置（确保对象存在）
 const getTextImageStackLayout = (module: ModuleConfig | null) => {
@@ -3398,9 +3387,7 @@ const importConfig = () => {
   margin: 0;
 }
 
-.properties-content {
-  /* 属性面板内容样式 */
-}
+/* 移除空规则：.properties-content */
 
 .module-config-content {
   padding: 10px 0;
