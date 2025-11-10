@@ -10,7 +10,7 @@
           :style="gridStyles"
         >
           <div
-            v-for="(item, index) in config.items"
+            v-for="(item, index) in (config.items || [])"
             :key="index"
             class="stat-item"
             data-aos="fade-up"

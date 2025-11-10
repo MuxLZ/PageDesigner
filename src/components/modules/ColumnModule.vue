@@ -9,7 +9,7 @@
           :style="flexibleGridStyles"
         >
           <div
-            v-for="(item, index) in config.items"
+            v-for="(item, index) in (config.items || [])"
             :key="index"
             class="flexible-item"
             :style="getFlexibleItemStyle(item)"
@@ -32,7 +32,7 @@
           :style="columnStyles"
         >
           <div
-            v-for="(item, index) in config.items"
+            v-for="(item, index) in (config.items || [])"
             :key="index"
             class="column-item"
             :class="{ 'reverse': config.layout === 'alternate' && index % 2 === 1 }"

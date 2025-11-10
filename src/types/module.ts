@@ -150,10 +150,19 @@ export interface TitleSubModuleConfig {
   content: string                  // 子模块内容
   icon?: string                    // 图标（可选）
   backgroundColor?: string          // 背景色
-  border?: string                  // 边框（如 "1px solid #ccc"）
   borderRadius?: string | number   // 弯曲度（圆角）
   color?: string                   // 文字颜色
   [key: string]: any               // 其他自定义属性
+}
+
+// 分割线配置
+export interface DividerConfig {
+  enabled?: boolean                // 是否显示分割线
+  style?: 'solid' | 'dashed' | 'dotted' | 'double' | 'groove' | 'ridge' | 'inset' | 'outset'  // 分割线样式（默认 solid）
+  width?: string | number           // 分割线粗细（默认 1px）
+  color?: string                    // 分割线颜色（全色，默认 #e4e7ed）
+  gradient?: string                 // 分割线渐变色（如：linear-gradient(90deg, #ff0000, #0000ff)）
+  colorType?: 'solid' | 'gradient'  // 颜色类型：全色或渐变色（默认 solid）
 }
 
 // 标题显示模块配置
@@ -167,7 +176,7 @@ export interface TitleDisplayConfig {
     titlePosition?: 'left' | 'center' | 'right'  // 标题位置（默认 left）
     subModulesPosition?: 'left' | 'center' | 'right'  // 子模块位置（默认 right）
   }
-  divider?: boolean                 // 是否显示分割线（标题与下方模块之间）
+  divider?: boolean | DividerConfig  // 是否显示分割线（标题与下方模块之间），支持简单布尔值或详细配置
 }
 
 // 模块基础配置

@@ -13,6 +13,9 @@
         <div class="title-section" :class="titlePositionClass">
           <span v-if="titleDisplayConfig.icon" class="title-icon">
             <img v-if="isImageUrl(titleDisplayConfig.icon)" :src="titleDisplayConfig.icon" alt="icon" />
+            <el-icon v-else-if="isElementIcon(titleDisplayConfig.icon)" :size="24">
+              <component :is="titleDisplayConfig.icon" />
+            </el-icon>
             <i v-else :class="titleDisplayConfig.icon"></i>
           </span>
           <h2 v-if="titleDisplayConfig.title" class="module-title">{{ titleDisplayConfig.title }}</h2>
@@ -29,6 +32,9 @@
             >
               <span v-if="subModule.icon" class="sub-module-icon">
                 <img v-if="isImageUrl(subModule.icon)" :src="subModule.icon" alt="icon" />
+                <el-icon v-else-if="isElementIcon(subModule.icon)" :size="16">
+                  <component :is="subModule.icon" />
+                </el-icon>
                 <i v-else :class="subModule.icon"></i>
               </span>
               <span class="sub-module-content">{{ subModule.content }}</span>
@@ -38,7 +44,7 @@
       </div>
       
       <!-- 分割线 -->
-      <div v-if="titleDisplayConfig.divider" class="title-divider"></div>
+      <div v-if="dividerEnabled" class="title-divider" :style="dividerStyles"></div>
     </div>
     
     <slot />
@@ -50,6 +56,7 @@ import { computed } from 'vue'
 import type { BaseModuleConfig, TitleSubModuleConfig } from '@/types/module'
 import { StyleSystem } from '@/core/StyleSystem'
 import { EffectSystem } from '@/core/EffectSystem'
+import { isElementIconName } from '@/utils/iconHelper'
 
 interface Props {
   moduleConfig: BaseModuleConfig
@@ -76,14 +83,23 @@ const subModulesPositionClass = computed(() => {
 
 // 标题显示容器类
 const titleDisplayClasses = computed(() => {
+  const divider = titleDisplayConfig.value?.divider
+  const hasDivider = typeof divider === 'boolean' ? divider : (divider?.enabled || false)
   return {
-    'has-divider': titleDisplayConfig.value?.divider || false
+    'has-divider': hasDivider
   }
 })
 
 // 判断是否为图片URL
 const isImageUrl = (str: string): boolean => {
+  if (!str || typeof str !== 'string') return false
   return str.startsWith('http://') || str.startsWith('https://') || str.startsWith('/') || str.startsWith('./')
+}
+
+// 判断是否为 Element Plus 图标名称
+const isElementIcon = (str: string): boolean => {
+  if (!str || typeof str !== 'string') return false
+  return isElementIconName(str)
 }
 
 // 获取子模块样式
@@ -92,10 +108,6 @@ const getSubModuleStyle = (subModule: TitleSubModuleConfig): Record<string, any>
   
   if (subModule.backgroundColor) {
     styles.backgroundColor = subModule.backgroundColor
-  }
-  
-  if (subModule.border) {
-    styles.border = subModule.border
   }
   
   if (subModule.borderRadius !== undefined) {
@@ -111,6 +123,56 @@ const getSubModuleStyle = (subModule: TitleSubModuleConfig): Record<string, any>
   
   return styles
 }
+
+// 分割线是否启用
+const dividerEnabled = computed(() => {
+  const divider = titleDisplayConfig.value?.divider
+  if (typeof divider === 'boolean') {
+    return divider
+  }
+  return divider?.enabled || false
+})
+
+// 分割线样式
+const dividerStyles = computed(() => {
+  const divider = titleDisplayConfig.value?.divider
+  if (typeof divider === 'boolean' || !divider) {
+    return {
+      width: '100%',
+      height: '1px',
+      backgroundColor: '#e4e7ed',
+      marginTop: '16px'
+    }
+  }
+  
+  const styles: Record<string, any> = {
+    width: '100%',
+    marginTop: '16px'
+  }
+  
+  // 设置高度（粗细）
+  const width = divider.width !== undefined ? divider.width : 1
+  styles.height = typeof width === 'number' ? `${width}px` : width
+  
+  // 设置边框样式
+  const borderStyle = divider.style || 'solid'
+  
+  // 设置颜色
+  if (divider.colorType === 'gradient' && divider.gradient) {
+    // 渐变色：使用背景渐变
+    styles.background = divider.gradient
+    styles.border = 'none'
+    styles.height = typeof width === 'number' ? `${width}px` : width
+  } else {
+    // 全色：使用边框
+    const color = divider.color || '#e4e7ed'
+    styles.borderTop = `${typeof width === 'number' ? width : parseFloat(width.toString()) || 1}px ${borderStyle} ${color}`
+    styles.backgroundColor = 'transparent'
+    styles.height = '0'
+  }
+  
+  return styles
+})
 
 // 模块类名
 const moduleClasses = computed(() => {
@@ -260,10 +322,7 @@ const moduleStyles = computed(() => {
 
 /* 分割线 */
 .title-divider {
-  width: 100%;
-  height: 1px;
-  background-color: #e4e7ed;
-  margin-top: 16px;
+  /* 样式通过内联样式动态设置 */
 }
 
 .module-title-display.has-divider {

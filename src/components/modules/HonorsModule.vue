@@ -12,7 +12,7 @@
           :style="gridStyles"
         >
           <div
-            v-for="(honor, index) in config.items"
+            v-for="(honor, index) in (config.items || [])"
             :key="index"
             class="honor-item"
             data-aos="zoom-in"

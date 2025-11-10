@@ -13,7 +13,7 @@
           :style="listStyles"
         >
           <div
-            v-for="(item, index) in config.items"
+            v-for="(item, index) in (config.items || [])"
             :key="index"
             class="card-item card"
             @click="handleItemClick(item)"

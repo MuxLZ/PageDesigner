@@ -101,10 +101,43 @@ const getModuleComponent = (type: ModuleType) => {
   return moduleComponentMap.get(type) || null
 }
 
+// 验证并修复模块配置，确保items字段存在
+const validateAndFixModule = (module: ModuleConfig): ModuleConfig => {
+  const moduleAny = module as any
+  
+  // 对于需要items字段的模块类型，确保items存在
+  const modulesWithItems = [
+    ModuleType.FEATURE_LIST,
+    ModuleType.GRID,
+    ModuleType.COLUMN,
+    ModuleType.CARD_LIST,
+    ModuleType.TIMELINE,
+    ModuleType.STATS,
+    ModuleType.PRODUCTS,
+    ModuleType.NEWS,
+    ModuleType.PARTNERS,
+    ModuleType.TEAM,
+    ModuleType.HONORS
+  ]
+  
+  if (modulesWithItems.includes(module.type) && !moduleAny.items) {
+    moduleAny.items = []
+  }
+  
+  // 确保titleDisplay.subModules存在
+  if (moduleAny.titleDisplay && !moduleAny.titleDisplay.subModules) {
+    moduleAny.titleDisplay.subModules = []
+  }
+  
+  return module
+}
+
 // 排序并过滤可见模块
 const sortedVisibleModules = computed(() => {
   const sorted = ConfigGenerator.sortModules(props.config.modules)
-  return ConfigGenerator.filterVisibleModules(sorted)
+  const filtered = ConfigGenerator.filterVisibleModules(sorted)
+  // 验证并修复每个模块
+  return filtered.map(module => validateAndFixModule(module))
 })
 
 // 页面样式

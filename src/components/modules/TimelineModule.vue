@@ -8,7 +8,7 @@
           :style="timelineStyles"
         >
           <div
-            v-for="(item, index) in config.items"
+            v-for="(item, index) in (config.items || [])"
             :key="index"
             class="timeline-item"
             data-aos="fade-up"

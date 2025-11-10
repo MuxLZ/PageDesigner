@@ -12,7 +12,7 @@
           :style="gridStyles"
         >
           <div
-            v-for="(member, index) in config.items"
+            v-for="(member, index) in (config.items || [])"
             :key="index"
             class="team-card card"
             data-aos="fade-up"

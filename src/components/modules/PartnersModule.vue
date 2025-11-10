@@ -13,7 +13,7 @@
           data-aos="fade-up"
         >
           <div
-            v-for="(partner, index) in config.items"
+            v-for="(partner, index) in (config.items || [])"
             :key="index"
             class="partner-item"
             :class="{ 'grayscale': config.grayscale, 'hover-effect': config.hoverEffect }"

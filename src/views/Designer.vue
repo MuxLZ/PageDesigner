@@ -188,14 +188,14 @@
             <el-collapse-item title="标题显示模块" name="titleDisplay">
               <el-form label-width="120px" size="small">
                 <el-form-item label="显示标题">
-                  <el-switch v-model="getTitleDisplay(selectedModule).enabled" />
+                  <el-switch v-model="getTitleDisplay(selectedModule).enabled" @change="handleTitleDisplayToggle" />
                 </el-form-item>
                 <template v-if="getTitleDisplay(selectedModule).enabled">
                   <el-form-item label="标题内容">
-                    <el-input v-model="getTitleDisplay(selectedModule).title" placeholder="请输入标题" />
+                    <el-input v-model="getTitleDisplay(selectedModule).title" placeholder="请输入标题（默认：模块标题）" />
                   </el-form-item>
                   <el-form-item label="图标">
-                    <el-input v-model="getTitleDisplay(selectedModule).icon" placeholder="图标类名或URL（可选）" />
+                    <IconPicker v-model="getTitleDisplay(selectedModule).icon" placeholder="图标类名或URL（默认：el-icon-Document）" />
                   </el-form-item>
                   
                   <el-divider content-position="left">位置设置</el-divider>
@@ -225,13 +225,10 @@
                         <el-input v-model="subModule.content" placeholder="子模块内容" />
                       </el-form-item>
                       <el-form-item label="图标">
-                        <el-input v-model="subModule.icon" placeholder="图标类名或URL（可选）" />
+                        <IconPicker v-model="subModule.icon" placeholder="图标类名或URL（可选）" />
                       </el-form-item>
                       <el-form-item label="背景色">
                         <el-color-picker v-model="subModule.backgroundColor" />
-                      </el-form-item>
-                      <el-form-item label="边框">
-                        <el-input v-model="subModule.border" placeholder="如: 1px solid #ccc" />
                       </el-form-item>
                       <el-form-item label="弯曲度">
                         <el-input-number v-model="subModule.borderRadius" :min="0" placeholder="圆角值" />
@@ -245,11 +242,54 @@
                   
                   <el-divider content-position="left">分割线</el-divider>
                   <el-form-item label="显示分割线">
-                    <el-switch v-model="getTitleDisplay(selectedModule).divider" />
+                    <el-switch v-model="getDividerConfig(selectedModule).enabled" />
                     <div style="font-size: 12px; color: #909399; margin-top: 4px;">
                       在标题与下方模块之间显示分割线
                     </div>
                   </el-form-item>
+                  <template v-if="getDividerConfig(selectedModule).enabled">
+                    <el-form-item label="分割线样式">
+                      <el-select v-model="getDividerConfig(selectedModule).style" placeholder="选择分割线样式">
+                        <el-option label="实线" value="solid" />
+                        <el-option label="虚线" value="dashed" />
+                        <el-option label="点线" value="dotted" />
+                        <el-option label="双线" value="double" />
+                        <el-option label="凹槽" value="groove" />
+                        <el-option label="凸起" value="ridge" />
+                        <el-option label="内嵌" value="inset" />
+                        <el-option label="外凸" value="outset" />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="分割线粗细">
+                      <el-input-number 
+                        v-model="getDividerConfig(selectedModule).width" 
+                        :min="1" 
+                        :max="20"
+                        placeholder="粗细(px)"
+                      />
+                      <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                        分割线粗细，单位为px，默认1px
+                      </div>
+                    </el-form-item>
+                    <el-form-item label="颜色类型">
+                      <el-radio-group v-model="getDividerConfig(selectedModule).colorType">
+                        <el-radio label="solid">全色</el-radio>
+                        <el-radio label="gradient">渐变色</el-radio>
+                      </el-radio-group>
+                    </el-form-item>
+                    <el-form-item v-if="getDividerConfig(selectedModule).colorType === 'solid'" label="分割线颜色">
+                      <el-color-picker v-model="getDividerConfig(selectedModule).color" />
+                    </el-form-item>
+                    <el-form-item v-if="getDividerConfig(selectedModule).colorType === 'gradient'" label="渐变色">
+                      <el-input 
+                        v-model="getDividerConfig(selectedModule).gradient" 
+                        placeholder="如: linear-gradient(90deg, #ff0000, #0000ff)"
+                      />
+                      <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+                        支持CSS渐变语法，如：linear-gradient(90deg, #ff0000, #0000ff)
+                      </div>
+                    </el-form-item>
+                  </template>
                 </template>
               </el-form>
             </el-collapse-item>
@@ -497,7 +537,7 @@
                             <el-input v-model="item.image" placeholder="图片URL" />
                           </el-form-item>
                           <el-form-item label="图标">
-                            <el-input v-model="item.icon" placeholder="图标名称" />
+                            <IconPicker v-model="item.icon" placeholder="图标名称" />
                           </el-form-item>
                           <el-form-item label="链接">
                             <el-input v-model="item.link" placeholder="链接地址" />
@@ -549,7 +589,7 @@
                             <el-input v-model="item.description" type="textarea" :rows="3" />
                           </el-form-item>
                           <el-form-item label="图标">
-                            <el-input v-model="item.icon" placeholder="图标名称" />
+                            <IconPicker v-model="item.icon" placeholder="图标名称" />
                           </el-form-item>
                         </el-form>
                       </el-card>
@@ -597,7 +637,7 @@
                             <el-input v-model="item.suffix" placeholder="例: + 或 %" />
                           </el-form-item>
                           <el-form-item label="图标">
-                            <el-input v-model="item.icon" placeholder="图标名称" />
+                            <IconPicker v-model="item.icon" placeholder="图标名称" />
                           </el-form-item>
                         </el-form>
                       </el-card>
@@ -775,7 +815,7 @@
                         </template>
                         <el-form label-width="80px" size="small">
                           <el-form-item label="图标">
-                            <el-input v-model="item.icon" placeholder="图标名称" />
+                            <IconPicker v-model="item.icon" placeholder="图标名称" />
                           </el-form-item>
                           <el-form-item label="文本">
                             <el-input v-model="item.text" />
@@ -960,7 +1000,7 @@
                         </template>
                         <el-form label-width="80px" size="small">
                           <el-form-item label="图标">
-                            <el-input v-model="item.icon" placeholder="图标名称" />
+                            <IconPicker v-model="item.icon" placeholder="图标名称" />
                           </el-form-item>
                           <el-form-item label="标题">
                             <el-input v-model="item.title" />
@@ -1336,7 +1376,7 @@
                             </el-select>
                           </el-form-item>
                           <el-form-item label="图标">
-                            <el-input v-model="btn.icon" placeholder="图标名称" />
+                            <IconPicker v-model="btn.icon" placeholder="图标名称" />
                           </el-form-item>
                         </el-form>
                       </el-card>
@@ -1689,7 +1729,7 @@
                             </el-select>
                           </el-form-item>
                           <el-form-item label="图标">
-                            <el-input v-model="btn.icon" placeholder="图标名称" />
+                            <IconPicker v-model="btn.icon" placeholder="图标名称" />
                           </el-form-item>
                         </el-form>
                       </el-card>
@@ -1849,6 +1889,7 @@ import { ConfigGenerator } from '@/core/ConfigGenerator'
 import { StyleSystem } from '@/core/StyleSystem'
 import PageRenderer from '@/core/PageRenderer.vue'
 import { getModulesByCategory, getModuleName, getModuleIcon, categoryNames } from '@/utils/moduleHelper'
+import IconPicker from '@/components/common/IconPicker.vue'
 
 const route = useRoute()
 
@@ -2201,6 +2242,7 @@ const getTitleDisplay = (module: ModuleConfig | null) => {
     moduleAny.titleDisplay = {
       enabled: false,
       title: '',
+      icon: '',
       subModules: [],
       divider: false,
       position: {
@@ -2220,7 +2262,30 @@ const getTitleDisplay = (module: ModuleConfig | null) => {
       subModulesPosition: 'right'
     }
   }
+  // 如果启用但标题为空，填充默认标题
+  if (moduleAny.titleDisplay.enabled && !moduleAny.titleDisplay.title) {
+    moduleAny.titleDisplay.title = moduleAny.name || '模块标题'
+  }
+  // 如果启用但图标为空，填充默认图标
+  if (moduleAny.titleDisplay.enabled && !moduleAny.titleDisplay.icon) {
+    moduleAny.titleDisplay.icon = 'el-icon-Document'
+  }
   return moduleAny.titleDisplay
+}
+
+// 处理标题显示开关切换
+const handleTitleDisplayToggle = (enabled: boolean) => {
+  if (enabled && selectedModule.value) {
+    const titleDisplay = getTitleDisplay(selectedModule.value)
+    // 如果标题为空，填充默认标题
+    if (!titleDisplay.title) {
+      titleDisplay.title = selectedModule.value.name || '模块标题'
+    }
+    // 如果图标为空，填充默认图标
+    if (!titleDisplay.icon) {
+      titleDisplay.icon = 'el-icon-Document'
+    }
+  }
 }
 
 // 获取标题显示位置配置
@@ -2235,6 +2300,48 @@ const getTitleDisplayPosition = (module: ModuleConfig | null) => {
   return titleDisplay.position
 }
 
+// 获取分割线配置
+const getDividerConfig = (module: ModuleConfig | null) => {
+  if (!module) {
+    return { enabled: false, style: 'solid', width: 1, color: '#e4e7ed', colorType: 'solid' }
+  }
+  const moduleAny = module as any
+  const titleDisplay = getTitleDisplay(module)
+  
+  // 如果divider是布尔值，转换为配置对象
+  if (typeof titleDisplay.divider === 'boolean') {
+    titleDisplay.divider = {
+      enabled: titleDisplay.divider,
+      style: 'solid',
+      width: 1,
+      color: '#e4e7ed',
+      colorType: 'solid'
+    }
+  }
+  
+  // 如果divider不存在，创建默认配置
+  if (!titleDisplay.divider || typeof titleDisplay.divider === 'boolean') {
+    titleDisplay.divider = {
+      enabled: false,
+      style: 'solid',
+      width: 1,
+      color: '#e4e7ed',
+      colorType: 'solid'
+    }
+  }
+  
+  // 确保所有字段都有默认值
+  const divider = titleDisplay.divider as any
+  if (divider.enabled === undefined) divider.enabled = false
+  if (!divider.style) divider.style = 'solid'
+  if (divider.width === undefined) divider.width = 1
+  if (!divider.color) divider.color = '#e4e7ed'
+  if (!divider.colorType) divider.colorType = 'solid'
+  if (!divider.gradient) divider.gradient = ''
+  
+  return divider
+}
+
 // 添加子模块
 const addSubModule = () => {
   if (selectedModule.value) {
@@ -2245,7 +2352,6 @@ const addSubModule = () => {
     titleDisplay.subModules.push({
       content: '新子模块',
       backgroundColor: '',
-      border: '',
       borderRadius: 0,
       color: ''
     })
