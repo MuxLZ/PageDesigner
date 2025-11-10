@@ -188,14 +188,14 @@
             <el-collapse-item title="标题显示模块" name="titleDisplay">
               <el-form label-width="120px" size="small">
                 <el-form-item label="显示标题">
-                  <el-switch v-model="getTitleDisplay(selectedModule).enabled" @change="handleTitleDisplayToggle" />
+                  <el-switch v-model="currentTitleDisplay.enabled" @change="handleTitleDisplayToggle" />
                 </el-form-item>
-                <template v-if="getTitleDisplay(selectedModule).enabled">
+                <template v-if="currentTitleDisplay.enabled">
                   <el-form-item label="标题内容">
-                    <el-input v-model="getTitleDisplay(selectedModule).title" placeholder="请输入标题（默认：模块标题）" />
+                    <el-input v-model="currentTitleDisplay.title" placeholder="请输入标题（默认：模块标题）" />
                   </el-form-item>
                   <el-form-item label="图标">
-                    <IconPicker v-model="getTitleDisplay(selectedModule).icon" placeholder="图标类名或URL（默认：el-icon-Document）" />
+                    <IconPicker v-model="currentTitleDisplay.icon" placeholder="图标类名或URL（默认：el-icon-Document）" />
                   </el-form-item>
                   
                   <el-divider content-position="left">位置设置</el-divider>
@@ -215,7 +215,7 @@
                   </el-form-item>
                   
                   <el-divider content-position="left">子模块</el-divider>
-                  <div v-for="(subModule, index) in getTitleDisplay(selectedModule).subModules" :key="index" style="margin-bottom: 16px; padding: 12px; border: 1px solid #e4e7ed; border-radius: 4px;">
+                  <div v-for="(subModule, index) in currentTitleDisplay.subModules" :key="index" style="margin-bottom: 16px; padding: 12px; border: 1px solid #e4e7ed; border-radius: 4px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                       <strong>子模块 {{ index + 1 }}</strong>
                       <el-button type="danger" size="small" text @click="removeSubModule(index)">删除</el-button>
@@ -242,14 +242,14 @@
                   
                   <el-divider content-position="left">分割线</el-divider>
                   <el-form-item label="显示分割线">
-                    <el-switch v-model="getDividerConfig(selectedModule).enabled" />
+                    <el-switch v-model="currentDividerConfig.enabled" />
                     <div style="font-size: 12px; color: #909399; margin-top: 4px;">
                       在标题与下方模块之间显示分割线
                     </div>
                   </el-form-item>
-                  <template v-if="getDividerConfig(selectedModule).enabled">
+                  <template v-if="currentDividerConfig.enabled">
                     <el-form-item label="分割线样式">
-                      <el-select v-model="getDividerConfig(selectedModule).style" placeholder="选择分割线样式">
+                      <el-select v-model="currentDividerConfig.style" placeholder="选择分割线样式">
                         <el-option label="实线" value="solid" />
                         <el-option label="虚线" value="dashed" />
                         <el-option label="点线" value="dotted" />
@@ -262,7 +262,7 @@
                     </el-form-item>
                     <el-form-item label="分割线粗细">
                       <el-input-number 
-                        v-model="getDividerConfig(selectedModule).width" 
+                        v-model="currentDividerConfig.width" 
                         :min="1" 
                         :max="20"
                         placeholder="粗细(px)"
@@ -272,17 +272,17 @@
                       </div>
                     </el-form-item>
                     <el-form-item label="颜色类型">
-                      <el-radio-group v-model="getDividerConfig(selectedModule).colorType">
+                      <el-radio-group v-model="currentDividerConfig.colorType">
                         <el-radio label="solid">全色</el-radio>
                         <el-radio label="gradient">渐变色</el-radio>
                       </el-radio-group>
                     </el-form-item>
-                    <el-form-item v-if="getDividerConfig(selectedModule).colorType === 'solid'" label="分割线颜色">
-                      <el-color-picker v-model="getDividerConfig(selectedModule).color" />
+                    <el-form-item v-if="currentDividerConfig.colorType === 'solid'" label="分割线颜色">
+                      <el-color-picker v-model="currentDividerConfig.color" />
                     </el-form-item>
-                    <el-form-item v-if="getDividerConfig(selectedModule).colorType === 'gradient'" label="渐变色">
+                    <el-form-item v-if="currentDividerConfig.colorType === 'gradient'" label="渐变色">
                       <el-input 
-                        v-model="getDividerConfig(selectedModule).gradient" 
+                        v-model="currentDividerConfig.gradient" 
                         placeholder="如: linear-gradient(90deg, #ff0000, #0000ff)"
                       />
                       <div style="font-size: 12px; color: #909399; margin-top: 4px;">
@@ -2235,7 +2235,7 @@ const getCarouselSlideAnimation = (module: ModuleConfig | null) => {
 // 获取标题显示配置
 const getTitleDisplay = (module: ModuleConfig | null) => {
   if (!module) {
-    return { enabled: false, title: '', subModules: [], divider: false }
+    return { enabled: false, title: '', icon: '', subModules: [], divider: false }
   }
   const moduleAny = module as any
   if (!moduleAny.titleDisplay) {
@@ -2262,14 +2262,8 @@ const getTitleDisplay = (module: ModuleConfig | null) => {
       subModulesPosition: 'right'
     }
   }
-  // 如果启用但标题为空，填充默认标题
-  if (moduleAny.titleDisplay.enabled && !moduleAny.titleDisplay.title) {
-    moduleAny.titleDisplay.title = moduleAny.name || '模块标题'
-  }
-  // 如果启用但图标为空，填充默认图标
-  if (moduleAny.titleDisplay.enabled && !moduleAny.titleDisplay.icon) {
-    moduleAny.titleDisplay.icon = 'el-icon-Document'
-  }
+  // 注意：不在getter中自动填充默认值，避免副作用
+  // 默认值填充应该在handleTitleDisplayToggle中处理
   return moduleAny.titleDisplay
 }
 
@@ -2303,30 +2297,20 @@ const getTitleDisplayPosition = (module: ModuleConfig | null) => {
 // 获取分割线配置
 const getDividerConfig = (module: ModuleConfig | null) => {
   if (!module) {
-    return { enabled: false, style: 'solid', width: 1, color: '#e4e7ed', colorType: 'solid' }
+    return { enabled: false, style: 'solid', width: 1, color: '#e4e7ed', colorType: 'solid', gradient: '' }
   }
   const moduleAny = module as any
   const titleDisplay = getTitleDisplay(module)
   
-  // 如果divider是布尔值，转换为配置对象
-  if (typeof titleDisplay.divider === 'boolean') {
-    titleDisplay.divider = {
-      enabled: titleDisplay.divider,
-      style: 'solid',
-      width: 1,
-      color: '#e4e7ed',
-      colorType: 'solid'
-    }
-  }
-  
-  // 如果divider不存在，创建默认配置
+  // 如果divider是布尔值或不存在，转换为/创建配置对象
   if (!titleDisplay.divider || typeof titleDisplay.divider === 'boolean') {
     titleDisplay.divider = {
-      enabled: false,
+      enabled: typeof titleDisplay.divider === 'boolean' ? titleDisplay.divider : false,
       style: 'solid',
       width: 1,
       color: '#e4e7ed',
-      colorType: 'solid'
+      colorType: 'solid',
+      gradient: ''
     }
   }
   
@@ -2337,10 +2321,16 @@ const getDividerConfig = (module: ModuleConfig | null) => {
   if (divider.width === undefined) divider.width = 1
   if (!divider.color) divider.color = '#e4e7ed'
   if (!divider.colorType) divider.colorType = 'solid'
-  if (!divider.gradient) divider.gradient = ''
+  if (divider.gradient === undefined) divider.gradient = ''
   
   return divider
 }
+
+// 缓存当前选中模块的标题显示配置（优化性能）
+const currentTitleDisplay = computed(() => getTitleDisplay(selectedModule.value))
+
+// 缓存当前选中模块的分割线配置（优化性能）
+const currentDividerConfig = computed(() => getDividerConfig(selectedModule.value))
 
 // 添加子模块
 const addSubModule = () => {

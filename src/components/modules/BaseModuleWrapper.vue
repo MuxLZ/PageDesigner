@@ -151,8 +151,9 @@ const dividerStyles = computed(() => {
   }
   
   // 设置高度（粗细）
-  const width = divider.width !== undefined ? divider.width : 1
-  styles.height = typeof width === 'number' ? `${width}px` : width
+  const widthValue = divider.width !== undefined ? divider.width : 1
+  const widthNum = typeof widthValue === 'number' ? widthValue : (parseFloat(String(widthValue)) || 1)
+  const widthPx = `${widthNum}px`
   
   // 设置边框样式
   const borderStyle = divider.style || 'solid'
@@ -162,11 +163,11 @@ const dividerStyles = computed(() => {
     // 渐变色：使用背景渐变
     styles.background = divider.gradient
     styles.border = 'none'
-    styles.height = typeof width === 'number' ? `${width}px` : width
+    styles.height = widthPx
   } else {
     // 全色：使用边框
     const color = divider.color || '#e4e7ed'
-    styles.borderTop = `${typeof width === 'number' ? width : parseFloat(width.toString()) || 1}px ${borderStyle} ${color}`
+    styles.borderTop = `${widthNum}px ${borderStyle} ${color}`
     styles.backgroundColor = 'transparent'
     styles.height = '0'
   }
